@@ -1,12 +1,20 @@
-import react from "react";
-import Topbar from "../../components/Topbar.js";
-import Navbar from "../../components/Navbar.js";
-import Footer from "../../components/Footer.js";
+import HomeSlider from "../../components/main/home-slider/home-slider";
 
-export default function Home() {
-    return (
+
+const HomePage = () => {
+    return(
         <>
-            <Footer />
+            <HomeSlider/>
+            
+            <div className="main d-flex justify-content-center align-items-center flex-column">
+                <div className="container-w1">
+                    <div className="d-flex align-items-center justify-content-center textZone flex-column">
+                        <h1>THIS IS HOME PAGE</h1>
+                    </div>
+                </div>
+            </div>
         </>
-    );
+    )
 }
+
+export default HomePage;
