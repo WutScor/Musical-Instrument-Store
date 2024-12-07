@@ -9,7 +9,7 @@ const HeaderIcons = () => {
                 <Link to={'/user'}><AiOutlineUser/></Link>
                 <Link to={'/shop'}><AiOutlineSearch/></Link>
                 <Link to={'/favorite'}><AiOutlineHeart/></Link>
-                <Button><AiOutlineShoppingCart/></Button>
+                <Link to={'/cart'}><Button><AiOutlineShoppingCart/></Button></Link>
             </div>
         </>
     )

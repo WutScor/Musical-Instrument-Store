@@ -1,4 +1,6 @@
+import { Button } from "@mui/material";
 import ProductItem from "./product-item";
+import { Link } from "react-router-dom";
 
 
 const HomeProducts = () => {
@@ -22,6 +24,8 @@ const HomeProducts = () => {
                                 <ProductItem/>
                             </div>
                         </div>
+
+                        <Link to={'/shop'} className="btn-container"><Button className="sm-button">Show More</Button></Link>
                     </div>
                 </div>
             </div>
