@@ -1,11 +1,8 @@
 import './App.css';
-import Navbar from './components/Navbar.js';
-import Home from "./pages/Client/Home.js";
+import Navbar from './components/Common/Navbar/Navbar.js';
+import About from './pages/Client/About/about.js';
+import Home from "./pages/Client/Home/home.js";
 import { BrowserRouter, Routes, Route, Router, Link } from 'react-router-dom'
-
-const About = () => {
-  return <h1>About Page</h1>;
-};
 
 
 
