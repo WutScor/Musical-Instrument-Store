@@ -1,12 +1,16 @@
-import react from "react";
-import Topbar from "../../components/Topbar.js";
-import Navbar from "../../components/Navbar.js";
-import Footer from "../../components/Footer.js";
+import HomeBrowse from "../../components/main/home/home-browse";
+import HomeProducts from "../../components/main/home/home-products/home-products";
+import HomeSlider from "../../components/main/home/home-slider";
 
-export default function Home() {
-    return (
+
+const HomePage = () => {
+    return(
         <>
-            <Footer />
+            <HomeSlider/>
+            <HomeBrowse/>
+            <HomeProducts/>
         </>
-    );
+    )
 }
+
+export default HomePage;
