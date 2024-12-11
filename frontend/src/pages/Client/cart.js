@@ -1,15 +1,9 @@
-
+import CartInformation from '../../components/main/cart/cart-information';
 
 const CartPage = () => {
     return(
         <>
-            <div className="main d-flex justify-content-center align-items-center">
-                <div className="container-w1">
-                    <div className="d-flex align-items-center justify-content-center textZone">
-                        <h1>THIS IS CART PAGE</h1>
-                    </div>
-                </div>
-            </div>
+            <CartInformation/>
         </>
     )
 }

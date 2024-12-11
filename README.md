@@ -11,3 +11,7 @@
                                 npm install slick-carousel
 
 7/12/2024 - trannghia's Note: Ai lam Shop page co the lay component ProductItem trannghia da viet :P
+
+
+
+11/12/2024 - Chien's note: Basic CartPage
