@@ -10,6 +10,8 @@ import ContactPage from './pages/Client/contact';
 import UserPage from './pages/Client/user';
 import FavoritePage from './pages/Client/favorite';
 import CartPage from './pages/Client/cart';
+import SignInPage from './pages/Client/signin';
+import SignUpPage from './pages/Client/signup';
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path='/user' exact={true} element={<UserPage/>} />
           <Route path='/favorite' exact={true} element={<FavoritePage/>} />
           <Route path='/cart' exact={true} element={<CartPage/>} />
+          <Route path='/signin' exact={true} element={<SignInPage/>} />
+          <Route path='/signup' exact={true} element={<SignUpPage/>} />
       </Routes>
       <Footer/>
     </>

@@ -258,7 +258,7 @@ a {
   font-weight: 475 !important;
   text-transform: none;
   color: #b88e2f;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 .product-item .item {
@@ -341,5 +341,78 @@ a {
   border-bottom: 1px solid black !important;
   border-radius: 0 !important;
   font-size: 14px !important;
-  font-weight: 550 !important;
+  font-weight: 500 !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.user-page button {
+  width: 202px;
+  height: 48px;
+  background: #fff;
+  border-radius: 0 !important;
+  font-size: 16px !important;
+  font-weight: 475 !important;
+  text-transform: none;
+  color: #b88e2f;
+  font-family: 'Poppins', sans-serif !important;
+  border: 1px solid #b88e2f;
+}
+
+.user-page button:hover {
+  background: #b88e2f;
+  color: #fff;
+}
+
+.signin-form svg {
+  font-size: 36px;
+}
+
+.form-txt {
+  font-size: 18px;
+  margin-left: 5px !important;
+}
+
+.signin-form p {
+  margin-bottom: 0 !important;
+}
+
+.signin-form .p1 {
+  margin-left: 66px !important;
+}
+
+.signin-form .p2 {
+  margin-top: 36px !important;
+  height: 75px !important;
+}
+
+.signin-form .p2 input {
+  outline: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
+  height: 52px !important;
+  padding: 12px !important;
+  font-size: 18px !important;
+  border-radius: 5px !important;
+  font-weight: 400 !important;
+}
+
+.main button {
+  width: 202px;
+  height: 48px;
+  background: #fff;
+  border-radius: 0 !important;
+  font-size: 16px !important;
+  font-weight: 475 !important;
+  text-transform: none;
+  color: #b88e2f;
+  font-family: 'Poppins', sans-serif !important;
+  border: 1px solid #b88e2f;
+}
+
+.main button:hover {
+  background: #b88e2f;
+  color: #fff;
+}
+
+.signin-form .p2 i {
+  right: 333px;
 }
