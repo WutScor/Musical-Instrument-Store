@@ -1,6 +1,7 @@
 import FooterBrand from "./footer-brand/footer-brand";
 import FooterLinks from "./footer-links/footer-links";
 import FooterHelp from "./footer-help/footer-help";
+import FooterNewsletter from "./footer-newsletter/footer-newsletter";
 
 
 const Footer = () => {
@@ -27,7 +28,7 @@ const Footer = () => {
                                             </div>
 
                                             <div className="col-md-7">
-                                                <p className="top-title">Newsletter</p>
+                                                <FooterNewsletter/>
                                             </div>
                                         </div>
                                     </div>
