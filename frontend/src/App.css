@@ -572,3 +572,19 @@ a {
   width: 1536px !important;
   padding: 0 200px !important;
 }
+
+.user-cover {
+  overflow: hidden;
+  height: 666px;
+}
+
+.user-avt {
+  width: 180px;
+  height: 180px;
+  min-width: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  top: 0;
+  right: -90px;
+}
