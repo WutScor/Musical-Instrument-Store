@@ -17,3 +17,5 @@
                                 npm install react-icons-kit
                                 
 11/12/2024 - Chien's note: Basic CartPage
+
+13/12/2024 - trannghia's Note: Chinh sua lai cac thong so chieu rong, lam theo figma no bi nho
