@@ -31,7 +31,7 @@ const CartAds = () => {
         <div className="d-flex justify-content-center align-items-center ads-part">
           <AiOutlineCustomerService class="ads-icon"/>
           <div>
-            <h5 class="fw-semibold">24 / 7 Support</h5>
+            <h5 class="fw-semibold">24/7 Support</h5>
             <p class="ads-text">Dedicated support</p>
           </div>
         </div>

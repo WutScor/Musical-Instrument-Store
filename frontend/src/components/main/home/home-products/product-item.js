@@ -31,7 +31,7 @@ const ProductItem = () => {
                 <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column">
                     <Button>Add to cart</Button>
 
-                    <div className="d-flex justify-content-between align-items-center w-100 px-3 mt-4">
+                    <div className="d-flex justify-content-between align-items-center w-100 px-4 mt-4">
                         <div className="item">
                             <AiOutlineShareAlt/><p>Share</p>
                         </div>

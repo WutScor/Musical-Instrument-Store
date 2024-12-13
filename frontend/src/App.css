@@ -26,7 +26,7 @@ body {
 }
 
 .container-w1 {
-  width: 1440px !important;
+  width: 1536px !important;
   padding: 0 77px !important;
 }
 
@@ -100,8 +100,8 @@ a {
 }
 
 .container-w2 {
-  width: 1440px !important;
-  padding: 0 126px !important;
+  width: 1536px !important;
+  padding: 0 200px !important;
 }
 
 .align-w-box {
@@ -112,7 +112,7 @@ a {
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
-  height: 480px;
+  height: 520px;
 }
 
 .img-container img {
@@ -129,8 +129,8 @@ a {
 }
 
 .container-w3 {
-  width: 1440px !important;
-  padding: 0 106px !important;
+  width: 1536px !important;
+  padding: 0 136px !important;
 }
 
 .products-row {
@@ -139,7 +139,7 @@ a {
 }
 
 .product-item {
-  width: 23.5%;
+  width: 23.6%;
   height: auto;
   cursor: pointer;
 }
@@ -205,8 +205,8 @@ a {
 }
 
 .container-w4 {
-  width: 1440px;
-  padding: 0 69px;
+  width: 1536px;
+  padding: 0 96px;
 }
 
 .brand-name {
@@ -217,7 +217,7 @@ a {
 
 .bg-hover {
   visibility: hidden;
-  height: 427.433px;
+  height: 298.3px;
   width: 100%;
   background: #3a3a3a;
   opacity: 0;
@@ -232,7 +232,7 @@ a {
 
 .product-hover {
   visibility: hidden;
-  height: 427.433px;
+  height: 298.3px;
   width: 100%;
   opacity: 0;
   top: 0;
@@ -414,7 +414,7 @@ a {
 }
 
 .signin-form .p2 i {
-  right: 333px;
+  right: 216px;
 }
 /*-----------------Cart CSS-------------------------------*/
 .cart-information {
@@ -567,3 +567,8 @@ a {
 /* .link-text:hover {
   color: #FFFFFF;
 } */
+
+.container-w5 {
+  width: 1536px !important;
+  padding: 0 200px !important;
+}
