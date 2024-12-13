@@ -15,3 +15,5 @@
 11/12/2024 - trannghia's Note: Cai thu vien:
 
                                 npm install react-icons-kit
+                                
+11/12/2024 - Chien's note: Basic CartPage
