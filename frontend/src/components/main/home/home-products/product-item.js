@@ -34,7 +34,7 @@ const ProductItem = () => {
                 <div className="bg-hover position-absolute"></div>
 
                 <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column">
-                    <Button onClick={context.plusCartItemQtty}>Add to cart</Button>
+                    <Button onClick={() => context.plusCartItemQtty()}>Add to cart</Button>
 
                     <div className="d-flex justify-content-between align-items-center w-100 px-4 mt-4">
                         <div className="item">
