@@ -5,15 +5,6 @@ import { BsBagX } from "react-icons/bs";
 import CDialogComponent from "../../../components/main/cart/dialog/cdialog-component";
 import { Link } from "react-router-dom";
 
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
-    ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
 
 const CartDialog = () => {
 
