@@ -3,7 +3,7 @@ import CartItems from './cart-items-information';
 import CartAds from './cart-ads';
 import CartIntro from './cart-intro';
 
-const cartInformation = () => {
+const CartInformation = () => {
     return (
         <>
             <CartIntro />
@@ -16,4 +16,4 @@ const cartInformation = () => {
     )
 }
 
-export default cartInformation;
+export default CartInformation;

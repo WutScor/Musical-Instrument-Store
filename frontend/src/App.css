@@ -593,3 +593,31 @@ a {
   top: 0;
   right: -90px;
 }
+
+.cart-dialog .MuiPaper-elevation {
+  top: 0px;
+  right: 0px;
+  border-radius: 0;
+  padding: 25px;
+  position: absolute;
+  margin: 0;
+  width: 444.8px;
+}
+
+.cart-dialog button {
+  font-size: 18px;
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+}
+
+.cart-dialog svg {
+  color: #9F9F9F;
+}
+
+.cart-dialog hr {
+  margin-right: 66px !important;
+}
+
+/* write css for a pink background nav bar

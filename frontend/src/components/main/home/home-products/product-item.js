@@ -1,8 +1,13 @@
 import { Button } from "@mui/material";
+import { useContext } from "react";
 import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart} from "react-icons/ai";
+import { MyContext } from "../../../../App";
 
 
 const ProductItem = () => {
+
+    const context = useContext(MyContext);
+
     return(
         <>
             <div className="product-item position-relative">
@@ -29,7 +34,7 @@ const ProductItem = () => {
                 <div className="bg-hover position-absolute"></div>
 
                 <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column">
-                    <Button>Add to cart</Button>
+                    <Button onClick={context.plusCartItemQtty}>Add to cart</Button>
 
                     <div className="d-flex justify-content-between align-items-center w-100 px-4 mt-4">
                         <div className="item">
