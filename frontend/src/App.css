@@ -1,38 +1,322 @@
-.App {
-  text-align: center;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
+
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 1);
+  position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header {
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) ;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container-w1 {
+  width: 1440px !important;
+  padding: 0 77px !important;
+}
+
+.header .container-w1 {
+  height: 100px;
+}
+
+.logo {
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+}
+
+.logo h3 {
+  font-size: 34px;
+}
+
+a {
+  color: rgba(0, 0, 0, 1) !important;
+  text-decoration: none !important;
+}
+
+.header-child {
+  width: 835px !important;
+}
+
+.header-nav {
+  width: 430px !important;
+}
+
+.header-nav a {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.header-icons {
+  width: 234px;
+}
+
+.header-icons a {
+  font-size: 24px;
+  font-weight: 700 !important;
+}
+
+.header-icons button {
+  min-width: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: rgba(0, 0, 0, 1) !important;
+  border-radius: 50% !important;
+}
+
+.header-icons button svg {
+  font-size: 24px !important;
+}
+
+.home-slider {
+  position: relative;
+}
+
+.title {
+  text-transform: capitalize !important;
+  font-size: 32px !important;
+  font-weight: bold !important;
+}
+
+.title-desc {
+  font-size: 20px !important;
+  color: #666666 !important;
+}
+
+.container-w2 {
+  width: 1440px !important;
+  padding: 0 126px !important;
+}
+
+.align-w-box {
+  width: 100%;
+}
+
+.img-container {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 480px;
+}
+
+.img-container img {
+  transform: scale(2.75);
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.browse-tag {
+  font-size: 24px;
+  font-weight: 475;
+}
+
+.container-w3 {
+  width: 1440px !important;
+  padding: 0 106px !important;
+}
+
+.products-row {
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.product-item {
+  width: 23.5%;
+  height: auto;
+  cursor: pointer;
+}
+
+.product-item img {
+  transition: all 0.12s ease-in-out;
+}
+
+.product-item:hover img {
+  transform: scale(1.0512);
+}
+
+.product-item .badge {
+  display: inline-block;
+  position: absolute;
+  padding: 5px 8px;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  background: #b88e2f !important;
+  transition: all 0.12 ease-in-out;
+}
+
+.img-wrapper {
+  border: 1px solid #f4f5f7;
+  overflow: hidden;
+}
+
+.product-info {
+  background: #f4f5f7;
+  height: 145px;
+  padding: 12px 18px;
+}
+
+.name {
+  padding: 0;
+  font-size: 24px;
+  font-weight: 475;
+  margin: 0 !important;
+}
+
+.short-desc {
+  font-size: 16px !important;
+  color: #666666 !important;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+.net-price {
+  font-size: 20px !important;
+  font-weight: 475 !important;
+}
+
+.old-price {
+  font-size: 16px;
+  color: #b0b0b0;
+  text-decoration: line-through;
+}
+
+.footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  margin-top: 100px;
+}
+
+.container-w4 {
+  width: 1440px;
+  padding: 0 69px;
+}
+
+.brand-name {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.bg-hover {
+  visibility: hidden;
+  height: 427.433px;
+  width: 100%;
+  background: #3a3a3a;
+  opacity: 0;
+  top: 0;
+  transition: all 0.12s ease-in-out;
+}
+
+.product-item:hover .bg-hover {
+  visibility: inherit;
+  opacity: 0.72;
+}
+
+.product-hover {
+  visibility: hidden;
+  height: 427.433px;
+  width: 100%;
+  opacity: 0;
+  top: 0;
+  transition: all 0.12s ease-in-out;
+}
+
+.product-item:hover .product-hover {
+  visibility: inherit;
+  opacity: 1;
+}
+
+.product-item:hover .badge {
+  top: -21px;
+  left: -21px;
+}
+
+.product-hover button {
+  width: 202px;
+  height: 48px;
+  background: #fff;
+  border-radius: 0 !important;
+  font-size: 16px !important;
+  font-weight: 475 !important;
+  text-transform: none;
+  color: #b88e2f;
+  font-family: 'Poppins', sans-serif;
+}
+
+.product-item .item {
+  font-size: 16px;
+  font-weight: 475;
+  color: #fff;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  transition: all 0.12s ease-in-out;
 }
 
-.App-link {
-  color: #61dafb;
+.product-item .item p {
+  padding-left: 1px;
+  margin: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.top-title {
+  margin-bottom: 60px;
+}
+
+.address {
+  font-size: 16px;
+  color: #9f9f9f;
+}
+
+.top-title {
+  font-size: 16px;
+  color: #9f9f9f;
+}
+
+.flink-container {
+  height: 212px !important;
+  margin-bottom: 36px;
+}
+
+.flink-container a {
+  font-size: 16px !important;
+  font-weight: 475 !important;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.sm-button {
+  width: 202px;
+  height: 48px;
+  background: #fff !important;
+  border-radius: 0 !important;
+  font-size: 16px !important;
+  font-weight: 475 !important;
+  text-transform: none !important;
+  color: #b88e2f !important;
+  font-family: 'Poppins', sans-serif !important;
+  border: 1px solid #b88e2f !important;
+}
+
+.btn-container {
+  margin-top: 36px;
 }

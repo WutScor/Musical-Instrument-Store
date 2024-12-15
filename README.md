@@ -40,3 +40,4 @@ Reusable components: Đặt trong components/ (ví dụ: Navbar, ProductCard).
 Page-level components: Đặt trong pages/ (ví dụ: HomePage, ProductPage).
 
 3. Development Commands
+
