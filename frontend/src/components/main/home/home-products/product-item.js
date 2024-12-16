@@ -28,9 +28,9 @@ const ProductItem = () => {
                         <div className="col-md-6">
                             <p className="old-price">$30.00</p>
                         </div>
-                    </div>
-                </div>
-
+                      </div>
+                {/* Removed extra closing div */}
+  
                 <div className="bg-hover position-absolute"></div>
 
                 <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column">
@@ -71,8 +71,6 @@ const ProductItem = () => {
               </div>
             </div>
           </div>
-        </Link>
-      </div>
     </>
   );
 };
