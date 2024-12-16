@@ -7,11 +7,20 @@ exports.getMusicalInstruments = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    const filters = {
+      category_id: req.query.category_id,
+      search: req.query.search,
+    };
+
     const categories = await musicalInstrumentModel.getMusicalInstruments(
       limit,
-      offset
+      offset,
+      filters
     );
-    const totalItems = await musicalInstrumentModel.getMusicalInstrumentCount();
+
+    const totalItems = await musicalInstrumentModel.getMusicalInstrumentCount(
+      filters
+    );
 
     const result = paginate(categories, totalItems, page, limit);
 
@@ -99,5 +108,37 @@ exports.updateMusicalInstrument = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating musical instrument." });
+  }
+};
+
+exports.getRandomRelatedMusicalInstruments = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const limit = parseInt(req.query.limit) || 5;
+
+    if (limit <= 0) {
+      return res.status(400).json({ message: "Limit must be greater than 0." });
+    }
+
+    const relatedInstruments =
+      await musicalInstrumentModel.getRandomRelatedMusicalInstruments(
+        id,
+        limit
+      );
+
+    if (relatedInstruments.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No related musical instruments found." });
+    }
+
+    res.status(200).json({
+      items: relatedInstruments,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error fetching related musical instruments." });
   }
 };
