@@ -18,11 +18,11 @@ const HomeSlider = () => {
             <div className="home-slider mb-5">
                 <Slider {...settings}>
                     <div className="item">
-                        <img src="https://r4.wallpaperflare.com/wallpaper/614/202/340/play-fender-stratocaster-blue-guitar-strat-wallpaper-f9e0589db11a2d8b06f7187fc05186fd.jpg" className="w-100"/>
+                        <img src="https://r4.wallpaperflare.com/wallpaper/614/202/340/play-fender-stratocaster-blue-guitar-strat-wallpaper-f9e0589db11a2d8b06f7187fc05186fd.jpg" className="w-100" alt=""/>
                     </div>
 
                     <div className="item">
-                        <img src="https://r4.wallpaperflare.com/wallpaper/367/616/1014/music-ghost-piano-musical-instrument-wallpaper-69e0780d717acd9b16b7480fe011e6fd.jpg" className="w-100"/>
+                        <img src="https://r4.wallpaperflare.com/wallpaper/367/616/1014/music-ghost-piano-musical-instrument-wallpaper-69e0780d717acd9b16b7480fe011e6fd.jpg" className="w-100" alt=""/>
                     </div>
                 </Slider>
             </div>
