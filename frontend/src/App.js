@@ -14,8 +14,10 @@ import SignUpPage from './pages/Client/signup';
 import { createContext, useState } from 'react';
 import CartPage from './pages/Client/cart/cart';
 import CartDialog from './pages/Client/cart/cart-dialog';
+import ProductDetail from './pages/Client/product';
 
 const MyContext = createContext();
+
 
 function App() {
  
@@ -55,6 +57,7 @@ function App() {
             <Route path='/cart' exact={true} element={<CartPage/>} />
             <Route path='/signin' exact={true} element={<SignInPage/>} />
             <Route path='/signup' exact={true} element={<SignUpPage/>} />
+            <Route path='/product' exact={true} element={<ProductDetail/>} />
         </Routes>
         <Footer/>
 

@@ -15,7 +15,7 @@ const HomeBrowse = () => {
                                     <div className="col-md-4 d-flex align-items-center flex-column">
                                         <div className="img-container d-flex align-items-end">
                                             <img src="https://r4.wallpaperflare.com/wallpaper/668/879/585/anime-anime-girls-bocchi-the-rock-musical-instrument-hd-wallpaper-8a881564d2120db7bfe52782fcbd57d0.jpg"
-                                                className="cursor w-100" />
+                                                className="cursor w-100" alt=""/>
                                         </div>
 
                                         <p className="mt-4 browse-tag">Guitar</p>
@@ -23,7 +23,7 @@ const HomeBrowse = () => {
                                     <div className="col-md-4 d-flex align-items-center flex-column">
                                         <div className="img-container d-flex align-items-center">
                                             <img src="https://r4.wallpaperflare.com/wallpaper/668/879/585/anime-anime-girls-bocchi-the-rock-musical-instrument-hd-wallpaper-8a881564d2120db7bfe52782fcbd57d0.jpg"
-                                                className="cursor w-100" />
+                                                className="cursor w-100" alt=""/>
                                         </div>
 
                                         <p className="mt-4 browse-tag">Drums</p>
@@ -31,7 +31,7 @@ const HomeBrowse = () => {
                                     <div className="col-md-4 d-flex align-items-center flex-column">
                                         <div className="img-container">
                                             <img src="https://r4.wallpaperflare.com/wallpaper/668/879/585/anime-anime-girls-bocchi-the-rock-musical-instrument-hd-wallpaper-8a881564d2120db7bfe52782fcbd57d0.jpg"
-                                                className="cursor w-100" />
+                                                className="cursor w-100" alt=""/>
                                         </div>
 
                                         <p className="mt-4 browse-tag">Leg :P</p>
