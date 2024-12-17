@@ -1,4 +1,4 @@
-import SignInForm from "../../components/main/signin/signin-form";
+import SignInForm from "../../components/Client/signin/signin-form";
 import { Button } from "@mui/material";
 
 const SignInPage = () => {

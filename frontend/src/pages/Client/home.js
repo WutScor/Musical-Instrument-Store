@@ -1,6 +1,6 @@
-import HomeBrowse from "../../components/main/home/home-browse";
-import HomeProducts from "../../components/main/home/home-products/home-products";
-import HomeSlider from "../../components/main/home/home-slider";
+import HomeBrowse from "../../components/Client/home/home-browse";
+import HomeProducts from "../../components/Client/home/home-products/home-products";
+import HomeSlider from "../../components/Client/home/home-slider";
 
 
 const HomePage = () => {

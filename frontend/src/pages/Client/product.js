@@ -1,5 +1,5 @@
-import Headline from "../../components/main/products/product-headline";
-import ShowProductDetail from "../../components/main/products/product-detail";
+import Headline from "../../components/Client/products/product-headline";
+import ShowProductDetail from "../../components/Client/products/product-detail";
 
 const ProductDetail = () => {
   return (

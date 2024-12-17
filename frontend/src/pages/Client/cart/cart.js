@@ -1,4 +1,4 @@
-import CartInformation from "../../../components/main/cart/cart-information";
+import CartInformation from "../../../components/Client/cart/cart-information";
 
 
 const CartPage = () => {

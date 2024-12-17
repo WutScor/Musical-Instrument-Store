@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import UserInfo from "../../components/main/home/user/user-info";
+import UserInfo from "../../components/Client/home/user/user-info";
 
 
 const UserPage = () => {

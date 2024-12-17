@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Button, Dialog, Slide } from "@mui/material";
 import { MyContext } from "../../../App";
 import { BsBagX } from "react-icons/bs";
-import CDialogComponent from "../../../components/main/cart/dialog/cdialog-component";
+import CDialogComponent from "../../../components/Client/cart/dialog/cdialog-component";
 import { Link } from "react-router-dom";
 
 
