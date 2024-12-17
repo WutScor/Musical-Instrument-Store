@@ -99,41 +99,39 @@ const ShowProductDetail = () => {
             </button>
           </div>
           {/* More Information */}
-          <div className="d-flex gap-4 mt-5">
-            <div>
-              <div className="bonus-title">
-                <p>SKU</p>
-                <div className="d-flex gap-2">
+          <div className="mt-5">
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>SKU</p>
                   <p>:</p>
-                  <p>SS001</p>
+                </div>
+                <p className="more-info-text">SS001</p>
+              </div>
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>Category</p>
+                  <p>:</p>
+                </div>
+                <p>Guitar</p>
+              </div>
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>Tags</p>
+                  <p>:</p>
+                </div>
+                <p>Electric, Guitar, Shop</p>
+              </div>
+              <div className="d-flex gap-2 share-field">
+                <div className="bonus-title">
+                  <p>Share</p>
+                  <p>:</p>
+                </div>
+                <div className="d-flex gap-3">
+                  <FaFacebook className="icon-share"/>
+                  <FaLinkedin className="icon-share"/>
+                  <FaPinterest className="icon-share"/> 
                 </div>
               </div>
-              <div className="bonus-title">
-                <p>Category</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <p>Guitar</p>
-                </div>
-              </div>
-              <div className="bonus-title">
-                <p>Tags</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <p>Guitar, Electric, Shop</p>
-                </div>
-              </div>
-              <div className="bonus-title">
-                <p>Share</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <div className="d-flex gap-4 justify-content-center align-items-center">
-                    <FaFacebook />
-                    <FaLinkedin />
-                    <FaPinterest />
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
