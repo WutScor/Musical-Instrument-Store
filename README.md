@@ -32,12 +32,15 @@ Dự án React được tổ chức theo cấu trúc như sau:
 
 
 2. Coding Standards
-Quy tắc đặt tên:
+- Quy tắc đặt tên:
 Component: Sử dụng PascalCase (Navbar, ProductCard).
 Biến và hàm: Sử dụng camelCase (handleClick, fetchData).
-Component Organization
-Reusable components: Đặt trong components/ (ví dụ: Navbar, ProductCard).
-Page-level components: Đặt trong pages/ (ví dụ: HomePage, ProductPage).
 
-3. Development Commands
+- Component Organization
+Client components: Đặt trong components/Client
+Admin components: Đặt trong components/Admin
+Reusable components cho cả hai (Client và Admin): Đặt trong components/Common
 
+- Page Organization
+Client pages: Đặt trong pages/Client
+Admin pages: Đặt trong pages/Admin
