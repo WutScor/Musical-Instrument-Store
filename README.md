@@ -1,21 +1,43 @@
-# Project-Web
-6/12/2024 - trannghia's Note: Cai cac thu vien sau:
-                                
-                                npm install @mui/material @emotion/react @emotion/styled
-                                npm install @mui/material @mui/styled-engine-sc styled-components
-                                npm install @mui/icons-material
+# Musical Instrument Store
+## 🚀 Project Overview
+Musical Instrument Store là một ứng dụng web bán nhạc cụ trực tuyến, sử dụng:
 
-                                npm install react-icons --save
+Frontend: React.js
+Backend: Express.js
+Database: PostgreSQL
+Kiến trúc: MVC
+API giao tiếp: AJAX
+## 🛠️ Phần 1: Git Workflow
+1. Branching Strategy
+Chúng ta sử dụng chiến lược Feature Branch Workflow:
 
-                                npm install react-slick --save
-                                npm install slick-carousel
-                            
-7/12/2024 - trannghia's Note: Ai lam Shop page co the lay component ProductItem trannghia da viet :P
+Nhánh chính:
+main: Chỉ chứa code đã kiểm thử, sẵn sàng cho sản xuất.
 
-11/12/2024 - trannghia's Note: Cai thu vien:
+Nhánh theo giai đoạn:
+milestone1: Chứa code ổn định đã được tích hợp trong giai đoạn 1
+milestone2: Chứa code ổn định đã được tích hợp trong giai đoạn 2
+milestone3: Chứa code ổn định đã được tích hợp trong giai đoạn 3
 
-                                npm install react-icons-kit
-                                
-11/12/2024 - Chien's note: Basic CartPage
+Nhánh Dev:
+Từng thành viên code và push lên nhánh của mình
 
-13/12/2024 - trannghia's Note: Chinh sua lai cac thong so chieu rong, lam theo figma no bi nho
+
+2. Commit Guidelines
+Commit message phải rõ ràng, theo định dạng
+
+## 🏗️ Phần 2: React Workflow
+1. Project Structure
+Dự án React được tổ chức theo cấu trúc như sau:
+
+
+2. Coding Standards
+Quy tắc đặt tên:
+Component: Sử dụng PascalCase (Navbar, ProductCard).
+Biến và hàm: Sử dụng camelCase (handleClick, fetchData).
+Component Organization
+Reusable components: Đặt trong components/ (ví dụ: Navbar, ProductCard).
+Page-level components: Đặt trong pages/ (ví dụ: HomePage, ProductPage).
+
+3. Development Commands
+
