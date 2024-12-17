@@ -15,6 +15,34 @@ exports.getMusicalInstruments = async (limit, offset, filters) => {
     values.push(`%${filters.search}%`);
   }
 
+  if (filters.min_price) {
+    conditions.push(`price >= $${conditions.length + 1}`);
+    values.push(filters.min_price);
+  }
+
+  if (filters.max_price) {
+    conditions.push(`price <= $${conditions.length + 1}`);
+    values.push(filters.max_price);
+  }
+
+  if (filters.min_release_year) {
+    conditions.push(`release_year >= $${conditions.length + 1}`);
+    values.push(filters.min_release_year);
+  }
+
+  if (filters.max_release_year) {
+    conditions.push(`release_year <= $${conditions.length + 1}`);
+    values.push(filters.max_release_year);
+  }
+
+  if (filters.isAvailable !== undefined) {
+    if (filters.isAvailable === true) {
+      conditions.push(`quantity > 0`);
+    } else if (filters.isAvailable === false) {
+      conditions.push(`quantity <= 0`);
+    }
+  }
+
   if (conditions.length > 0) {
     query += ` WHERE ${conditions.join(" AND ")}`;
   }
@@ -40,6 +68,34 @@ exports.getMusicalInstrumentCount = async (filters) => {
     values.push(`%${filters.search}%`);
   }
 
+  if (filters.min_price) {
+    conditions.push(`price >= $${conditions.length + 1}`);
+    values.push(filters.min_price);
+  }
+
+  if (filters.max_price) {
+    conditions.push(`price <= $${conditions.length + 1}`);
+    values.push(filters.max_price);
+  }
+
+  if (filters.min_release_year) {
+    conditions.push(`release_year >= $${conditions.length + 1}`);
+    values.push(filters.min_release_year);
+  }
+
+  if (filters.max_release_year) {
+    conditions.push(`release_year <= $${conditions.length + 1}`);
+    values.push(filters.max_release_year);
+  }
+
+  if (filters.isAvailable !== undefined) {
+    if (filters.isAvailable === true) {
+      conditions.push(`quantity > 0`);
+    } else if (filters.isAvailable === false) {
+      conditions.push(`quantity <= 0`);
+    }
+  }
+
   if (conditions.length > 0) {
     query += ` WHERE ${conditions.join(" AND ")}`;
   }
@@ -53,11 +109,13 @@ exports.insertMusicalInstrument = async (
   additional_information,
   image,
   price,
-  category_id
+  category_id,
+  quantity,
+  release_year
 ) => {
   const query = `
-    INSERT INTO musical_instrument (name, description, additional_information, image, price, category_id)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO musical_instrument (name, description, additional_information, image, price, category_id, quantity, release_year)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   `;
   const values = [
     name,
@@ -66,6 +124,8 @@ exports.insertMusicalInstrument = async (
     image,
     price,
     category_id,
+    quantity,
+    release_year,
   ];
 
   return await db.none(query, values);
@@ -102,7 +162,7 @@ exports.updateMusicalInstrument = async (id, updates) => {
   return await db.oneOrNone(query, values);
 };
 
-exports.getRandomRelatedMusicalInstruments = async (id, limit) => {
+exports.getRelatedMusicalInstruments = async (id, limit, offset) => {
   const query = `
     SELECT * 
     FROM musical_instrument 
@@ -111,8 +171,21 @@ exports.getRandomRelatedMusicalInstruments = async (id, limit) => {
         FROM musical_instrument 
         WHERE id = $1
     ) AND id != $1
-    ORDER BY RANDOM()
-    LIMIT $2
+    ORDER BY quantity DESC
+    LIMIT $2 OFFSET $3
   `;
-  return await db.any(query, [id, limit]);
+  return await db.any(query, [id, limit, offset]);
+};
+
+exports.getRelatedMusicalInstrumentCount = async (id) => {
+  const query = `
+    SELECT COUNT(*) 
+    FROM musical_instrument 
+    WHERE category_id = (
+        SELECT category_id 
+        FROM musical_instrument 
+        WHERE id = $1
+    ) AND id != $1
+  `;
+  return await db.one(query, [id], (result) => +result.count);
 };

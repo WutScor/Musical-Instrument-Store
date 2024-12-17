@@ -8,7 +8,7 @@ router.delete("/:id", musicalInstrumentController.deleteMusicalInstrument);
 router.put("/:id", musicalInstrumentController.updateMusicalInstrument);
 router.get(
   "/:id/related",
-  musicalInstrumentController.getRandomRelatedMusicalInstruments
+  musicalInstrumentController.getRelatedMusicalInstruments
 );
 
 module.exports = router;

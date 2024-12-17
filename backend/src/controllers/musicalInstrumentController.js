@@ -10,9 +10,25 @@ exports.getMusicalInstruments = async (req, res) => {
     const filters = {
       category_id: req.query.category_id,
       search: req.query.search,
+      min_price: req.query.min_price
+        ? parseFloat(req.query.min_price)
+        : undefined,
+      max_price: req.query.max_price
+        ? parseFloat(req.query.max_price)
+        : undefined,
+      min_release_year: req.query.min_release_year
+        ? parseInt(req.query.min_release_year)
+        : undefined,
+      max_release_year: req.query.max_release_year
+        ? parseInt(req.query.max_release_year)
+        : undefined,
+      isAvailable:
+        req.query.isAvailable !== undefined && req.query.isAvailable !== ""
+          ? req.query.isAvailable === "true"
+          : undefined,
     };
 
-    const categories = await musicalInstrumentModel.getMusicalInstruments(
+    const items = await musicalInstrumentModel.getMusicalInstruments(
       limit,
       offset,
       filters
@@ -22,7 +38,7 @@ exports.getMusicalInstruments = async (req, res) => {
       filters
     );
 
-    const result = paginate(categories, totalItems, page, limit);
+    const result = paginate(items, totalItems, page, limit);
 
     res.json(result);
   } catch (error) {
@@ -40,9 +56,19 @@ exports.insertMusicalInstrument = async (req, res) => {
       image,
       price,
       category_id,
+      quantity,
+      release_year,
     } = req.body;
 
-    if (!name || !description || !image || !price || !category_id) {
+    if (
+      !name ||
+      !description ||
+      !image ||
+      !price ||
+      !category_id ||
+      !quantity ||
+      !release_year
+    ) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -52,7 +78,9 @@ exports.insertMusicalInstrument = async (req, res) => {
       additional_information,
       image,
       price,
-      category_id
+      category_id,
+      quantity,
+      release_year
     );
 
     res.status(201).json({ message: "Musical instrument added successfully." });
@@ -111,30 +139,32 @@ exports.updateMusicalInstrument = async (req, res) => {
   }
 };
 
-exports.getRandomRelatedMusicalInstruments = async (req, res) => {
+exports.getRelatedMusicalInstruments = async (req, res) => {
   try {
     const { id } = req.params;
     const limit = parseInt(req.query.limit) || 5;
+    const page = parseInt(req.query.page) || 1;
 
-    if (limit <= 0) {
-      return res.status(400).json({ message: "Limit must be greater than 0." });
-    }
-
-    const relatedInstruments =
-      await musicalInstrumentModel.getRandomRelatedMusicalInstruments(
-        id,
-        limit
-      );
-
-    if (relatedInstruments.length === 0) {
+    if (limit <= 0 || page <= 0) {
       return res
-        .status(404)
-        .json({ message: "No related musical instruments found." });
+        .status(400)
+        .json({ message: "Limit and page must be greater than 0." });
     }
 
-    res.status(200).json({
-      items: relatedInstruments,
-    });
+    const offset = (page - 1) * limit;
+
+    const items = await musicalInstrumentModel.getRelatedMusicalInstruments(
+      id,
+      limit,
+      offset
+    );
+
+    const totalItems =
+      await musicalInstrumentModel.getRelatedMusicalInstrumentCount(id);
+
+    const result = paginate(items, totalItems, page, limit);
+
+    res.json(result);
   } catch (error) {
     console.error(error);
     res
