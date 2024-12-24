@@ -1,7 +1,7 @@
-import Headline from "../../components/main/products/product-headline";
-import ShowProductDetail from "../../components/main/products/product-detail";
-import DescriptionTab from "../../components/main/products/product-description";
-import ProductRelated from "../../components/main/products/product-related";
+import Headline from "../../components/Client/products-detail/product-headline";
+import ShowProductDetail from "../../components/Client/products-detail/product-detail";
+import DescriptionTab from "../../components/Client/products-detail/product-description";
+import ProductRelated from "../../components/Client/products-detail/product-related";
 
 const ProductDetail = () => {
   return (

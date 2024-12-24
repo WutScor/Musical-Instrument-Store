@@ -1,0 +1,16 @@
+NOTE: Nếu có Note hoặc lưu ý gì mọi người note ở đây...
+(Đừng viết vào Readme.md nữa)
+Note với cú pháp:
+[Ngày] - [Tên] #[Lần thứ n]: [Nội dung]. Ví dụ: 
+
+17/12/2024 - [Quốc] #1: Sửa lại một xíu về cấu trúc frontend
+             [Nghĩa] #1: ey ey tôi mới cài thêm thư viện, mọi người nhớ install trước khi chạy nhé..!
+             [Quốc] #2: ....
+
+18/12/2024 - [Quốc] #3: ....
+             [Nghĩa] #2: ....
+             [Quốc] #4: ....
+
+24/12/2024 - [Chiến] #1: Sửa lại tên component products -> products-detail
+             [Chiến] #2: Thêm đường dẫn cho từng sản phẩm (ở Home) tới trang chi tiết sản phẩm (product)
+             [Chiến] #3: Thêm comment giải thích trong từng mục của product-detail vì lười sửa lại tên :v
