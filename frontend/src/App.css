@@ -926,3 +926,11 @@ p {
   justify-content: center;
   overflow: hidden;
 }
+
+/* -----------------Billing-Details--------------------- */
+.billing-input {
+  width: 100%;
+  padding: 15px 10px;
+  border: 1px solid #9F9F9F;
+  border-radius: 5px;
+}
