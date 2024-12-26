@@ -223,6 +223,7 @@ a {
   opacity: 0;
   top: 0;
   transition: all 0.12s ease-in-out;
+  right: 0px !important
 }
 
 .product-item:hover .bg-hover {
@@ -237,6 +238,7 @@ a {
   opacity: 0;
   top: 0;
   transition: all 0.12s ease-in-out;
+  right: 0px !important;
 }
 
 .product-item:hover .product-hover {
@@ -825,3 +827,4 @@ p {
   align-items: center;
   gap: 20px;
 }
+
