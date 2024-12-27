@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import ProductCounter from "./product-counter";
+import ProductCounter from "./product-quantity-counter";
 import { FaFacebook, FaLinkedin, FaPinterest } from "react-icons/fa";
 
 const ShowProductDetail = () => {
+  // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
   const [showNotification, setShowNotification] = useState(false);
 
   const handleAddToCart = () => {
     setShowNotification(true); // Hiển thị thông báo khi click "Add to Cart"
     setTimeout(() => {
       setShowNotification(false); // Ẩn thông báo sau 2 giây
-    }, 2000);
+    }, 2000); 
   };
   return (
     <>
@@ -89,6 +90,7 @@ const ShowProductDetail = () => {
             </div>
           </div>
           <div className="d-flex button-container">
+            {/* Điều chỉnh số lượng sản phẩm muốn thêm vào Cart */}
             <ProductCounter />
             <button className="add-to-cart-btn" onClick={handleAddToCart}>
               Add To Cart
@@ -99,41 +101,39 @@ const ShowProductDetail = () => {
             </button>
           </div>
           {/* More Information */}
-          <div className="d-flex gap-4 mt-5">
-            <div>
-              <div className="bonus-title">
-                <p>SKU</p>
-                <div className="d-flex gap-2">
+          <div className="mt-5">
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>SKU</p>
                   <p>:</p>
-                  <p>SS001</p>
+                </div>
+                <p className="more-info-text">SS001</p>
+              </div>
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>Category</p>
+                  <p>:</p>
+                </div>
+                <p>Guitar</p>
+              </div>
+              <div className="d-flex gap-2 more-info-container">
+                <div className="bonus-title">
+                  <p>Tags</p>
+                  <p>:</p>
+                </div>
+                <p>Electric, Guitar, Shop</p>
+              </div>
+              <div className="d-flex gap-2 share-field">
+                <div className="bonus-title">
+                  <p>Share</p>
+                  <p>:</p>
+                </div>
+                <div className="d-flex gap-3">
+                  <FaFacebook className="icon-share"/>
+                  <FaLinkedin className="icon-share"/>
+                  <FaPinterest className="icon-share"/> 
                 </div>
               </div>
-              <div className="bonus-title">
-                <p>Category</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <p>Guitar</p>
-                </div>
-              </div>
-              <div className="bonus-title">
-                <p>Tags</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <p>Guitar, Electric, Shop</p>
-                </div>
-              </div>
-              <div className="bonus-title">
-                <p>Share</p>
-                <div className="d-flex gap-2">
-                  <p>:</p>
-                  <div className="d-flex gap-4 justify-content-center align-items-center">
-                    <FaFacebook />
-                    <FaLinkedin />
-                    <FaPinterest />
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
