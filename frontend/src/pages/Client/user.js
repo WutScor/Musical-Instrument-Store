@@ -10,8 +10,8 @@ const UserPage = () => {
                 <div className="container-w1">
                     <div className="d-flex align-items-center justify-content-center flex-column textZone">
                         <UserInfo/>
-                        <Link to={'/signin'} className="mt-4"><Button>Sign In</Button></Link>
-                        <Link to={'/signup'} className="mt-4"><Button>Sign Up</Button></Link>
+                        <Link to={'/auth/signin'} className="mt-4"><Button>Sign In</Button></Link>
+                        <Link to={'/auth/signup'} className="mt-4"><Button>Sign Up</Button></Link>
                     </div>
                 </div>
             </div>

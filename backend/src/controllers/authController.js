@@ -1,5 +1,8 @@
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
+
 
 exports.register = async (req, res) => {
     console.log("registering user", req.body);
@@ -28,8 +31,17 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.json({ message: "Login successful", token });
+        console.log("Dô AUTH rồi");
+        const user = await userModel.getUserByUsername("admin");
+        const accessToken = jwt.sign({_id: user.id }, process.env.JWT_SECRET);
+        console.log(accessToken);
+        user.password = undefined;
+        console.log(user);
+        res.status(200).json({
+            message: "Login successful",
+            user: user,
+            accessToken 
+        });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ message: "Error logging in" });
