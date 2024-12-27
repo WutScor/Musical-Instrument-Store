@@ -1,10 +1,13 @@
 const db = require("../config/database");
 
 exports.getUsers = async (limit, offset) => {
-  return await db.any("SELECT * FROM public.user LIMIT $1 OFFSET $2", [
-    limit,
-    offset,
-  ]);
+  if (limit) {
+    return await db.any("SELECT * FROM public.user LIMIT $1 OFFSET $2", [
+      limit,
+      offset,
+    ]);
+  }
+  return await db.any("SELECT * FROM public.user");
 };
 
 exports.getUserCount = async () => {

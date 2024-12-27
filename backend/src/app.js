@@ -14,5 +14,6 @@ app.use("/", express.static("public"));
 app.use("/categories", require("./routes/categoryRoutes"));
 app.use("/musical_instruments", require("./routes/musicalInstrumentRoutes"));
 app.use("/users", require("./routes/userRoutes"));
+app.use("/carts", require("./routes/cartRoutes"));
 
 module.exports = app;

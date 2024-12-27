@@ -3,9 +3,9 @@ const { paginate } = require("../helpers/paginationHelper");
 
 exports.getMusicalInstruments = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
+    const page = req.query.page ? parseInt(req.query.page) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const offset = page && limit ? (page - 1) * limit : null;
 
     const filters = {
       category_id: req.query.category_id,
@@ -38,7 +38,9 @@ exports.getMusicalInstruments = async (req, res) => {
       filters
     );
 
-    const result = paginate(items, totalItems, page, limit);
+    const result = limit
+      ? paginate(items, totalItems, page || 1, limit)
+      : { data: items, totalItems };
 
     res.json(result);
   } catch (error) {
@@ -142,16 +144,16 @@ exports.updateMusicalInstrument = async (req, res) => {
 exports.getRelatedMusicalInstruments = async (req, res) => {
   try {
     const { id } = req.params;
-    const limit = parseInt(req.query.limit) || 5;
-    const page = parseInt(req.query.page) || 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const page = req.query.page ? parseInt(req.query.page) : null;
 
-    if (limit <= 0 || page <= 0) {
+    if ((limit !== null && limit <= 0) || (page !== null && page <= 0)) {
       return res
         .status(400)
         .json({ message: "Limit and page must be greater than 0." });
     }
 
-    const offset = (page - 1) * limit;
+    const offset = limit && page ? (page - 1) * limit : null;
 
     const items = await musicalInstrumentModel.getRelatedMusicalInstruments(
       id,
@@ -162,7 +164,9 @@ exports.getRelatedMusicalInstruments = async (req, res) => {
     const totalItems =
       await musicalInstrumentModel.getRelatedMusicalInstrumentCount(id);
 
-    const result = paginate(items, totalItems, page, limit);
+    const result = limit
+      ? paginate(items, totalItems, page || 1, limit)
+      : { data: items, totalItems };
 
     res.json(result);
   } catch (error) {

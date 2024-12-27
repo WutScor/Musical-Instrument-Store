@@ -47,8 +47,10 @@ exports.getMusicalInstruments = async (limit, offset, filters) => {
     query += ` WHERE ${conditions.join(" AND ")}`;
   }
 
-  query += ` LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
-  values.push(limit, offset);
+  if (limit && offset !== null) {
+    query += ` LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+    values.push(limit, offset);
+  }
 
   return await db.any(query, values);
 };
@@ -163,7 +165,7 @@ exports.updateMusicalInstrument = async (id, updates) => {
 };
 
 exports.getRelatedMusicalInstruments = async (id, limit, offset) => {
-  const query = `
+  let query = `
     SELECT * 
     FROM musical_instrument 
     WHERE category_id = (
@@ -172,9 +174,16 @@ exports.getRelatedMusicalInstruments = async (id, limit, offset) => {
         WHERE id = $1
     ) AND id != $1
     ORDER BY quantity DESC
-    LIMIT $2 OFFSET $3
   `;
-  return await db.any(query, [id, limit, offset]);
+
+  const values = [id];
+
+  if (limit && offset !== null) {
+    query += ` LIMIT $2 OFFSET $3`;
+    values.push(limit, offset);
+  }
+
+  return await db.any(query, values);
 };
 
 exports.getRelatedMusicalInstrumentCount = async (id) => {

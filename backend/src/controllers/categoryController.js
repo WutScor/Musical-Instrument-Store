@@ -3,14 +3,20 @@ const { paginate } = require("../helpers/paginationHelper");
 
 exports.getCategories = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
+    const page = req.query.page ? parseInt(req.query.page) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+
+    let offset = 0;
+    if (page && limit) {
+      offset = (page - 1) * limit;
+    }
 
     const categories = await categoryModel.getCategories(limit, offset);
     const totalItems = await categoryModel.getCategoryCount();
 
-    const result = paginate(categories, totalItems, page, limit);
+    const result = limit
+      ? paginate(categories, totalItems, page || 1, limit)
+      : { data: categories, totalItems };
 
     res.json(result);
   } catch (error) {
