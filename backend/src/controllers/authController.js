@@ -27,6 +27,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+    console.log("logging in user", req.user);
     try {
         const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
         res.json({ message: "Login successful", token });
@@ -39,3 +40,16 @@ exports.login = async (req, res) => {
 exports.protected = async (req, res) => {
     res.json({ message: "Protected route", user: req.user });
 };  
+
+
+exports.loginWithGoogle = async (req, res) => {
+    console.log("logging in with Google", req.user);
+    try {
+        const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        console.log('redirecting to client with token', token);
+        res.redirect(`http://localhost:3000/auth/google/callback?token=${token}`);
+    } catch (error) {
+        console.error("Error logging in with Google:", error);
+        res.status(500).json({ message: "Error logging in with Google" });
+    }
+};

@@ -15,6 +15,7 @@ import { createContext, useState } from 'react';
 import CartPage from './pages/Client/cart/cart';
 import CartDialog from './pages/Client/cart/cart-dialog';
 import ProductDetail from './pages/Client/product';
+import GoogleCallback from './pages/Client/googleCallback';
 
 const MyContext = createContext();
 
@@ -58,6 +59,7 @@ function App() {
             <Route path='/signin' exact={true} element={<SignInPage/>} />
             <Route path='/signup' exact={true} element={<SignUpPage/>} />
             <Route path='/product' exact={true} element={<ProductDetail/>} />
+            <Route path='/auth/google/callback' element={<GoogleCallback/>} />
         </Routes>
         <Footer/>
 

@@ -11,7 +11,6 @@ const SignInPage = () => {
                         <p className="short-desc">Sign mtfk in u dawg!!</p>
 
                         <SignInForm/>
-                        <Button className="mt-5">Sign In</Button>
                     </div>
                 </div>
             </div>
