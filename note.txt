@@ -12,5 +12,5 @@ Note với cú pháp:
              [Quốc] #4: ....
 
 24/12/2024 - [Chiến] #1: Sửa lại tên component products -> products-detail
-             [Chiến] #2: Thêm đường dẫn cho từng sản phẩm (ở Home) tới trang chi tiết sản phẩm (product)
+             [Chiến] #2: Thêm đường dẫn cho từng sản phẩm (ở Home) tới trang chi tiết sản phẩm (product) -> chưa đúng lắm (sẽ sửa sau)
              [Chiến] #3: Thêm comment giải thích trong từng mục của product-detail vì lười sửa lại tên :v
