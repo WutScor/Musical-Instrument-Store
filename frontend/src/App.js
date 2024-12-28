@@ -19,9 +19,11 @@ import Checkout from './pages/Client/checkout';
 
 
 // Import các trang Admin
-import AdminLayout from './components/Admin/AdminLayout';
-import Dashboard from './pages/Admin/Dashboard';
-import ProductPage from './pages/Admin/ProductPage';
+import AdminLayout from './components/Admin/admin-layout';
+import Dashboard from './pages/Admin/dashboard';
+import ProductPage from './pages/Admin/products';
+import CategoryPage from './pages/Admin/categories';
+import AccountPage from './pages/Admin/accounts';
 
 const MyContext = createContext();
 
@@ -74,6 +76,8 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="products" element={<ProductPage />} />
+              <Route path="categories" element={<CategoryPage />} />
+              <Route path="accounts" element={<AccountPage />} />
               {/* Thêm các route Admin khác */}
             </Route>
         </Routes>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, ListItem, Divider } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser, AiOutlineLogout } from 'react-icons/ai';
+import { AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineAppstore, AiOutlineUser, AiOutlineLogout } from 'react-icons/ai';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -9,7 +9,8 @@ const Sidebar = () => {
   const menuOptions = [
     { name: 'Dashboard', icon: <AiOutlineDashboard size={24} />, value: 'dashboard', path: '/admin/dashboard' },
     { name: 'Products', icon: <AiOutlineShoppingCart size={24} />, value: 'products', path: '/admin/products' },
-    { name: 'Account', icon: <AiOutlineUser size={24} />, value: 'account', path: '/admin/account' },
+    { name: 'Categories', icon: <AiOutlineAppstore size={24} />, value: 'category', path: '/admin/categories' },
+    { name: 'Account', icon: <AiOutlineUser size={24} />, value: 'account', path: '/admin/accounts' },
     { name: 'Logout', icon: <AiOutlineLogout size={24} />, value: 'logout', path: '/auth/signin' },
   ];
 

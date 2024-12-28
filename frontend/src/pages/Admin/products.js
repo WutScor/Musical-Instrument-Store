@@ -1,4 +1,3 @@
-// src/pages/Admin/ProductPage.js
 const ProductPage = () => {
     return (
       <div>
