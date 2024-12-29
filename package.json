@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Musical Instrument Store là một ứng dụng web bán nhạc cụ trực tuyến",
   "scripts": {
-    "start": "concurrently \"npm run start --prefix frontend\" \"npm run start --prefix backend\""
+    "start": "concurrently \"npm run start --prefix frontend\" \"npm run start --prefix backend\"",
+    "iall": "npm install && npm install --prefix frontend && npm install --prefix backend"
   },
   "keywords": [],
   "author": "",
