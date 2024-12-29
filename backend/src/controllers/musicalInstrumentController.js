@@ -1,5 +1,8 @@
 const musicalInstrumentModel = require("../models/musicalInstrumentModel");
 const { paginate } = require("../helpers/paginationHelper");
+const { supabase } = require("../config/supabase");
+const { BUCKET_NAME: bucketName } = require("../config/constant");
+require("dotenv").config();
 
 exports.getMusicalInstruments = async (req, res) => {
   try {
@@ -55,12 +58,12 @@ exports.insertMusicalInstrument = async (req, res) => {
       name,
       description,
       additional_information,
-      image,
       price,
       category_id,
       quantity,
       release_year,
     } = req.body;
+    const image = req.file;
 
     if (
       !name ||
@@ -74,18 +77,45 @@ exports.insertMusicalInstrument = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    const fileName = `${Date.now()}-${image.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, image.buffer, {
+        contentType: image.mimetype,
+      });
+
+    if (uploadError) {
+      console.log(uploadError);
+      return res.status(500).json({ message: "Error uploading image." });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const publicUrl = `https://${supabaseUrl.replace(
+      "https://",
+      ""
+    )}/storage/v1/object/public/${bucketName}/${fileName}`;
+
     await musicalInstrumentModel.insertMusicalInstrument(
       name,
       description,
       additional_information,
-      image,
+      publicUrl,
       price,
       category_id,
       quantity,
       release_year
     );
 
-    res.status(201).json({ message: "Musical instrument added successfully." });
+    res.status(201).json({
+      name,
+      description,
+      additional_information,
+      image: publicUrl,
+      price,
+      category_id,
+      quantity,
+      release_year,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error inserting musical instrument." });
@@ -124,6 +154,32 @@ exports.updateMusicalInstrument = async (req, res) => {
       return res.status(400).json({ message: "No fields to update." });
     }
 
+    let imageUrl = null;
+
+    if (req.file) {
+      const { file } = req;
+      const { originalname, buffer } = file;
+      const fileName = `${Date.now()}-${originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, buffer);
+
+      if (uploadError) {
+        console.log(uploadError);
+        return res.status(500).json({ message: "Error uploading image." });
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      imageUrl = `https://${supabaseUrl.replace(
+        "https://",
+        ""
+      )}/storage/v1/object/public/${bucketName}/${fileName}`;
+    }
+
+    if (imageUrl) {
+      updates.image = imageUrl;
+    }
+
     const updatedInstrument =
       await musicalInstrumentModel.updateMusicalInstrument(id, updates);
 
@@ -132,7 +188,6 @@ exports.updateMusicalInstrument = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Musical instrument updated successfully.",
       updatedInstrument,
     });
   } catch (error) {
