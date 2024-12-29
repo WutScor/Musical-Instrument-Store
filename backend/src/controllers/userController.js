@@ -21,7 +21,7 @@ exports.getUsers = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching users" });
+    res.status(500).json({ message: "Error fetching Users" });
   }
 };
 

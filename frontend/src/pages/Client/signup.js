@@ -11,7 +11,6 @@ const SignUpPage = () => {
                         <p className="short-desc">Sign mtfk up u dawg!!</p>
 
                         <SignUpForm/>
-                        <Button className="mt-5">Sign Up</Button>
                     </div>
                 </div>
             </div>
