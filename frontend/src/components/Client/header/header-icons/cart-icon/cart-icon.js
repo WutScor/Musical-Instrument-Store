@@ -1,11 +1,11 @@
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Button } from "@mui/material";
 import React, { useContext } from "react";
-import { MyContext } from "../../../../../App";
+import { CartContext } from "../../../../../context/cartContext";
 
 const CartIcon = () => {
 
-    const context = useContext(MyContext);
+    const context = useContext(CartContext);
 
     return(
         <>

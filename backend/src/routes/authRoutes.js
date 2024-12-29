@@ -15,7 +15,6 @@ router.post('/login', (req, res, next) => {
             console.log("Authentication failed:", info.message);
             return res.status(401).json({ message: info.message || "Unauthorized" });
         }
-        // Nếu xác thực thành công, gọi controller xử lý tiếp
         req.user = user;
         console.log("Authentication successful:", req.user);
         authController.login(req, res);
@@ -27,5 +26,7 @@ router.get('/protected', passport.authenticate('jwt', { session: false }), authC
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', passport.authenticate('google', { session: false }), authController.loginWithGoogle);
+
+router.get('/admin', passport.authenticate('jwt', { session: false }), authController.requireRole('admin'), authController.admin);
 
 module.exports = router;

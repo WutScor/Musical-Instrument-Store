@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button, Dialog, Slide } from "@mui/material";
-import { MyContext } from "../../../App";
+import { CartContext } from "../../../context/cartContext";
 import { BsBagX } from "react-icons/bs";
 import CDialogComponent from "../../../components/Client/cart/dialog/cdialog-component";
 import { Link } from "react-router-dom";
@@ -8,11 +8,11 @@ import { Link } from "react-router-dom";
 
 const CartDialog = () => {
 
-    const context = useContext(MyContext);
+    const context = useContext(CartContext);
 
     return(
         <>
-            <Dialog open={true} className="cart-dialog" onClose={() => context.setIsOpenCart(false)}>
+            <Dialog open={context.isOpenCart} className="cart-dialog" onClose={() => context.setIsOpenCart(false)}>
                 <div className="pad-25">
                     <div className="d-flex justify-content-between align-items-center">
                         <h3>Shopping Cart</h3>

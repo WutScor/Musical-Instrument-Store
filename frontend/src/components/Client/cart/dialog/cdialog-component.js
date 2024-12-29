@@ -1,11 +1,10 @@
 import { Button } from "@mui/material";
 import { useContext } from "react";
-import { MyContext } from "../../../../App";
-
+import { CartContext } from "../../../../context/cartContext";
 
 const CDialogComponent = () => {
 
-    const context = useContext(MyContext);
+    const context = useContext(CartContext);
 
     return(
         <>

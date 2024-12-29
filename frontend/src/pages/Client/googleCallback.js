@@ -7,17 +7,15 @@ const GoogleCallback = () => {
   useEffect(() => {
     const getGoogleToken = async () => {
       try {
-        // Lấy mã thông báo từ URL (dùng thư viện như URLSearchParams để lấy token)
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
+        console.log("Google token:", token);
         
         if (token) {
-          // Lưu token vào localStorage
           localStorage.setItem('token', token);
-          navigate('/');  // Điều hướng về trang chủ
+          navigate('/'); 
         } else {
-          // Nếu không có token, điều hướng về trang đăng nhập hoặc hiển thị lỗi
-          navigate('/');
+          navigate('/login');
         }
       } catch (error) {
         console.error("Error during Google login callback", error);
@@ -28,7 +26,7 @@ const GoogleCallback = () => {
     getGoogleToken();
   }, [navigate]);
 
-  return <div>Loading...</div>;  // Hiển thị thông báo loading trong khi xử lý
+  return <div>Loading...</div>;
 };
 
 export default GoogleCallback;

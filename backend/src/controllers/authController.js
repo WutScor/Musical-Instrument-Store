@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     console.log("logging in user", req.user);
     try {
-        const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ sub: req.user.id, role: user.isAdmin ? "admin" : "client" }, process.env.JWT_SECRET, { expiresIn: "1h" });
         res.json({ message: "Login successful", token });
     } catch (error) {
         console.error("Error logging in:", error);
@@ -38,7 +38,24 @@ exports.login = async (req, res) => {
 };
 
 exports.protected = async (req, res) => {
-    res.json({ message: "Protected route", user: req.user });
+    try {
+        const user = req.user;
+        console.log("protected data", user);
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
+        const fullUser = await userModel.getUserById(user.id);
+
+        if (!fullUser) {
+            return res.status(404).json({ message: "User not found in database" });
+        }
+
+        res.status(200).json({ user: fullUser });
+    } catch (error) {
+        console.error("Error getting protected data:", error);
+        res.status(500).json({ message: "Error getting protected data" });
+    }
 };  
 
 
@@ -51,5 +68,24 @@ exports.loginWithGoogle = async (req, res) => {
     } catch (error) {
         console.error("Error logging in with Google:", error);
         res.status(500).json({ message: "Error logging in with Google" });
+    }
+};
+
+
+exports.requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.user || req.user.role !== role) {
+            return res.status(403).json({ message: "Forbidden: Insufficient privileges" });
+        }
+        next();
+    };
+};
+
+exports.admin = async (req, res) => {
+    try {
+        res.json({ message: "Admin data" });
+    } catch (error) {
+        console.error("Error getting admin data:", error);
+        res.status(500).json({ message: "Error getting admin data" });
     }
 };

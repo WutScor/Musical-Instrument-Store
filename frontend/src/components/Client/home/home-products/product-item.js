@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import { useContext } from "react";
 import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart} from "react-icons/ai";
-import { MyContext } from "../../../../App";
+import { CartContext } from "../../../../context/cartContext";
 
 
 const ProductItem = () => {
 
-    const context = useContext(MyContext);
+    const context = useContext(CartContext);
 
     return(
         <>

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { AuthContext } from "../../../context/authContext";
+
 
 const SignInForm = () => {
     const [username, setUsername] = useState("");
@@ -13,6 +15,7 @@ const SignInForm = () => {
     const [icon, setIcon] = useState(eyeOff);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const context = useContext(AuthContext);
 
     const handleToggle = () => {
         if (type === 'password') {
@@ -33,11 +36,12 @@ const SignInForm = () => {
                 body: JSON.stringify({ username, password }),
             });
             const textResponse = await response.text();
-            console.log(textResponse);
+            console.log("Response:", textResponse);
             
             let data;
             try {
                 data = JSON.parse(textResponse);
+                console.log("Data:", data);
             } catch (err) {
                 console.error("Error parsing JSON:", err);
                 setError("An error occurred while processing your request");
@@ -47,6 +51,7 @@ const SignInForm = () => {
             if (!response.ok) setError(data.message || "Invalid login credentials.");
             else {
                 localStorage.setItem("token", data.token);
+                context.setToken(data.token);
                 navigate("/");
             }
         } catch (err) {

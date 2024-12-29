@@ -51,6 +51,20 @@ module.exports = {
   comparePassword: async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
   },
+  getUserById: async (id) => {
+    try {
+      const query = `
+        SELECT id, username, isadmin
+        FROM public.user
+        WHERE id = $1
+      `;
+
+      return await db.oneOrNone(query, [id]);
+    } catch (error) {
+      console.error("Error getting user by id:", error);
+      throw error;
+    }
+  }
 };
 
 
