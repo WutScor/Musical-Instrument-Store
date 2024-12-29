@@ -25,6 +25,34 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.insertUser = async (req, res) => {
+  try {
+    const { username, password, email, isAdmin } = req.body;
+
+    if (
+      !username ||
+      !password ||
+      !email ||
+      isAdmin === undefined ||
+      isAdmin === null
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    await userModel.insertUser(username, password, email, isAdmin);
+
+    res.status(201).json({
+      username,
+      password,
+      email,
+      isAdmin,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error inserting user." });
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -43,5 +71,28 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ message: "Error deleting user." });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No fields to update." });
+    }
+
+    const updatedUser = await userModel.updateUserById(id, updates);
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({
+      updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating user." });
   }
 };
