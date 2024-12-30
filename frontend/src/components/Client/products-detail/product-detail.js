@@ -7,7 +7,6 @@ const ShowProductDetail = ({productDetail}) => {
   // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
   const [showNotification, setShowNotification] = useState(false);
   //const [categoryName, setCategory] = useState('Unknown Category');
-  console.log("Product Details: ", productDetail);
   const {id, name, image, price, description, release_year, category} = productDetail;
 
   const categoryName = category ? category.name : 'Unknown Category';

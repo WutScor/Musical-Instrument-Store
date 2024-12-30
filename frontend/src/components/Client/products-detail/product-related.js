@@ -7,20 +7,18 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const ProductRelated = ({ productRelated }) => {
   console.log(productRelated);
-  const category_id = productRelated.category.id;
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [visibleIndex, setVisibleIndex] = useState(0);       // Index của sản phẩm đầu tiên
 
   useEffect(() => {
     axios.get(`/musical_instruments/${productRelated.id}/related?page=1&limit=8`)
       .then(response => {
-        console.log("Related: ",response);
         setRelatedProducts(response.data.items);
       })
       .catch(error => {
         console.error('Error fetching related products:', error);
       });
-  }, [category_id]);
+  }, [productRelated.id]);
 
   // Hiển thị sản phẩm tiếp theo
   const handleNext = () => {

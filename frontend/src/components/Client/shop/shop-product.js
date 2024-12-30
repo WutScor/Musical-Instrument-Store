@@ -69,7 +69,6 @@ const ProductItem = ({ product }) => {
       release_year: product.release_year,
       category: product.category,
     };
-    console.log("ProductData: ",productData);
     navigate(`/product/${product.id}`, { state: { product: productData } });
   }
 
