@@ -1,10 +1,25 @@
 import React, { useState } from "react";
 import ProductCounter from "./product-quantity-counter";
 import { FaFacebook, FaLinkedin, FaPinterest } from "react-icons/fa";
+import axios from "axios";
 
-const ShowProductDetail = () => {
+const ShowProductDetail = ({productDetail}) => {
   // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
   const [showNotification, setShowNotification] = useState(false);
+  const [category, setCategory] = useState('Unknown Category');
+  const {id, name, image, price, description, release_year, category_id} = productDetail;
+  // console.log(productDetail);
+
+    axios.get('/categories?page=1&limit=20')
+    .then(response => {
+      const test = response.data.items;
+      const categoryItem = test.find(item => parseInt(item.id) === parseInt(category_id));
+      setCategory(categoryItem ? categoryItem.name : 'Unknown Category');
+    })
+    .catch(error => {
+      console.error('Error fetching categories:', error);
+    });
+
 
   const handleAddToCart = () => {
     setShowNotification(true); // Hiển thị thông báo khi click "Add to Cart"
@@ -21,34 +36,34 @@ const ShowProductDetail = () => {
       <div className="d-flex mt-4 product-detail-container">
         {/* Images */}
         <div className="image-field">
-          {/* Small image */}
+          {/* Small image
           <div className="d-flex flex-column small-gallery">
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
-              alt="img"
+              src={ image }
+              alt={ name }
               className="small-img"
             ></img>
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
-              alt="img"
+              src={ image }
+              alt={ name }
               className="small-img"
             ></img>
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
-              alt="img"
+              src={ image }
+              alt={ name }
               className="small-img"
             ></img>
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
-              alt="img"
+              src={ image }
+              alt={ name }
               className="small-img"
             ></img>
-          </div>
+          </div> */}
           {/* Big image */}
-          <div class>
+          <div>
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
-              alt="img"
+              src={ image }
+              alt={ name }
               className="big-img"
             ></img>
           </div>
@@ -56,8 +71,8 @@ const ShowProductDetail = () => {
 
         {/* Details */}
         <div className="product-detail">
-          <h3>Instrument Name</h3>
-          <h5>250,000.00</h5>
+          <h3>{name}</h3>
+          <h5>${price}</h5>
           {/* Rating */}
           <div className="d-flex align-items-center my-3">
             <div className="rating-container">
@@ -74,10 +89,7 @@ const ShowProductDetail = () => {
           {/* Mini Description */}
           <div className="mini-description">
             <p className="flex flex-wrap">
-              Mini Description here - Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit. Nulla quam velit, vulputate eu pharetra nec,
-              mattis ac neque. Duis vulputate commodo lectus, ac blandit elit
-              tincidunt id.
+              { productDetail.description }
             </p>
           </div>
           {/* Color */}
@@ -107,24 +119,24 @@ const ShowProductDetail = () => {
                   <p>SKU</p>
                   <p>:</p>
                 </div>
-                <p className="more-info-text">SS001</p>
+                <p className="more-info-text">{id}</p>
               </div>
               <div className="d-flex gap-2 more-info-container">
                 <div className="bonus-title">
                   <p>Category</p>
                   <p>:</p>
                 </div>
-                <p>Guitar</p>
+                <p>{category}</p>
               </div>
               <div className="d-flex gap-2 more-info-container">
                 <div className="bonus-title">
-                  <p>Tags</p>
+                  <p>Release</p>
                   <p>:</p>
                 </div>
-                <p>Electric, Guitar, Shop</p>
+                <p>{release_year}</p>
               </div>
               <div className="d-flex gap-2 share-field">
-                <div className="bonus-title">
+                <div className="bonus-title more-info-container mb-0">
                   <p>Share</p>
                   <p>:</p>
                 </div>

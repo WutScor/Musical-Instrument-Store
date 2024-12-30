@@ -15,7 +15,7 @@ exports.getUsers = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching categories" });
+    res.status(500).json({ message: "Error fetching Users" });
   }
 };
 

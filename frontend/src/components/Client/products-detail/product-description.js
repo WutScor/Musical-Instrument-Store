@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const DescriptionTab = () => {
+
+const DescriptionTab = ({ description, additional, reviews, image }) => {
   // Điều chỉnh nội dung cho các tab (Description, Additional Information, Reviews) ở trong trang chi tiết sản phẩm
   const [activeTab, setActiveTab] = useState("description");
-
-  const tabsContent = {
-    description:
-      "This is a description of the product. It is a very good product. You should buy it. It is very good.And now, let's talk about the product. It is a very good product. You should buy it. It is very good. So, let's talk about the product. It is a very good product. You should buy it. It is very good. And now, let's talk about the product. It is a very good product. You should buy it. It is very good. So, let's talk about the product. It is a very good product. You should buy it. It is very good. And now, let's talk about the product. It is a very good product. You should buy it. It is very good. So, let's talk about the product. It is a very good product. You should buy it. It is very good. And now, let's talk about the product. It is a very good product. You should buy it. It is very good. So, let's talk about the product. It is a very good product. You should buy it. It is very good. And now, let's talk about the product. It is a very good product. You should buy it. It is very good. So, let's talk about the product. It is a very good product. You should buy it. It is very good. And now, let's talk about the product. It is a very good product. You should buy it. It is very good.",
-    additional:
-      "Additional information about the product. It is a very good product. You should buy it. It is very good. ",
-    reviews:
-      "Reviews of the product. It is a very good product. You should buy it. It is very good. ",
-  };
+  const [additionalInfo, setAdditionalInfo] = useState([]);
+  useEffect(() => {
+    const listInfo = additional.split("\\n");
+    setAdditionalInfo(listInfo);
+  }, [additional]);
 
   return (
     <>
@@ -41,33 +38,39 @@ const DescriptionTab = () => {
         {/* Tabs Content */}
         <div className="content-tabs">
           {activeTab === "description" && (
-            <p className="description-content">{tabsContent.description}</p>
+            <p className="description-content">{description}</p>
           )}
           {activeTab === "additional" && (
-            <p className="description-content">{tabsContent.additional}</p>
+            <div className="description-content d-flex flex-column">
+              <div className="grid-layout">
+              {additionalInfo.map((info, index) => (
+                <div key={index}>{info}</div>
+              ))}
+              </div>
+            </div>
           )}
           {activeTab === "reviews" && (
-            <p className="description-content">{tabsContent.reviews}</p>
+            <p className="description-content">{reviews}</p>
           )}
         </div>
 
         {/* Images */}
-        <div className="d-flex des-img-gallery">
+        {/* <div className="d-flex des-img-gallery">
           <div className="des-img-frame">
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
+              src={image}
               alt="img"
               className="des-img"
             ></img>
           </div>
           <div className="des-img-frame">
             <img
-              src="https://guitarsaoviet.com/wp-content/uploads/2020/03/z4103330088588_d4088c84e86a6a37ed18e825a7e2bc96.jpg"
+              src={image}
               alt="img"
               className="des-img"
             ></img>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

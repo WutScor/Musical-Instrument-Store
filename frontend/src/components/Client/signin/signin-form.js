@@ -5,9 +5,9 @@ import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye'
 
-const SignInForm = () => {
+const SignInForm = ({ setEmail, setPassword }) => {
 
-    const [password, setPassword] = useState("");
+    const [password, setHiddenPassword] = useState("");
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
 
@@ -40,7 +40,8 @@ const SignInForm = () => {
                     <div className="col-md-8">
                         <div className="d-flex align-items-start justify-content-center flex-column p1">
                             <div className="d-flex flex-row align-items-center p2 w-100">
-                                <input type="text" className="w-100" placeholder="username/email"></input>
+                                <input type="text" className="w-100" placeholder="username/email"
+                                    onChange={(e) => setEmail(e.target.value)}></input>
                             </div>
                             <div className="d-flex flex-row align-items-center p2 w-100">
                                     <input
@@ -48,7 +49,10 @@ const SignInForm = () => {
                                         name="password"
                                         placeholder="password"
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            setHiddenPassword(e.target.value);
+                                          }}
                                         autoComplete="current-password"
                                         className="w-100"
                                     />

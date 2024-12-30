@@ -4,7 +4,7 @@ Note với cú pháp:
 [Ngày] - [Tên] #[Lần thứ n]: [Nội dung]. Ví dụ: 
 
 17/12/2024 - [Quốc] #1: Sửa lại một xíu về cấu trúc frontend
-             [Nghĩa] #1: ey ey tôi mới cài thêm thư viện, mọi người nhớ install trước khi chạy nhé..!
+             [Nghĩa] #1: 
              [Quốc] #2: ....
 
 18/12/2024 - [Quốc] #3: ....
@@ -14,3 +14,5 @@ Note với cú pháp:
 24/12/2024 - [Chiến] #1: Sửa lại tên component products -> products-detail
              [Chiến] #2: Thêm đường dẫn cho từng sản phẩm (ở Home) tới trang chi tiết sản phẩm (product) -> chưa đúng lắm (sẽ sửa sau)
              [Chiến] #3: Thêm comment giải thích trong từng mục của product-detail vì lười sửa lại tên :v
+
+28/12/2024 - [Quốc] #1: Mọi người ở thư mục gốc chạy bằng lệnh npm start (Chú ý: nhớ npm install ở cả thư mục gốc, frontend, và backend nha)
