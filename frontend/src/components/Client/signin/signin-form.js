@@ -55,7 +55,7 @@ const SignInForm = () => {
                 context.setToken(data.token);
                 const decodedToken = jwtDecode(data.token);
                 console.log("User's role:", decodedToken.role);
-                if (decodedToken.role === "admin") navigate("/admin");
+                if (decodedToken.role === "admin") navigate("/admin/dashboard");
                 else navigate("/");
             }
         } catch (err) {
