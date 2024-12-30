@@ -1,13 +1,12 @@
 import { Button } from "@mui/material";
 import { useContext } from "react";
-import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart } from "react-icons/ai";
-import { MyContext } from "../../../../App";
+import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart} from "react-icons/ai";
+import { CartContext } from "../../../../context/cartContext";
 import { Link } from "react-router-dom";
-
 
 const ProductItem = () => {
 
-  const context = useContext(MyContext);
+  const context = useContext(CartContext);
 
   return (
     <>

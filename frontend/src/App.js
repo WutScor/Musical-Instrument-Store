@@ -1,5 +1,5 @@
-import './App.css';
 
+import './App.css';
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Client/header/header';
 import Footer from './components/Client/footer/footer';
@@ -11,10 +11,13 @@ import UserPage from './pages/Client/user';
 import FavoritePage from './pages/Client/favorite';
 import SignInPage from './pages/Client/signin';
 import SignUpPage from './pages/Client/signup';
-import { createContext, useState } from 'react';
 import CartPage from './pages/Client/cart/cart';
 import CartDialog from './pages/Client/cart/cart-dialog';
 import ProductDetail from './pages/Client/product';
+import GoogleCallback from './pages/Client/googleCallback';
+
+import { AuthProvider } from './context/authContext';
+import { CartContextProvider } from './context/cartContext';
 import Checkout from './pages/Client/checkout';
 
 
@@ -25,40 +28,15 @@ import ProductPage from './pages/Admin/products';
 import CategoryPage from './pages/Admin/categories';
 import AccountPage from './pages/Admin/accounts';
 
-const MyContext = createContext();
 
 
 function App() {
- 
-  const[cartItemQtty, setCartItemQtty] = useState(0);
-  const[isOpenCart, setIsOpenCart] = useState(false);
 
   const location = useLocation();
-
-  const plusCartItemQtty = () => {
-    setCartItemQtty(cartItemQtty + 1);
-  }
-
-  const minusCartItemQtty = () => {
-    if(!cartItemQtty < 1) {
-      setCartItemQtty(cartItemQtty - 1);
-    }
-  }
-
-  const values = {
-    cartItemQtty,
-    setCartItemQtty,
-    plusCartItemQtty,
-    minusCartItemQtty,
-    isOpenCart,
-    setIsOpenCart,
-  }
-
   return (
-    <>
-      <MyContext.Provider value={values}>
+    <AuthProvider>
+      <CartContextProvider>
         {!(location.pathname.startsWith('/admin') || location.pathname.startsWith('/auth')) && <Header />}
-
         <Routes>
             <Route path="/" exact={true} element={<HomePage/>} />
             <Route path='/shop' exact={true} element={<ShopPage/>} />
@@ -80,19 +58,13 @@ function App() {
               <Route path="accounts" element={<AccountPage />} />
               {/* Thêm các route Admin khác */}
             </Route>
+          <Route path="/auth/google/callback" element={<GoogleCallback />} />
         </Routes>
-        
         {!(location.pathname.startsWith('/admin') || location.pathname.startsWith('/auth')) && <Footer />}
-
-        {
-          isOpenCart === true && <CartDialog/>
-        }
-
-      </MyContext.Provider>
-    </>
+        <CartDialog />
+      </CartContextProvider>
+    </AuthProvider>
   );
 }
 
 export default App;
-
-export {MyContext};
