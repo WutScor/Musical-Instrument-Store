@@ -1,38 +1,15 @@
-import { createContext, useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-const { useNavigate } = require('react-router-dom');
+import { createContext, useState, useEffect, useCallback } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      const decodedToken = jwt_decode(token);
-      console.log("User's role:", decodedToken.role);
-
-      setUser({ id: decodedToken.sub, role: decodedToken.role });
-
-      const currentTime = Date.now() / 1000;
-      if (decodedToken.exp < currentTime) {
-        console.log("Token has expired");
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem("token");
-        navigate("/signin");
-      } else {
-        console.log("Token is still valid");
-        fetchUserData();
-      }
-    }
-  }, [token]);
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3001/auth/protected", {
+      const response = await fetch("/auth/protected", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +22,22 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUser({ id: decodedToken.sub, role: decodedToken.role });
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp < currentTime) {
+        console.log("Token has expired");
+        logout();
+      } else {
+        console.log("Token is still valid");
+        fetchUserData();
+      }
+    }
+  }, [token, fetchUserData]);
 
   const logout = () => {
     setUser(null);
@@ -54,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, token, setToken, logout }}>
+    <AuthContext.Provider value={{ user, setUser, token, setToken, logout, fetchUserData }}>
       {children}
     </AuthContext.Provider>
   );

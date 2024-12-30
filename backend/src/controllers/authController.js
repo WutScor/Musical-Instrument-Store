@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     console.log("logging in user", req.user);
     try {
-        const token = jwt.sign({ sub: req.user.id, role: user.isAdmin ? "admin" : "client" }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ sub: req.user.id, role: req.user.isadmin ? "admin" : "client" }, process.env.JWT_SECRET, { expiresIn: "1h" });
         res.json({ message: "Login successful", token });
     } catch (error) {
         console.error("Error logging in:", error);

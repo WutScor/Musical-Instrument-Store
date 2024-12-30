@@ -6,6 +6,7 @@ import { eye } from 'react-icons-kit/feather/eye';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { AuthContext } from "../../../context/authContext";
+import { jwtDecode } from "jwt-decode";
 
 
 const SignInForm = () => {
@@ -30,7 +31,7 @@ const SignInForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:3001/auth/login", {
+            const response = await fetch("/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -52,7 +53,10 @@ const SignInForm = () => {
             else {
                 localStorage.setItem("token", data.token);
                 context.setToken(data.token);
-                navigate("/");
+                const decodedToken = jwtDecode(data.token);
+                console.log("User's role:", decodedToken.role);
+                if (decodedToken.role === "admin") navigate("/admin");
+                else navigate("/");
             }
         } catch (err) {
             console.error("Error:", err);
@@ -113,7 +117,7 @@ const SignInForm = () => {
                     </div>
                     {/* Google Login Button */}
                     <div className="text-center mt-3">
-                        <a href="http://localhost:3001/auth/google" className="btn btn-outline-danger">
+                        <a href="https://localhost:4000/auth/google" className="btn btn-outline-danger">
                             <FaGoogle className="me-2" />
                             Sign In with Google
                         </a>
@@ -123,5 +127,6 @@ const SignInForm = () => {
         </>
     );
 };
+
 
 export default SignInForm;
