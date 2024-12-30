@@ -1,16 +1,25 @@
 const categoryModel = require("../models/categoryModel");
 const { paginate } = require("../helpers/paginationHelper");
+const { supabase } = require("../config/supabase");
+const { BUCKET_NAME: bucketName } = require("../config/constant");
+require("dotenv").config();
 
 exports.getCategories = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
+    const page = req.query.page ? parseInt(req.query.page) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+
+    let offset = 0;
+    if (page && limit) {
+      offset = (page - 1) * limit;
+    }
 
     const categories = await categoryModel.getCategories(limit, offset);
     const totalItems = await categoryModel.getCategoryCount();
 
-    const result = paginate(categories, totalItems, page, limit);
+    const result = limit
+      ? paginate(categories, totalItems, page || 1, limit)
+      : { data: categories, totalItems };
 
     res.json(result);
   } catch (error) {
@@ -21,15 +30,37 @@ exports.getCategories = async (req, res) => {
 
 exports.insertCategory = async (req, res) => {
   try {
-    const { name, image } = req.body;
+    const { name } = req.body;
+    const image = req.file;
 
     if (!name || !image) {
       return res.status(400).json({ message: "Name and image are required." });
     }
 
-    await categoryModel.insertCategory(name, image);
+    const fileName = `${Date.now()}-${image.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, image.buffer, {
+        contentType: image.mimetype,
+      });
 
-    res.status(201).json({ message: "Category added successfully." });
+    if (uploadError) {
+      console.log(uploadError);
+      return res.status(500).json({ message: "Error uploading image." });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const publicUrl = `https://${supabaseUrl.replace(
+      "https://",
+      ""
+    )}/storage/v1/object/public/${bucketName}/${fileName}`;
+
+    await categoryModel.insertCategory(name, publicUrl);
+
+    res.status(201).json({
+      name,
+      image: publicUrl,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error inserting category." });
@@ -66,22 +97,43 @@ exports.updateCategory = async (req, res) => {
     }
 
     const updates = {};
-    const { name, image } = req.body;
+    const { name } = req.body;
+    const image = req.file;
+
+    const fileName = `${Date.now()}-${image.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, image.buffer, {
+        contentType: image.mimetype,
+      });
+
+    if (uploadError) {
+      console.log(uploadError);
+      return res.status(500).json({ message: "Error uploading image." });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const publicUrl = `https://${supabaseUrl.replace(
+      "https://",
+      ""
+    )}/storage/v1/object/public/${bucketName}/${fileName}`;
 
     if (name) updates.name = name;
-    if (image) updates.image = image;
+    if (publicUrl) updates.image = publicUrl;
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No fields to update." });
     }
 
-    const result = await categoryModel.updateCategoryById(id, updates);
+    const updatedCategory = await categoryModel.updateCategoryById(id, updates);
 
-    if (result.rowCount === 0) {
+    if (!updatedCategory) {
       return res.status(404).json({ message: "Category not found." });
     }
 
-    res.status(200).json({ message: "Category updated successfully." });
+    res.status(200).json({
+      updatedCategory,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating category." });

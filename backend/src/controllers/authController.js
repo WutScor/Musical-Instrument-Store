@@ -1,5 +1,8 @@
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
+
 
 exports.register = async (req, res) => {
     console.log("registering user", req.body);

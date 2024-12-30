@@ -3,14 +3,23 @@ const bcrypt = require("bcrypt");
 
 module.exports = {
   getUsers: async (limit, offset) => {
-    return await db.any("SELECT * FROM public.user LIMIT $1 OFFSET $2", [
-      limit,
-      offset,
-    ]);
+    if (limit) {
+      return await db.any("SELECT * FROM public.user LIMIT $1 OFFSET $2", [
+        limit,
+        offset,
+      ]);
+    }
+    return await db.any("SELECT * FROM public.user");
   },
   getUserCount: async () => {
     const result = await db.one("SELECT COUNT(*) FROM public.user");
     return parseInt(result.count);
+  },
+  insertUser: async (username, password, email, isAdmin) => {
+    return await db.none(
+      "INSERT INTO public.user (username, password, email, isAdmin) VALUES ($1, $2, $3, $4)",
+      [username, password, email, isAdmin]
+    );
   },
   deleteUserById: async (id) => {
     const query = `
@@ -18,6 +27,28 @@ module.exports = {
       WHERE id = $1
     `;
     return await db.result(query, [id]);
+  },
+  updateUserById: async (id, updates) => {
+    const fields = [];
+    const values = [];
+
+    Object.keys(updates).forEach((key, index) => {
+      fields.push(`${key} = $${index + 1}`);
+      values.push(updates[key]);
+    });
+
+    if (fields.length === 0) {
+      throw new Error("No fields to update");
+    }
+
+    const query = `
+    UPDATE public.user
+    SET ${fields.join(", ")}
+    WHERE id = ${id}
+    RETURNING *;
+  `;
+
+    return await db.oneOrNone(query, values);
   },
   createUser: async (user) => {
     try {
@@ -66,5 +97,3 @@ module.exports = {
     }
   }
 };
-
-

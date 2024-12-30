@@ -10,3 +10,9 @@ Note với cú pháp:
 18/12/2024 - [Quốc] #3: ....
              [Nghĩa] #2: ....
              [Quốc] #4: ....
+
+24/12/2024 - [Chiến] #1: Sửa lại tên component products -> products-detail
+             [Chiến] #2: Thêm đường dẫn cho từng sản phẩm (ở Home) tới trang chi tiết sản phẩm (product)
+             [Chiến] #3: Thêm comment giải thích trong từng mục của product-detail vì lười sửa lại tên :v
+
+28/12/2024 - [Quốc] #1: Mọi người ở thư mục gốc chạy bằng lệnh npm start (Chú ý: nhớ npm install ở cả thư mục gốc, frontend, và backend nha)

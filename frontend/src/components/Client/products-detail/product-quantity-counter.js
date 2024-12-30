@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 function ProductCounter() {
+  // Component điều chỉnh số lượng sản phẩm muốn thêm vào giỏ hàng (sử dụng trong product-detail)
   const [count, setCount] = useState(1);
   const increment = () => setCount(count + 1);
   const decrement = () => {

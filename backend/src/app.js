@@ -10,15 +10,16 @@ const app = express();
 require("./config/passport");
 
 app.use(cors());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressSanitizer());
-app.use(session({ 
-    secret: process.env.SESSION_SECRET || '123456',
-    resave: false, 
-    saveUninitialized: true 
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "123456",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 app.use("/", express.static("public"));
 
@@ -31,6 +32,7 @@ app.use(passport.session());
 app.use("/categories", require("./routes/categoryRoutes"));
 app.use("/musical_instruments", require("./routes/musicalInstrumentRoutes"));
 app.use("/users", require("./routes/userRoutes"));
+app.use("/carts", require("./routes/cartRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
 
 module.exports = app;

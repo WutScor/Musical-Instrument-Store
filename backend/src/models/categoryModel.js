@@ -1,10 +1,13 @@
 const db = require("../config/database");
 
 exports.getCategories = async (limit, offset) => {
-  return await db.any("SELECT * FROM category LIMIT $1 OFFSET $2", [
-    limit,
-    offset,
-  ]);
+  if (limit) {
+    return await db.any("SELECT * FROM category LIMIT $1 OFFSET $2", [
+      limit,
+      offset,
+    ]);
+  }
+  return await db.any("SELECT * FROM category");
 };
 
 exports.getCategoryCount = async () => {
@@ -36,6 +39,8 @@ exports.updateCategoryById = async (id, updates) => {
     throw new Error("No fields to update");
   }
 
-  const query = `UPDATE category SET ${fields.join(", ")} WHERE id = ${id}`;
-  return await db.result(query, values);
+  const query = `UPDATE category SET ${fields.join(
+    ", "
+  )} WHERE id = ${id} RETURNING *;`;
+  return await db.oneOrNone(query, values);
 };

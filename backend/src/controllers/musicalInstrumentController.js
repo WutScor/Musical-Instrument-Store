@@ -1,11 +1,14 @@
 const musicalInstrumentModel = require("../models/musicalInstrumentModel");
 const { paginate } = require("../helpers/paginationHelper");
+const { supabase } = require("../config/supabase");
+const { BUCKET_NAME: bucketName } = require("../config/constant");
+require("dotenv").config();
 
 exports.getMusicalInstruments = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
+    const page = req.query.page ? parseInt(req.query.page) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const offset = page && limit ? (page - 1) * limit : null;
 
     const filters = {
       category_id: req.query.category_id,
@@ -38,7 +41,9 @@ exports.getMusicalInstruments = async (req, res) => {
       filters
     );
 
-    const result = paginate(items, totalItems, page, limit);
+    const result = limit
+      ? paginate(items, totalItems, page || 1, limit)
+      : { data: items, totalItems };
 
     res.json(result);
   } catch (error) {
@@ -53,12 +58,12 @@ exports.insertMusicalInstrument = async (req, res) => {
       name,
       description,
       additional_information,
-      image,
       price,
       category_id,
       quantity,
       release_year,
     } = req.body;
+    const image = req.file;
 
     if (
       !name ||
@@ -72,18 +77,45 @@ exports.insertMusicalInstrument = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    const fileName = `${Date.now()}-${image.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, image.buffer, {
+        contentType: image.mimetype,
+      });
+
+    if (uploadError) {
+      console.log(uploadError);
+      return res.status(500).json({ message: "Error uploading image." });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const publicUrl = `https://${supabaseUrl.replace(
+      "https://",
+      ""
+    )}/storage/v1/object/public/${bucketName}/${fileName}`;
+
     await musicalInstrumentModel.insertMusicalInstrument(
       name,
       description,
       additional_information,
-      image,
+      publicUrl,
       price,
       category_id,
       quantity,
       release_year
     );
 
-    res.status(201).json({ message: "Musical instrument added successfully." });
+    res.status(201).json({
+      name,
+      description,
+      additional_information,
+      image: publicUrl,
+      price,
+      category_id,
+      quantity,
+      release_year,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error inserting musical instrument." });
@@ -122,6 +154,32 @@ exports.updateMusicalInstrument = async (req, res) => {
       return res.status(400).json({ message: "No fields to update." });
     }
 
+    let imageUrl = null;
+
+    if (req.file) {
+      const { file } = req;
+      const { originalname, buffer } = file;
+      const fileName = `${Date.now()}-${originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, buffer);
+
+      if (uploadError) {
+        console.log(uploadError);
+        return res.status(500).json({ message: "Error uploading image." });
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      imageUrl = `https://${supabaseUrl.replace(
+        "https://",
+        ""
+      )}/storage/v1/object/public/${bucketName}/${fileName}`;
+    }
+
+    if (imageUrl) {
+      updates.image = imageUrl;
+    }
+
     const updatedInstrument =
       await musicalInstrumentModel.updateMusicalInstrument(id, updates);
 
@@ -130,7 +188,6 @@ exports.updateMusicalInstrument = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Musical instrument updated successfully.",
       updatedInstrument,
     });
   } catch (error) {
@@ -142,16 +199,16 @@ exports.updateMusicalInstrument = async (req, res) => {
 exports.getRelatedMusicalInstruments = async (req, res) => {
   try {
     const { id } = req.params;
-    const limit = parseInt(req.query.limit) || 5;
-    const page = parseInt(req.query.page) || 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const page = req.query.page ? parseInt(req.query.page) : null;
 
-    if (limit <= 0 || page <= 0) {
+    if ((limit !== null && limit <= 0) || (page !== null && page <= 0)) {
       return res
         .status(400)
         .json({ message: "Limit and page must be greater than 0." });
     }
 
-    const offset = (page - 1) * limit;
+    const offset = limit && page ? (page - 1) * limit : null;
 
     const items = await musicalInstrumentModel.getRelatedMusicalInstruments(
       id,
@@ -162,7 +219,9 @@ exports.getRelatedMusicalInstruments = async (req, res) => {
     const totalItems =
       await musicalInstrumentModel.getRelatedMusicalInstrumentCount(id);
 
-    const result = paginate(items, totalItems, page, limit);
+    const result = limit
+      ? paginate(items, totalItems, page || 1, limit)
+      : { data: items, totalItems };
 
     res.json(result);
   } catch (error) {
