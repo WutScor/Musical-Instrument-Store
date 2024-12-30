@@ -3,43 +3,53 @@ const db = require("../config/database");
 exports.getMusicalInstruments = async (limit, offset, filters) => {
   const conditions = [];
   const values = [];
-  let query = "SELECT * FROM musical_instrument";
+  let query = `
+    SELECT 
+      mi.*, 
+      json_build_object(
+        'id', c.id, 
+        'name', c.name, 
+        'image', c.image
+      ) AS category
+    FROM musical_instrument mi
+    LEFT JOIN category c ON mi.category_id = c.id
+  `;
 
   if (filters.category_id) {
-    conditions.push(`category_id = $${conditions.length + 1}`);
+    conditions.push(`mi.category_id = $${conditions.length + 1}`);
     values.push(filters.category_id);
   }
 
   if (filters.search) {
-    conditions.push(`name ILIKE $${conditions.length + 1}`);
+    conditions.push(`mi.name ILIKE $${conditions.length + 1}`);
     values.push(`%${filters.search}%`);
   }
 
   if (filters.min_price) {
-    conditions.push(`price >= $${conditions.length + 1}`);
+    conditions.push(`mi.price >= $${conditions.length + 1}`);
     values.push(filters.min_price);
   }
 
   if (filters.max_price) {
-    conditions.push(`price <= $${conditions.length + 1}`);
+    conditions.push(`mi.price <= $${conditions.length + 1}`);
     values.push(filters.max_price);
   }
 
   if (filters.min_release_year) {
-    conditions.push(`release_year >= $${conditions.length + 1}`);
+    conditions.push(`mi.release_year >= $${conditions.length + 1}`);
     values.push(filters.min_release_year);
   }
 
   if (filters.max_release_year) {
-    conditions.push(`release_year <= $${conditions.length + 1}`);
+    conditions.push(`mi.release_year <= $${conditions.length + 1}`);
     values.push(filters.max_release_year);
   }
 
   if (filters.isAvailable !== undefined) {
     if (filters.isAvailable === true) {
-      conditions.push(`quantity > 0`);
+      conditions.push(`mi.quantity > 0`);
     } else if (filters.isAvailable === false) {
-      conditions.push(`quantity <= 0`);
+      conditions.push(`mi.quantity <= 0`);
     }
   }
 
@@ -166,14 +176,20 @@ exports.updateMusicalInstrument = async (id, updates) => {
 
 exports.getRelatedMusicalInstruments = async (id, limit, offset) => {
   let query = `
-    SELECT * 
-    FROM musical_instrument 
-    WHERE category_id = (
+    SELECT mi.*, 
+           json_build_object(
+        'id', c.id, 
+        'name', c.name, 
+        'image', c.image
+      ) AS category
+    FROM musical_instrument mi
+    JOIN category c ON mi.category_id = c.id
+    WHERE mi.category_id = (
         SELECT category_id 
         FROM musical_instrument 
         WHERE id = $1
-    ) AND id != $1
-    ORDER BY quantity DESC
+    ) AND mi.id != $1
+    ORDER BY mi.quantity DESC
   `;
 
   const values = [id];
