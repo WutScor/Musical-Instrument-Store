@@ -27,7 +27,7 @@ const CartDialog = () => {
                 <div className="pad-25">
                     <div className="d-flex justify-content-around align-items-center btn-grp">
                         <Link to={'/cart'}><Button onClick={() => context.setIsOpenCart(false)}>Cart</Button></Link>
-                        <Link><Button>Checkout</Button></Link>
+                        <Link to={'/checkout'}><Button>Checkout</Button></Link>
                         <Link><Button>Comparison</Button></Link>
                     </div>
                 </div>
