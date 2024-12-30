@@ -12,7 +12,6 @@ const ProductItem = () => {
     <>
       <div className="product-item position-relative">
         {/* Đường dẫn tới chi tiết sản phẩm */}
-        <Link to="/product">
         <div className="img-wrapper position-relative">
           <img src="https://kadence.in/wp-content/uploads/2024/02/1-72.jpg"
             className="w-100" />
@@ -51,7 +50,6 @@ const ProductItem = () => {
             </div>
           </div>
         </div>
-        </Link>
       </div>
 
       <div className="bg-hover position-absolute"></div>

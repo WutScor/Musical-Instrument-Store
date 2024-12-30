@@ -38,7 +38,6 @@ const ShopPage = () => {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, [filters, searchParams]);
 
