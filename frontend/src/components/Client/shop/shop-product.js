@@ -67,9 +67,9 @@ const ProductItem = ({ product }) => {
       description: product.description,
       additional_information: product.additional_information,
       release_year: product.release_year,
-      category_id: product.category_id,
+      category: product.category,
     };
-    console.log(productData);
+    console.log("ProductData: ",productData);
     navigate(`/product/${product.id}`, { state: { product: productData } });
   }
 

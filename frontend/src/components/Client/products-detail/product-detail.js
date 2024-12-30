@@ -6,20 +6,11 @@ import axios from "axios";
 const ShowProductDetail = ({productDetail}) => {
   // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
   const [showNotification, setShowNotification] = useState(false);
-  const [category, setCategory] = useState('Unknown Category');
-  const {id, name, image, price, description, release_year, category_id} = productDetail;
-  // console.log(productDetail);
+  //const [categoryName, setCategory] = useState('Unknown Category');
+  console.log("Product Details: ", productDetail);
+  const {id, name, image, price, description, release_year, category} = productDetail;
 
-    axios.get('/categories?page=1&limit=20')
-    .then(response => {
-      const test = response.data.items;
-      const categoryItem = test.find(item => parseInt(item.id) === parseInt(category_id));
-      setCategory(categoryItem ? categoryItem.name : 'Unknown Category');
-    })
-    .catch(error => {
-      console.error('Error fetching categories:', error);
-    });
-
+  const categoryName = category ? category.name : 'Unknown Category';
 
   const handleAddToCart = () => {
     setShowNotification(true); // Hiển thị thông báo khi click "Add to Cart"
@@ -126,7 +117,7 @@ const ShowProductDetail = ({productDetail}) => {
                   <p>Category</p>
                   <p>:</p>
                 </div>
-                <p>{category}</p>
+                <p>{categoryName}</p>
               </div>
               <div className="d-flex gap-2 more-info-container">
                 <div className="bonus-title">
