@@ -41,9 +41,14 @@ exports.getMusicalInstruments = async (req, res) => {
       filters
     );
 
+    const mappedItems = items.map(({ category_id, ...item }) => ({
+      ...item,
+      category: item.category,
+    }));
+
     const result = limit
-      ? paginate(items, totalItems, page || 1, limit)
-      : { data: items, totalItems };
+      ? paginate(mappedItems, totalItems, page || 1, limit)
+      : { data: mappedItems, totalItems };
 
     res.json(result);
   } catch (error) {
@@ -219,9 +224,14 @@ exports.getRelatedMusicalInstruments = async (req, res) => {
     const totalItems =
       await musicalInstrumentModel.getRelatedMusicalInstrumentCount(id);
 
+    const mappedItems = items.map(({ category_id, ...item }) => ({
+      ...item,
+      category: item.category,
+    }));
+
     const result = limit
-      ? paginate(items, totalItems, page || 1, limit)
-      : { data: items, totalItems };
+      ? paginate(mappedItems, totalItems, page || 1, limit)
+      : { data: mappedItems, totalItems };
 
     res.json(result);
   } catch (error) {
