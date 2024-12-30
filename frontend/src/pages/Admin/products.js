@@ -224,7 +224,7 @@ const ProductPage = () => {
                     {product.name}
                   </Box>
                 </TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>{product.category.name}</TableCell>
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>${product.price}</TableCell>
                 <TableCell>{product.release_year}</TableCell>
