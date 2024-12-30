@@ -74,7 +74,7 @@ const checkoutCart = async (req, res) => {
     res.status(error.status || 500).json({ message: error.message });
   }
 
-  // Save transaction details
+  // Save order
 };
 
 module.exports = {
