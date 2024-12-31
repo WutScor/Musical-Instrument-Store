@@ -14,9 +14,15 @@ router.post(
   upload.single("image"),
   musicalInstrumentController.insertMusicalInstrument
 );
-router.delete("/:id", musicalInstrumentController.deleteMusicalInstrument);
+router.delete("/:id",
+  passport.authenticate('jwt', { session: false }),
+  authController.requireRole('admin'),
+  musicalInstrumentController.deleteMusicalInstrument
+);
 router.put(
   "/:id",
+  passport.authenticate('jwt', { session: false }),
+  authController.requireRole('admin'),
   upload.single("image"),
   musicalInstrumentController.updateMusicalInstrument
 );
