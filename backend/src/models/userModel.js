@@ -17,7 +17,7 @@ module.exports = {
   },
   insertUser: async (username, password, email, isAdmin) => {
     return await db.none(
-      "INSERT INTO public.user (username, password, email, isAdmin) VALUES ($1, $2, $3, $4)",
+      "INSERT INTO public.user (username, password, email, isadmin) VALUES ($1, $2, $3, $4)",
       [username, password, email, isAdmin]
     );
   },
@@ -53,14 +53,14 @@ module.exports = {
   createUser: async (user) => {
     try {
       const query = `
-        INSERT INTO public.user (username, password, isadmin)
-        VALUES ($1, $2, false)
-        RETURNING id, username, isadmin
+        INSERT INTO public.user (username, password, email, isadmin)
+        VALUES ($1, $2, $3, false)
+        RETURNING id, username, email, isadmin
       `;
 
       const hashedPassword = await bcrypt.hash(user.password, 10);
 
-      return await db.one(query, [user.username, hashedPassword]);
+      return await db.one(query, [user.username, hashedPassword, user.email]);
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;
@@ -93,6 +93,19 @@ module.exports = {
       return await db.oneOrNone(query, [id]);
     } catch (error) {
       console.error("Error getting user by id:", error);
+      throw error;
+    }
+  },
+  getUserByEmail: async (email) => {
+    try {
+      const query = `
+        SELECT * FROM public.user
+        WHERE email = $1
+      `;
+
+      return await db.oneOrNone(query, [email]);
+    } catch (error) {
+      console.error("Error getting user by email:", error);
       throw error;
     }
   }
