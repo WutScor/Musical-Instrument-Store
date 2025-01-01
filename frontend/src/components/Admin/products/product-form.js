@@ -153,19 +153,43 @@ const ProductForm = ({ product = null }) => {
       </Typography>
       <form onSubmit={handleSubmit}>
         {/* Image Preview and Upload */}
-        <Box mb={2} display="flex" justifyContent="center" alignItems="center">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          style={{
+            width: '80%', // Khung preview rộng hơn
+            maxWidth: '500px', // Đảm bảo không quá lớn
+            aspectRatio: '16/9', // Cố định tỉ lệ khung
+            border: '2px dashed #ccc',
+            borderRadius: '10px',
+            backgroundColor: '#EDEDED',
+            margin: 'auto',
+            marginBottom: '20px',
+            overflow: 'hidden',
+          }}
+        >
           {imagePreview ? (
             <img
               src={imagePreview}
               alt="Product Preview"
-              style={{ width: '200px', height: 'auto', objectFit: 'cover', marginBottom: '10px' }}
+              style={{
+                width: 'auto',
+                height: '100%', // Fit ảnh theo chiều cao
+                objectFit: 'contain',
+              }}
             />
           ) : (
-            <Typography variant="body2" color="textSecondary">
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              style={{ textAlign: 'center', fontSize: 25, padding: '10px', width: '100%' }}
+            >
               No image selected
             </Typography>
           )}
         </Box>
+
 
         {/* Image Upload */}
         <Box mt={2} display="flex" justifyContent="center">
@@ -177,11 +201,23 @@ const ProductForm = ({ product = null }) => {
             id="product-image-upload"
           />
           <label htmlFor="product-image-upload">
-            <Button variant="outlined" component="span">
+            <Button
+              variant="outlined"
+              component="span"
+              sx={{
+                borderColor: '#B97A04',
+                color: '#B97A04',
+                '&:hover': {
+                  borderColor: '#B97A04',
+                  backgroundColor: '#FFE6CD',
+                },
+              }}
+            >
               Browse
             </Button>
           </label>
         </Box>
+
 
         {/* Product Fields */}
         <TextField
@@ -263,10 +299,29 @@ const ProductForm = ({ product = null }) => {
           margin="normal"
         />
         <Box mt={2} display="flex" justifyContent="space-between">
-          <Button type="submit" variant="contained" color="primary">
+          <Button 
+            type="submit" 
+            variant="contained" 
+            sx={{
+              backgroundColor: '#FFE6CD',
+              color: '#B97A04',
+              '&:hover': {
+                backgroundColor: '#FFD2A5',
+              },}}
+          >
             {product ? 'Save Changes' : 'Add Product'}
           </Button>
-          <Button variant="outlined" onClick={() => navigate('/admin/products')}>
+          <Button 
+            variant="outlined" 
+            onClick={() => navigate('/admin/products')}
+            sx={{
+              borderColor: '#B97A04',
+              color: '#B97A04',
+              '&:hover': {
+                borderColor: '#B97A04',
+                backgroundColor: '#FFE6CD',
+              },}}
+          >
             Cancel
           </Button>
         </Box>
