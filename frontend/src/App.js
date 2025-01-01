@@ -47,7 +47,7 @@ function App() {
             <Route path='/cart' exact={true} element={<CartPage/>} />
             <Route path='/auth/signin' exact={true} element={<SignInPage/>} />
             <Route path='/auth/signup' exact={true} element={<SignUpPage/>} />
-            <Route path='/product' exact={true} element={<ProductDetail/>} />
+            <Route path='/product/:id' exact={true} element={<ProductDetail/>} />
             <Route path='/checkout' exact={true} element={<Checkout/>} />
 
             {/* Các route của Admin */}

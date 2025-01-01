@@ -53,8 +53,25 @@
 import React from 'react';
 import { Button, Box, Grid } from "@mui/material";
 import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart } from "react-icons/ai";
+import { useNavigate } from 'react-router-dom';
 
 const ProductItem = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleProductClick = () => {
+    const productData = {
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      description: product.description,
+      additional_information: product.additional_information,
+      release_year: product.release_year,
+      category: product.category,
+    };
+    navigate(`/product/${product.id}`, { state: { product: productData } });
+  }
+
   return (
     <Box
       className="product-item position-relative"
@@ -71,6 +88,7 @@ const ProductItem = ({ product }) => {
           transform: 'scale(1.05)', // Phóng to nhẹ khi hover
         },
       }}
+      onClick={handleProductClick}
     >
       <Box
         className="img-wrapper position-relative"
