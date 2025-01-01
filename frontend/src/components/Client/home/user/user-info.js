@@ -1,6 +1,6 @@
 import { FaPhone, FaLocationDot } from "react-icons/fa6";
 
-const UserInfo = () => {
+const UserInfo = ({ name }) => {
     return(
         <>
             <div className="user-info mt-3">
@@ -21,7 +21,7 @@ const UserInfo = () => {
                         <div className="col-md-8">
                             <div className="d-flex flex-column">
                                 <div className="d-flex align-items-center justify-content-center mt-5">
-                                    <h1 className="user-name">Full Name</h1>
+                                    <h1 className="user-name">{name}</h1>
                                 </div>
                                 <div className="d-flex flex-column">
                                     <div className="row">

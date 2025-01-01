@@ -27,8 +27,28 @@ import Dashboard from './pages/Admin/dashboard';
 import ProductPage from './pages/Admin/products';
 import CategoryPage from './pages/Admin/categories';
 import AccountPage from './pages/Admin/accounts';
+import { useEffect } from 'react';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Cuộn lên đầu trang khi URL thay đổi
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (event.target.tagName === "A" && event.target.getAttribute("href") === window.location.pathname) {
+        window.scrollTo(0, 0); // Cuộn lên đầu nếu nhấn liên kết dẫn đến chính trang hiện tại
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick); // Dọn dẹp sự kiện
+  }, []);
+
+  return null;
+};
 
 function App() {
 
@@ -36,6 +56,7 @@ function App() {
   return (
     <AuthProvider>
       <CartContextProvider>
+        <ScrollToTop />
         {!(location.pathname.startsWith('/admin') || location.pathname.startsWith('/auth')) && <Header />}
         <Routes>
             <Route path="/" exact={true} element={<HomePage/>} />
