@@ -77,9 +77,22 @@ exports.loginWithGoogle = async (req, res) => {
 
 exports.requireRole = (role) => {
     return (req, res, next) => {
-        if (!req.user || req.user.role !== role) {
-            return res.status(403).json({ message: "Forbidden: Insufficient privileges" });
+        if (!req.user) {
+            return res.status(403).json({ message: "Forbidden: User not authenticated" });
         }
+
+        if (role === 'admin') {
+            if (!req.user.isadmin) {
+                return res.status(403).json({ message: "Forbidden: Insufficient privileges, admin required" });
+            }
+        } else if (role === 'client') {
+            if (req.user.isadmin) {
+                return res.status(403).json({ message: "Forbidden: Clients are not admins" });
+            }
+        } else {
+            return res.status(400).json({ message: "Bad Request: Invalid role specified" });
+        }
+
         next();
     };
 };
