@@ -63,18 +63,23 @@ const deleteItemFromCart = async (req, res) => {
 };
 
 const checkoutCart = async (req, res) => {
-  // Call payment gateway API
-
-  // Mark cart as paid
   const { cart_id } = req.params;
+  // Call payment gateway API
+  // update quantity of items in stock
+  await cartModel.updateMusicalInstrumentStock(cart_id);
+  // Mark cart as paid
+
   try {
     const result = await cartModel.markCartAsPaid(cart_id);
-    res.status(200).json({ message: result.message });
+    // Save order
+    const orderResult = await cartModel.saveOrder(cart_id);
+    res.status(200).json({
+      message: "Checkout successful",
+      orderId: orderResult.orderId,
+    });
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message });
   }
-
-  // Save order
 };
 
 module.exports = {
