@@ -1,7 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './sidebar.js';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/authContext.js';
 
 const AdminLayout = () => {
+
+  const context = useContext(AuthContext);
+  console.log("User:", context.user);
+  if (!context.user || !context.user.isadmin) {
+    return <h1>Access denied</h1>;
+  }
   return (
     <div
       style={{

@@ -30,18 +30,10 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+    console.log("logging in user", req.user);
     try {
-        console.log("Dô AUTH rồi");
-        const user = await userModel.getUserByUsername("admin");
-        const accessToken = jwt.sign({_id: user.id }, process.env.JWT_SECRET);
-        console.log(accessToken);
-        user.password = undefined;
-        console.log(user);
-        res.status(200).json({
-            message: "Login successful",
-            user: user,
-            accessToken 
-        });
+        const token = jwt.sign({ sub: req.user.id, role: req.user.isadmin ? "admin" : "client" }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.json({ message: "Login successful", token });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ message: "Error logging in" });
@@ -49,5 +41,67 @@ exports.login = async (req, res) => {
 };
 
 exports.protected = async (req, res) => {
-    res.json({ message: "Protected route", user: req.user });
+    try {
+        const user = req.user;
+        console.log("protected data", user);
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
+        const fullUser = await userModel.getUserById(user.id);
+
+        if (!fullUser) {
+            return res.status(404).json({ message: "User not found in database" });
+        }
+
+        res.status(200).json({ user: fullUser });
+    } catch (error) {
+        console.error("Error getting protected data:", error);
+        res.status(500).json({ message: "Error getting protected data" });
+    }
 };  
+
+
+exports.loginWithGoogle = async (req, res) => {
+    console.log("logging in with Google", req.user);
+    try {
+        const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        console.log('redirecting to client with token', token);
+        res.redirect(`http://localhost:3000/auth/google/callback?token=${token}`);
+    } catch (error) {
+        console.error("Error logging in with Google:", error);
+        res.status(500).json({ message: "Error logging in with Google" });
+    }
+};
+
+
+exports.requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(403).json({ message: "Forbidden: User not authenticated" });
+        }
+
+        if (role === 'admin') {
+            if (!req.user.isadmin) {
+                return res.status(403).json({ message: "Forbidden: Insufficient privileges, admin required" });
+            }
+        } else if (role === 'client') {
+            if (req.user.isadmin) {
+                return res.status(403).json({ message: "Forbidden: Clients are not admins" });
+            }
+        } else {
+            return res.status(400).json({ message: "Bad Request: Invalid role specified" });
+        }
+
+        next();
+    };
+};
+
+exports.admin = async (req, res) => {
+    try {
+        res.json({ message: "Admin data" });
+    } catch (error) {
+        console.error("Error getting admin data:", error);
+        res.status(500).json({ message: "Error getting admin data" });
+    }
+};

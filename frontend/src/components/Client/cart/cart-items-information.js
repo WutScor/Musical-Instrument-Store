@@ -37,7 +37,7 @@ const CartItems = () => {
               <th className="col-3">
                 <p class="fw-normal">250,000.00</p>
               </th>
-              <th className="col-2 "><RiDeleteBin6Line className="fs-5 delete-item"></RiDeleteBin6Line></th>
+              <th className="col-2"><RiDeleteBin6Line className="fs-5 delete-item"></RiDeleteBin6Line></th>
             </tr>
           </tbody>
         </table>

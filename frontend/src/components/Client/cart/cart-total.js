@@ -18,7 +18,7 @@ const CartTotal = () => {
                         <p className="total-text">250,000.00</p>
                     </div>
                 </div>
-                <Link><Button className="checkout-btn">Check Out</Button></Link>
+                <Link to={'/checkout'}><Button className="checkout-btn">Check Out</Button></Link>
             </div>
         </>
     )

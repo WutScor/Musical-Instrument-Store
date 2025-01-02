@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from "react-router-dom";
 import ShopIntro from "../../components/Client/shop/shop-intro";
 import ShopNavbar from "../../components/Client/shop/shop-navbar";
 import ProductList from '../../components/Client/shop/shop-product-list';
 import axios from 'axios';
 
 const ShopPage = () => {
-  const [filters, setFilters] = useState({ category: '', min_price: '', max_price: ''});
+  const [filters, setFilters] = useState({ category: '', min_price: '', max_price: '' });
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
+  const [searchParams] = useSearchParams();
 
-  // Fetch products from API when page or filters change
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        const search = searchParams.get('search') || '';
         const { page, category, min_price, max_price } = filters;
         const params = {
           page: page || 1, 
           limit: 8, 
           category_id: category, 
-          search: '', 
+          search,
           min_price: min_price, 
           max_price: max_price, 
           min_release_year: '', 
           max_release_year: '', 
           isAvailable: '',
         };
-        
+
         const response = await axios.get('/musical_instruments', { params });
         setProducts(response.data.items);
         setPagination({
@@ -36,15 +38,14 @@ const ShopPage = () => {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
-  }, [filters]);
+  }, [filters, searchParams]);
 
   const handleFilterChange = (newFilter) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...newFilter,
-      page: 1, // Reset to page 1 when filter changes
+      page: 1,
     }));
   };
 

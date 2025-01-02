@@ -6,33 +6,33 @@ import { AiOutlineCustomerService } from "react-icons/ai";
 const CartAds = () => {
   return (
     <>
-      <div class="d-flex justify-content-between ads-frame">
+      <div className="d-flex justify-content-between ads-frame">
         <div className="d-flex justify-content-center align-items-center ads-part">
           <AiOutlineTrophy className="ads-icon" />
           <div>
-            <h5 class="fw-semibold">High Quality</h5>
-            <p class="ads-text">crafted from top materials</p>
+            <h5 className="fw-semibold">High Quality</h5>
+            <p className="ads-text">crafted from top materials</p>
           </div>
         </div>
         <div className="d-flex justify-content-center align-items-center ads-part">
-          <AiOutlineSafety class="ads-icon"/>
+          <AiOutlineSafety className="ads-icon"/>
           <div>
-            <h5 class="fw-semibold">Warranty Protection</h5>
-            <p class="ads-text">Over 2 years</p>
+            <h5 className="fw-semibold">Warranty Protection</h5>
+            <p className="ads-text">Over 2 years</p>
           </div>
         </div>
         <div className="d-flex justify-content-center align-items-center ads-part">
-          <AiOutlineTruck class="ads-icon"/>
+          <AiOutlineTruck className="ads-icon"/>
           <div>
-            <h5 class="fw-semibold">Free Shipping</h5>
-            <p class="ads-text">Order over 150$</p>
+            <h5 className="fw-semibold">Free Shipping</h5>
+            <p className="ads-text">Order over 150$</p>
           </div>
         </div>
         <div className="d-flex justify-content-center align-items-center ads-part">
-          <AiOutlineCustomerService class="ads-icon"/>
+          <AiOutlineCustomerService className="ads-icon"/>
           <div>
-            <h5 class="fw-semibold">24/7 Support</h5>
-            <p class="ads-text">Dedicated support</p>
+            <h5 className="fw-semibold">24/7 Support</h5>
+            <p className="ads-text">Dedicated support</p>
           </div>
         </div>
       </div>

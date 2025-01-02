@@ -1,12 +1,17 @@
-
+import { AuthContext } from "../../../context/authContext";
+import { useContext } from "react";
 
 const HomeBrowse = () => {
+
+    const context = useContext(AuthContext);
+    console.log('user', context.user);
+
     return(
         <>
             <div className="main d-flex justify-content-center align-items-center flex-column">
                 <div className="container-w1">
                     <div className="d-flex align-items-center justify-content-center textZone flex-column">
-                        <h1 className="title mt-5">Browse the range</h1>
+                        <h1 className="title mt-5">Browse the range, {context.user ? context.user.username : 'lil dawg'}</h1>
                         <p className="title-desc">This is the description under those stupid titles...</p>
 
                         <div className="container-w2 mt-5">
@@ -41,6 +46,9 @@ const HomeBrowse = () => {
                         </div>
                     </div>
                 </div>
+                <button onClick={context.logout} className="btn btn-danger mt-3">
+                    Logout
+                </button>
             </div>
         </>
     )

@@ -4,13 +4,15 @@ const UserModel = require('../models/userModel');
 module.exports = new LocalStrategy(
     {
         usernameField: 'username',
-        passwordField: 'password'
+        passwordField: 'password',
+        passReqToCallback: true
     },
-    async (username, password, done) => {
+    async (req, username, password, done) => {
         try {
             const user = await UserModel.getUserByUsername(username);
-
+            console.log("User found:", user);
             if (!user) {
+                console.log("User not found");
                 return done(null, false, { message: 'User not found' });
             }
 

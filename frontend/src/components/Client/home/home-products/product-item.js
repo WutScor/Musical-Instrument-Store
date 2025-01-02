@@ -1,19 +1,17 @@
 import { Button } from "@mui/material";
 import { useContext } from "react";
-import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart } from "react-icons/ai";
-import { MyContext } from "../../../../App";
+import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart} from "react-icons/ai";
+import { CartContext } from "../../../../context/cartContext";
 import { Link } from "react-router-dom";
-
 
 const ProductItem = () => {
 
-  const context = useContext(MyContext);
+  const context = useContext(CartContext);
 
   return (
     <>
       <div className="product-item position-relative">
         {/* Đường dẫn tới chi tiết sản phẩm */}
-        <Link to="/product">
         <div className="img-wrapper position-relative">
           <img src="https://kadence.in/wp-content/uploads/2024/02/1-72.jpg"
             className="w-100" />
@@ -52,7 +50,6 @@ const ProductItem = () => {
             </div>
           </div>
         </div>
-        </Link>
       </div>
 
       <div className="bg-hover position-absolute"></div>

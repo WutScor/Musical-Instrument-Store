@@ -447,9 +447,10 @@ a {
 
 .checkout-btn {
   background-color: transparent !important;
+  border-radius: 5px !important;
   padding: 10px 40px !important;
   border: 1px solid black !important;
-  margin-top: 20px !important;
+  margin: 20px auto auto auto !important;
   font-size: 1.2rem !important;
   color: black !important;
   font-family: 'Poppins', sans-serif !important;
@@ -507,7 +508,6 @@ a {
 }
 
 .delete-item {
-  margin-top: -20px;
   cursor: pointer;
 }
 
@@ -699,6 +699,7 @@ p {
   width: 50%;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 50px;
 }
 
@@ -715,7 +716,7 @@ p {
 }
 
 .big-img {
-  width: 70%;
+  width: 100%;
   /* height: */
   border: 1px solid transparent;
   border-radius: 5px;
@@ -824,6 +825,7 @@ p {
 
 .more-info-container {
   margin-bottom: 10px;
+  color: #9F9F9F;
 }
 
 .share-field {
@@ -842,12 +844,6 @@ p {
   align-items: center;
   gap: 20px;
 }
-
-
-/* .more-info-text {
-  margin-left: 10px;
-} */
-
 
 
 /* -----------------Product Description Tabs--------------------- */
@@ -927,6 +923,25 @@ p {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 20%;
+  row-gap: 10px;
+  align-items: center;
+}
+
+.arrow-left, .arrow-right {
+  font-size: 1.6rem;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.arrow-left:hover, .arrow-right:hover {
+  filter: brightness(0.8);
 }
 
 /* -----------------Billing-Details--------------------- */
