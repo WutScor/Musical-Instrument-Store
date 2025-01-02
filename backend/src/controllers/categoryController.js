@@ -100,26 +100,28 @@ exports.updateCategory = async (req, res) => {
     const { name } = req.body;
     const image = req.file;
 
-    const fileName = `${Date.now()}-${image.originalname}`;
-    const { error: uploadError } = await supabase.storage
-      .from(bucketName)
-      .upload(fileName, image.buffer, {
-        contentType: image.mimetype,
-      });
+    if (image) {
+      const fileName = `${Date.now()}-${image.originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, image.buffer, {
+          contentType: image.mimetype,
+        });
 
-    if (uploadError) {
-      console.log(uploadError);
-      return res.status(500).json({ message: "Error uploading image." });
+      if (uploadError) {
+        console.log(uploadError);
+        return res.status(500).json({ message: "Error uploading image." });
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const publicUrl = `https://${supabaseUrl.replace(
+        "https://",
+        ""
+      )}/storage/v1/object/public/${bucketName}/${fileName}`;
+      if (publicUrl) updates.image = publicUrl;
     }
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const publicUrl = `https://${supabaseUrl.replace(
-      "https://",
-      ""
-    )}/storage/v1/object/public/${bucketName}/${fileName}`;
-
     if (name) updates.name = name;
-    if (publicUrl) updates.image = publicUrl;
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No fields to update." });

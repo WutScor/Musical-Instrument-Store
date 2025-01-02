@@ -5,15 +5,10 @@ import { AuthContext } from '../../../context/authContext';
 import AlertMessage from '../alert-message';
 
 const CategoryForm = ({ category = null }) => {
+    console.log('Category:', category);
     const context = useContext(AuthContext);
     const [formData, setFormData] = useState({
         name: '',
-        // description: '',
-        // additional_information: '',
-        // category_id: 0,
-        // quantity: 0,
-        // price: '',
-        // release_year: '',
         image: null,
     });
     const [categories, setCategories] = useState([]);
@@ -21,31 +16,6 @@ const CategoryForm = ({ category = null }) => {
     const [imagePreview, setImagePreview] = useState('');
     const [alert, setAlert] = useState({ message: '', color: '' });
     const navigate = useNavigate();
-
-    //   useEffect(() => {
-    //     // Fetch categories when component mounts
-    //     const fetchCategories = async () => {
-    //       try {
-    //         const response = await fetch('/categories', {
-    //           method: 'GET',
-    //         });
-    //         const data = await response.json();
-    //         if (response.ok) {
-    //           setCategories(data.data);
-    //           if (!product) {
-    //             console.log("Cat: ", data.data[0]);
-    //             setFormData((prev) => ({ ...prev, category_id: data.data[0]?.id || 0 }));
-    //           }
-    //         } else {
-    //           console.error(data.message || 'Failed to fetch categories');
-    //         }
-    //       } catch (error) {
-    //         console.error('Error fetching categories:', error);
-    //       }
-    //     };
-
-    //     fetchCategories();
-    //   }, [product]);
 
     useEffect(() => {
         // Fetch categories when component mounts
@@ -57,10 +27,10 @@ const CategoryForm = ({ category = null }) => {
                 const data = await response.json();
                 if (response.ok) {
                     setCategories(data.data);
-                    //   if (!category) {
-                    //     console.log("Cat: ", data.data[0]);
-                    //     setFormData((prev) => ({ ...prev, category_id: data.data[0]?.id || 0 }));
-                    //   }
+                      if (!category) {
+                        console.log("Cat: ", data.data[0]);
+                        setFormData((prev) => ({ ...prev, category_id: data.data[0]?.id || 0 }));
+                      }
                 } else {
                     console.error(data.message || 'Failed to fetch categories');
                 }
@@ -70,25 +40,20 @@ const CategoryForm = ({ category = null }) => {
         };
 
         fetchCategories();
-    }, []);
+    }, [category]);
 
     useEffect(() => {
         // Populate form data if editing an existing product
-        if (/*product*/ category) {
+        if (category) {
+            console.log('Category:', category);
             setFormData({
-                name: /*product*/category.name || '',
-                // description: product.description || '',
-                // additional_information: product.additional_information || '',
-                // category_id: product.category.id || 0,
-                // quantity: product.quantity || 0,
-                // price: product.price || '',
-                // release_year: product.release_year || '',
+                name: category.name || '',
                 image: null,
             });
             // Set image preview if there is an existing image URL
-            setImagePreview(/*product*/category.image || '');
+            setImagePreview(category.image || '');
         }
-    }, [/*product*/category]);
+    }, [category]);
 
     const showAlert = (message, color) => {
         setAlert({ message, color });
@@ -125,17 +90,11 @@ const CategoryForm = ({ category = null }) => {
     const validateForm = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = 'Name is required';
-        // if (!formData.description) newErrors.description = 'Description is required';
-        // if (!formData.category_id) newErrors.category_id = 'Category is required';
-        // if (formData.quantity < 0) newErrors.quantity = 'Quantity must be greater than or equal to 0';
-        // if (formData.price <= 0) newErrors.price = 'Price must be greater than 0';
-        // if (formData.release_year <= 0) newErrors.release_year = 'Release year must be greater than 0';
         categories.forEach((category) => {
-            if (category.name === formData.name) {
+            if (category.name === formData.name && category.id !== category?.id) {
                 newErrors.name = 'Category already exists';
             }
         });
-        if (!formData.image) newErrors.image = 'Image is required';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -147,19 +106,13 @@ const CategoryForm = ({ category = null }) => {
 
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
-        // formDataToSend.append('description', formData.description);
-        // formDataToSend.append('additional_information', formData.additional_information);
-        // formDataToSend.append('category_id', formData.category_id);
-        // formDataToSend.append('quantity', formData.quantity);
-        // formDataToSend.append('price', formData.price);
-        // formDataToSend.append('release_year', formData.release_year);
         if (formData.image) {
             formDataToSend.append('image', formData.image);
         }
 
         try {
-            const method = /*product*/category ? 'PUT' : 'POST';
-            const url = /*product*/category ? `/categories/${/*product*/category.id}` : '/categories';
+            const method = category ? 'PUT' : 'POST';
+            const url = category ? `/categories/${category.id}` : '/categories';
 
             if (!context.token) {
                 console.log('Token is missing or expired');
@@ -181,7 +134,7 @@ const CategoryForm = ({ category = null }) => {
 
             const data = await response.json();
 
-            showAlert(data.message || "Add category successfully", 'green');
+            showAlert(data.message || category ? "Category has been updated" : "Add category successfully", 'green');
             setTimeout(() => {
                 navigate('/admin/categories');
             }, 1500);
