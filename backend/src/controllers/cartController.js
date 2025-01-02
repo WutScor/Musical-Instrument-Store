@@ -29,16 +29,18 @@ const getOrCreateCart = async (req, res) => {
   }
 };
 
-const addItemToCart = async (req, res) => {
-  const { cart_id, item_id } = req.params;
-  const { quantity } = req.body;
+const addItemsToCart = async (req, res) => {
+  const { cart_id } = req.params;
+  const items = req.body;
 
-  if (!cart_id || !item_id || !quantity) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (!cart_id || !Array.isArray(items) || items.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields or invalid format" });
   }
 
   try {
-    const result = await cartModel.addItemToCart(cart_id, item_id, quantity);
+    const result = await cartModel.addItemsToCart(cart_id, items);
     res.status(200).json(result);
   } catch (error) {
     const status = error.status || 500;
@@ -84,7 +86,7 @@ const checkoutCart = async (req, res) => {
 
 module.exports = {
   getOrCreateCart,
-  addItemToCart,
+  addItemsToCart,
   deleteItemFromCart,
   checkoutCart,
 };

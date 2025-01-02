@@ -127,13 +127,13 @@ exports.createPaymentAccount = async (req, res) => {
       }
     );
 
-    res.status(200).json({
+    res.status(201).json({
       message: "Payment account created successfully",
       data: response.data,
     });
   } catch (error) {
-    console.error("Error calling sub-system API:", error.message);
-    res.status(500).json({
+    const status = error.response ? error.response.status : 500;
+    res.status(status).json({
       message: "Failed to call sub-system API.",
       error: error.message,
     });

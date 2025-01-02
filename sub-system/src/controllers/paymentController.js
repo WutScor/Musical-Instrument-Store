@@ -19,8 +19,13 @@ const createPaymentAccount = async (req, res) => {
   }
 
   try {
-    await paymentModel.createPaymentAccount(userId);
-    res.status(200).json({ message: "Payment account created successfully" });
+    const result = await paymentModel.createPaymentAccount(userId);
+
+    if (result === 1) {
+      res.status(201).json({ message: "Payment account created successfully" });
+    } else if (result === 0) {
+      res.status(409).json({ message: "Payment account already exists" });
+    }
   } catch (error) {
     res
       .status(500)

@@ -22,10 +22,23 @@ exports.createUserAccount = async (username, password) => {
 };
 
 exports.createPaymentAccount = async (userId) => {
-  const query = `
+  const queryCheck = `
+    SELECT COUNT(*)
+    FROM payment_account
+    WHERE id = $1
+  `;
+
+  const queryInsert = `
     INSERT INTO payment_account (id, balance)
     VALUES ($1, ${defaultBalance})
   `;
 
-  await db.none(query, [userId]);
+  const result = await db.one(queryCheck, [userId]);
+
+  if (parseInt(result.count) === 0) {
+    await db.none(queryInsert, [userId]);
+    return 1;
+  } else {
+    return 0;
+  }
 };
