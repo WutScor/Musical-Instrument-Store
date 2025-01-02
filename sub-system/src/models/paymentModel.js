@@ -5,9 +5,15 @@ const bcrypt = require("bcrypt");
 
 exports.createUserAccount = async (username, password) => {
   const query = `
-    INSERT INTO public.user (username, password, isAdmin)
-    VALUES ($1, $2, true)
-    RETURNING id
+    WITH ins AS (
+      INSERT INTO public.user (username, password, isAdmin)
+      VALUES ($1, $2, true)
+      ON CONFLICT (username) DO NOTHING
+      RETURNING id
+    )
+    SELECT id FROM ins
+    UNION ALL
+    SELECT id FROM public.user WHERE username = $1 LIMIT 1
   `;
 
   const hashedPassword = await bcrypt.hash(password, 10);

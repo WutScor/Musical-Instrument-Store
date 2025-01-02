@@ -1,6 +1,15 @@
 const paymentModel = require("../models/paymentModel");
 
-const createUserAccount = (req, res) => {};
+const createReceiverAccount = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const userId = await paymentModel.createUserAccount(username, password);
+    await paymentModel.createPaymentAccount(userId.id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 const createPaymentAccount = async (req, res) => {
   const { userId } = req.body;
@@ -20,6 +29,6 @@ const createPaymentAccount = async (req, res) => {
 };
 
 module.exports = {
-  createUserAccount,
+  createReceiverAccount,
   createPaymentAccount,
 };
