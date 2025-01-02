@@ -138,7 +138,7 @@ const addItemsToCart = async (cart_id, items) => {
 
       // Check if the item already exists in the cart
       const existingItem = await db.oneOrNone(
-        `SELECT id 
+        `SELECT * 
          FROM cart_item 
          WHERE cart_id = $1 AND musical_instrument_id = $2`,
         [cart_id, itemId]
@@ -149,8 +149,8 @@ const addItemsToCart = async (cart_id, items) => {
         await db.none(
           `UPDATE cart_item 
            SET quantity = $1 
-           WHERE id = $2`,
-          [quantity, existingItem.id]
+           WHERE cart_id = $2 AND musical_instrument_id = $3`,
+          [quantity, cart_id, itemId]
         );
       } else {
         // If the item doesn't exist, add it to the cart
@@ -189,7 +189,7 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
 
     // Check if the item exists in the cart
     const existingItem = await db.oneOrNone(
-      `SELECT id 
+      `SELECT 1 
        FROM cart_item 
        WHERE cart_id = $1 AND musical_instrument_id = $2`,
       [cart_id, musical_instrument_id]
@@ -204,8 +204,8 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
     // Remove the item from the cart
     await db.none(
       `DELETE FROM cart_item 
-       WHERE id = $1`,
-      [existingItem.id]
+       WHERE cart_id = $1 AND musical_instrument_id = $2`,
+      [cart_id, musical_instrument_id]
     );
 
     return { message: "Item removed from cart successfully" };
