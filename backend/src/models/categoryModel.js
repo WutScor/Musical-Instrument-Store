@@ -1,17 +1,32 @@
 const db = require("../config/database");
 
-exports.getCategories = async (limit, offset) => {
-  if (limit) {
-    return await db.any("SELECT * FROM category LIMIT $1 OFFSET $2", [
-      limit,
-      offset,
-    ]);
+exports.getCategories = async (limit, offset, search) => {
+  let query = "SELECT * FROM category";
+  const values = [];
+
+  if (search) {
+    query += " WHERE name ILIKE $1";
+    values.push(`%${search}%`);
   }
-  return await db.any("SELECT * FROM category");
+
+  if (limit) {
+    query += search ? " LIMIT $2 OFFSET $3" : " LIMIT $1 OFFSET $2";
+    values.push(limit, offset);
+  }
+
+  return await db.any(query, values);
 };
 
-exports.getCategoryCount = async () => {
-  const result = await db.one("SELECT COUNT(*) FROM category");
+exports.getCategoryCount = async (search) => {
+  let query = "SELECT COUNT(*) FROM category";
+  const values = [];
+
+  if (search) {
+    query += " WHERE name ILIKE $1";
+    values.push(`%${search}%`);
+  }
+
+  const result = await db.one(query, values);
   return parseInt(result.count);
 };
 

@@ -3,11 +3,11 @@ const express = require("express");
 const expressSanitizer = require("express-sanitizer");
 const session = require("express-session");
 const passport = require("passport");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
 require("./config/passport");
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,5 +33,8 @@ app.use("/musical_instruments", require("./routes/musicalInstrumentRoutes"));
 app.use("/users", require("./routes/userRoutes"));
 app.use("/carts", require("./routes/cartRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
+app.use("/orders", require("./routes/orderRoutes"));
+
+app.use(errorHandler);
 
 module.exports = app;

@@ -3,22 +3,28 @@ const bcrypt = require("bcrypt");
 
 module.exports = {
   getUsers: async (limit, offset) => {
+    const baseQuery = `
+    SELECT 
+      u.*, 
+      pa.balance
+    FROM public.user u
+    LEFT JOIN payment_account pa ON u.id = pa.id
+  `;
+
     if (limit) {
-      return await db.any("SELECT * FROM public.user LIMIT $1 OFFSET $2", [
-        limit,
-        offset,
-      ]);
+      return await db.any(`${baseQuery} LIMIT $1 OFFSET $2`, [limit, offset]);
     }
-    return await db.any("SELECT * FROM public.user");
+    return await db.any(baseQuery);
   },
   getUserCount: async () => {
     const result = await db.one("SELECT COUNT(*) FROM public.user");
     return parseInt(result.count);
   },
   insertUser: async (username, password, email, isAdmin) => {
+    const hashedPassword = await bcrypt.hash(password, 10);
     return await db.none(
       "INSERT INTO public.user (username, password, email, isAdmin) VALUES ($1, $2, $3, $4)",
-      [username, password, email, isAdmin]
+      [username, hashedPassword, email, isAdmin]
     );
   },
   deleteUserById: async (id) => {
@@ -32,6 +38,10 @@ module.exports = {
     const fields = [];
     const values = [];
 
+    if (updates.password) {
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
+
     Object.keys(updates).forEach((key, index) => {
       fields.push(`${key} = $${index + 1}`);
       values.push(updates[key]);
@@ -44,9 +54,11 @@ module.exports = {
     const query = `
     UPDATE public.user
     SET ${fields.join(", ")}
-    WHERE id = ${id}
+    WHERE id = $${fields.length + 1}
     RETURNING *;
   `;
+
+    values.push(id);
 
     return await db.oneOrNone(query, values);
   },
@@ -95,5 +107,5 @@ module.exports = {
       console.error("Error getting user by id:", error);
       throw error;
     }
-  }
+  },
 };

@@ -1,7 +1,13 @@
 const userModel = require("../models/userModel");
 const { paginate } = require("../helpers/paginationHelper");
+const https = require("https");
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
+const { pass } = require("../strategies/localStrat");
 
-exports.getUsers = async (req, res) => {
+const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
+
+exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -14,18 +20,27 @@ exports.getUsers = async (req, res) => {
     const users = await userModel.getUsers(limit, offset);
     const totalItems = await userModel.getUserCount();
 
+    const transformedUsers = users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      password: user.password,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      avatar: user.avatar,
+      payment_account: { balance: user.balance },
+    }));
+
     const result = limit
-      ? paginate(users, totalItems, page || 1, limit)
-      : { data: users, totalItems };
+      ? paginate(transformedUsers, totalItems, page || 1, limit)
+      : { data: transformedUsers, totalItems };
 
     res.json(result);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching Users" });
+    next(error);
   }
 };
 
-exports.insertUser = async (req, res) => {
+exports.insertUser = async (req, res, next) => {
   try {
     const { username, password, email, isAdmin } = req.body;
 
@@ -48,12 +63,11 @@ exports.insertUser = async (req, res) => {
       isAdmin,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error inserting user." });
+    next(error);
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -69,12 +83,11 @@ exports.deleteUser = async (req, res) => {
 
     res.status(200).json({ message: "User deleted successfully." });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({ message: "Error deleting user." });
+    next(error);
   }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -92,7 +105,40 @@ exports.updateUser = async (req, res) => {
       updatedUser,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating user." });
+    next(error);
+  }
+};
+
+exports.createPaymentAccount = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+
+    const token = jwt.sign({ system: "backend" }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+    const response = await axios.post(
+      "https://localhost:4001/payments/accounts",
+      { userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        httpsAgent,
+      }
+    );
+
+    res.status(201).json({
+      message: "Payment account created successfully",
+      data: response.data,
+    });
+  } catch (error) {
+    next(error);
   }
 };
