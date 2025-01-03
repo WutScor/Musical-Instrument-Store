@@ -28,6 +28,8 @@ import ProductPage from './pages/Admin/products';
 import CategoryPage from './pages/Admin/categories';
 import AccountPage from './pages/Admin/accounts';
 import { useEffect } from 'react';
+import AddProduct from './pages/Admin/add-product';
+import EditProduct from './pages/Admin/edit-product';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -75,6 +77,8 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="products" element={<ProductPage />} />
+              <Route path="/admin/products/add" element={<AddProduct />} />
+              <Route path="/admin/products/edit" element={<EditProduct />} />
               <Route path="categories" element={<CategoryPage />} />
               <Route path="accounts" element={<AccountPage />} />
               {/* Thêm các route Admin khác */}
