@@ -7,7 +7,7 @@ const createReceiverAccount = async (req, res) => {
     const userId = await paymentModel.createUserAccount(username, password);
     await paymentModel.createPaymentAccount(userId.id);
   } catch (error) {
-    throw new Error(error.message);
+    throw error;
   }
 };
 

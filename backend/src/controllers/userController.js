@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -19,18 +19,25 @@ exports.getUsers = async (req, res) => {
     const users = await userModel.getUsers(limit, offset);
     const totalItems = await userModel.getUserCount();
 
+    const transformedUsers = users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      payment_account: { balance: user.balance },
+    }));
+
     const result = limit
-      ? paginate(users, totalItems, page || 1, limit)
-      : { data: users, totalItems };
+      ? paginate(transformedUsers, totalItems, page || 1, limit)
+      : { data: transformedUsers, totalItems };
 
     res.json(result);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching Users" });
+    next(error);
   }
 };
 
-exports.insertUser = async (req, res) => {
+exports.insertUser = async (req, res, next) => {
   try {
     const { username, password, email, isAdmin } = req.body;
 
@@ -53,12 +60,11 @@ exports.insertUser = async (req, res) => {
       isAdmin,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error inserting user." });
+    next(error);
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -74,12 +80,11 @@ exports.deleteUser = async (req, res) => {
 
     res.status(200).json({ message: "User deleted successfully." });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({ message: "Error deleting user." });
+    next(error);
   }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -97,12 +102,11 @@ exports.updateUser = async (req, res) => {
       updatedUser,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating user." });
+    next(error);
   }
 };
 
-exports.createPaymentAccount = async (req, res) => {
+exports.createPaymentAccount = async (req, res, next) => {
   try {
     const { userId } = req.body;
 
@@ -132,10 +136,6 @@ exports.createPaymentAccount = async (req, res) => {
       data: response.data,
     });
   } catch (error) {
-    const status = error.response ? error.response.status : 500;
-    res.status(status).json({
-      message: "Failed to call sub-system API.",
-      error: error.message,
-    });
+    next(error);
   }
 };

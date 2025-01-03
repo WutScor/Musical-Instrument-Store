@@ -3,6 +3,7 @@ const express = require("express");
 const expressSanitizer = require("express-sanitizer");
 const session = require("express-session");
 const passport = require("passport");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
@@ -33,5 +34,7 @@ app.use("/users", require("./routes/userRoutes"));
 app.use("/carts", require("./routes/cartRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
 app.use("/orders", require("./routes/orderRoutes"));
+
+app.use(errorHandler);
 
 module.exports = app;

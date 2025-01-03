@@ -1,7 +1,7 @@
 const { paginate } = require("../helpers/paginationHelper");
 const orderModel = require("../models/orderModel");
 
-exports.getOrders = async (req, res) => {
+exports.getOrders = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -21,7 +21,6 @@ exports.getOrders = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching orders" });
+    next(error);
   }
 };
