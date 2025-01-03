@@ -3,6 +3,7 @@ const { paginate } = require("../helpers/paginationHelper");
 const https = require("https");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const { pass } = require("../strategies/localStrat");
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
 
@@ -22,8 +23,10 @@ exports.getUsers = async (req, res, next) => {
     const transformedUsers = users.map((user) => ({
       id: user.id,
       username: user.username,
+      password: user.password,
       email: user.email,
       isAdmin: user.isAdmin,
+      avatar: user.avatar,
       payment_account: { balance: user.balance },
     }));
 

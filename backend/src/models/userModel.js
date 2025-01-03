@@ -5,10 +5,7 @@ module.exports = {
   getUsers: async (limit, offset) => {
     const baseQuery = `
     SELECT 
-      u.id, 
-      u.username, 
-      u.email, 
-      u.isAdmin, 
+      u.*, 
       pa.balance
     FROM public.user u
     LEFT JOIN payment_account pa ON u.id = pa.id
