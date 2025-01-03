@@ -8,9 +8,10 @@ const ProductDetail = () => {
   const location = useLocation();
   // console.log(location);
   const {product} = location.state || {};
+  console.log(product);
   return (
     <>
-      <Headline />
+      <Headline product={product}/>
       <ShowProductDetail productDetail={product}/>
       <DescriptionTab description={product.description} additional={product.additional_information} reviews={"Test Review"} image={product.image}/>
       <ProductRelated productRelated={product}/>

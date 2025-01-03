@@ -1,15 +1,15 @@
 import CheckoutIntro from "../../components/Client/checkout/checkout-intro";
-import BillingDetails from "../../components/Client/checkout/billing-details";
+// import BillingDetails from "../../components/Client/checkout/billing-details";
 import CheckoutProducts from "../../components/Client/checkout/checkout-products";
 import CartAds from "../../components/Client/cart/cart-ads";
 import CheckoutPayment from "../../components/Client/checkout/checkout-pay";
-import { useRef } from "react";
+// import { useRef } from "react";
 import { useState } from "react";
 
 const Checkout = () => {
     const user = {
         username: 'John Doe',
-        wallet: 2000000
+        wallet: 100000
     };
     const cartProducts = [
         {
@@ -28,38 +28,45 @@ const Checkout = () => {
 
     const total = cartProducts.reduce((acc, product) => acc + product.price * product.quantity, 0);
 
-    const billingDetailsRef = useRef();
+    // const billingDetailsRef = useRef();
     const [isWaiting, setIsWaiting] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState(null);
+    const [paymentStatus, setPaymentStatus] = useState({show: false, message: "", color: ""});
     const [message, setMessage] = useState("");
 
-    const handlePlaceOrder = () => {
-        const checkValidation = billingDetailsRef.current.validateForm();
+    const setStatus = (show, message, color) => {
+        setPaymentStatus({show, message, color});
+        setTimeout(() => {
+            setPaymentStatus({show: false, message: "", color: ""});
+        }, 3000);
+    }
 
-        if (!checkValidation) {
-            return;
-        }
+    const handlePlaceOrder = () => {
+        // const checkValidation = billingDetailsRef.current.validateForm();
+
+        // if (!checkValidation) {
+        //     return;
+        // }
 
         setIsWaiting(true);
-        setPaymentStatus(null);
+        setPaymentStatus({show: false, message: "", color: ""});
 
         setTimeout(() => {
-            const billingDetails = billingDetailsRef.current.getBillingDetails();
-            console.log('Billing Details:', billingDetails);
-            console.log('Total:', total);
+            // const billingDetails = billingDetailsRef.current.getBillingDetails();
+            // console.log('Billing Details:', billingDetails);
+            // console.log('Total:', total);
 
             if (user.wallet >= total) {
-                setPaymentStatus('success');
+                setStatus(true, "Checkout successful! Your order will be delivered within 2 weeks", "green");
                 setTimeout(() => {
                     window.location.reload(); // Reload trang
                 }, 4000);
             }
             else {
-                setPaymentStatus('failed');
+                setStatus(true, "Checkout failed! Your wallet balance is insufficient", "red");
                 setMessage('Insufficient Funds! Please top up your wallet to place order');
                 setTimeout(() => {
                     setMessage("");
-                }, 4000);
+                }, 3000);
             }
             setIsWaiting(false);
         }, 2000);
@@ -67,10 +74,10 @@ const Checkout = () => {
     return (
         <>
             <CheckoutIntro />
-            <div className="d-flex mb-5">
-                <div className="w-50" style={{ padding: '50px 100px' }}>
+            <div className="d-flex mb-5 justify-content-center">
+                {/* <div className="w-50" style={{ padding: '50px 100px' }}>
                     <BillingDetails ref={billingDetailsRef} />
-                </div>
+                </div> */}
                 <div className="w-50" style={{ padding: '80px 100px' }}>
                     <CheckoutProducts products={cartProducts} total={total} />
                     <div className="mt-4">
@@ -110,8 +117,8 @@ const Checkout = () => {
             )}
 
             {/* Payment Status */}
-            {paymentStatus === "success" && (
-                <div className="notification-bar">Checkout successful! Your order will be delivered within 2 weeks</div>
+            {paymentStatus.show && (
+                <div className="notification-bar" style={{background: paymentStatus.color}}>{paymentStatus.message}</div>
             )}
         </>
     )
