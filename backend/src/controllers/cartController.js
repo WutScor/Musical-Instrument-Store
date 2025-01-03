@@ -1,7 +1,7 @@
 const cartModel = require("../models/cartModel");
 const { paginate } = require("../helpers/paginationHelper");
 
-const getOrCreateCart = async (req, res) => {
+const getOrCreateCart = async (req, res, next) => {
   const { user_id } = req.body;
   const page = req.query.page ? parseInt(req.query.page) : null;
   const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -23,30 +23,29 @@ const getOrCreateCart = async (req, res) => {
       : { data: cart, totalItems };
     res.status(200).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    next(error);
   }
 };
 
-const addItemToCart = async (req, res) => {
-  const { cart_id, item_id } = req.params;
-  const { quantity } = req.body;
+const addItemsToCart = async (req, res, next) => {
+  const { cart_id } = req.params;
+  const items = req.body;
 
-  if (!cart_id || !item_id || !quantity) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (!cart_id || !Array.isArray(items) || items.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields or invalid format" });
   }
 
   try {
-    const result = await cartModel.addItemToCart(cart_id, item_id, quantity);
+    const result = await cartModel.addItemsToCart(cart_id, items);
     res.status(200).json(result);
   } catch (error) {
-    const status = error.status || 500;
-    res.status(status).json({ error: error.message });
+    next(error);
   }
 };
 
-const deleteItemFromCart = async (req, res) => {
+const deleteItemFromCart = async (req, res, next) => {
   const { cart_id, item_id } = req.params;
 
   if (!cart_id || !item_id) {
@@ -58,28 +57,33 @@ const deleteItemFromCart = async (req, res) => {
 
     res.status(200).json({ message: result.message });
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
 };
 
-const checkoutCart = async (req, res) => {
-  // Call payment gateway API
-
-  // Mark cart as paid
+const checkoutCart = async (req, res, next) => {
   const { cart_id } = req.params;
+  // Call payment gateway API
+  // update quantity of items in stock
+  await cartModel.updateMusicalInstrumentStock(cart_id);
+  // Mark cart as paid
+
   try {
     const result = await cartModel.markCartAsPaid(cart_id);
-    res.status(200).json({ message: result.message });
+    // Save order
+    const orderResult = await cartModel.saveOrder(cart_id);
+    res.status(200).json({
+      message: "Checkout successful",
+      orderId: orderResult.orderId,
+    });
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
-
-  // Save transaction details
 };
 
 module.exports = {
   getOrCreateCart,
-  addItemToCart,
+  addItemsToCart,
   deleteItemFromCart,
   checkoutCart,
 };

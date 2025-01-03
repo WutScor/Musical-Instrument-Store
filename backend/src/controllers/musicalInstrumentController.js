@@ -4,7 +4,7 @@ const { supabase } = require("../config/supabase");
 const { BUCKET_NAME: bucketName } = require("../config/constant");
 require("dotenv").config();
 
-exports.getMusicalInstruments = async (req, res) => {
+exports.getMusicalInstruments = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -52,12 +52,11 @@ exports.getMusicalInstruments = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching musical instruments" });
+    next(error);
   }
 };
 
-exports.insertMusicalInstrument = async (req, res) => {
+exports.insertMusicalInstrument = async (req, res, next) => {
   try {
     const {
       name,
@@ -122,12 +121,11 @@ exports.insertMusicalInstrument = async (req, res) => {
       release_year,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error inserting musical instrument." });
+    next(error);
   }
 };
 
-exports.deleteMusicalInstrument = async (req, res) => {
+exports.deleteMusicalInstrument = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -145,12 +143,11 @@ exports.deleteMusicalInstrument = async (req, res) => {
       .status(200)
       .json({ message: "Musical instrument deleted successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deleting musical instrument." });
+    next(error);
   }
 };
 
-exports.updateMusicalInstrument = async (req, res) => {
+exports.updateMusicalInstrument = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -196,12 +193,11 @@ exports.updateMusicalInstrument = async (req, res) => {
       updatedInstrument,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating musical instrument." });
+    next(error);
   }
 };
 
-exports.getRelatedMusicalInstruments = async (req, res) => {
+exports.getRelatedMusicalInstruments = async (req, res, next) => {
   try {
     const { id } = req.params;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -235,9 +231,6 @@ exports.getRelatedMusicalInstruments = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error fetching related musical instruments." });
+    next(error);
   }
 };
