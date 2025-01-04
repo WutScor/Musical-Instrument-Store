@@ -1,25 +1,6 @@
-const db = require("../config/database");
 const defaultBalance = require("../config/constant").defaultBalance;
-
-const bcrypt = require("bcrypt");
-
-exports.createUserAccount = async (username, password) => {
-  const query = `
-    WITH ins AS (
-      INSERT INTO public.user (username, password, isAdmin)
-      VALUES ($1, $2, true)
-      ON CONFLICT (username) DO NOTHING
-      RETURNING id
-    )
-    SELECT id FROM ins
-    UNION ALL
-    SELECT id FROM public.user WHERE username = $1 LIMIT 1
-  `;
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const values = [username, hashedPassword];
-  return await db.one(query, values);
-};
+const db = require("../config/database");
+require("dotenv").config();
 
 exports.createPaymentAccount = async (userId) => {
   const queryCheck = `
@@ -40,5 +21,20 @@ exports.createPaymentAccount = async (userId) => {
     return 1;
   } else {
     return 0;
+  }
+};
+
+exports.updateBalance = async (id, adjustmentAmount, t) => {
+  const query = `
+    UPDATE payment_account
+    SET balance = balance + $2
+    WHERE id = $1
+    RETURNING *
+  `;
+
+  const result = await t.any(query, [id, adjustmentAmount]);
+
+  if (result.length === 0) {
+    throw new Error(`No payment account found with id ${id}`);
   }
 };

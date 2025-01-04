@@ -1,5 +1,11 @@
 const cartModel = require("../models/cartModel");
 const { paginate } = require("../helpers/paginationHelper");
+const https = require("https");
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
 
 const getOrCreateCart = async (req, res, next) => {
   const { user_id } = req.body;
@@ -12,7 +18,7 @@ const getOrCreateCart = async (req, res, next) => {
   }
 
   if (!user_id) {
-    return res.status(400).json({ message: "userId is required" });
+    return res.status(400).json({ message: "user_id is required" });
   }
 
   try {
@@ -63,20 +69,40 @@ const deleteItemFromCart = async (req, res, next) => {
 
 const checkoutCart = async (req, res, next) => {
   const { cart_id } = req.params;
-  // Call payment gateway API
-  // update quantity of items in stock
-  await cartModel.updateMusicalInstrumentStock(cart_id);
-  // Mark cart as paid
+
+  if (!cart_id) {
+    return res.status(400).json({ message: "cart_id is required" });
+  }
+
+  const token = jwt.sign({ system: "backend" }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
+
+  const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
   try {
-    const result = await cartModel.markCartAsPaid(cart_id);
-    // Save order
-    const orderResult = await cartModel.saveOrder(cart_id);
-    res.status(200).json({
-      message: "Checkout successful",
-      orderId: orderResult.orderId,
-    });
+    const response = await axios.post(
+      "https://localhost:4001/payments/checkout",
+      { cartId: cart_id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        httpsAgent,
+      }
+    );
+
+    const result = response.data;
+
+    res.status(200).json(result);
   } catch (error) {
+    // If the error is from the axios response (e.g. status code 4xx or 5xx)
+    if (error.response) {
+      const { status, data } = error.response;
+      return res.status(status).json(data);
+    }
+
+    // If the error is not from the axios response (e.g. network error)
     next(error);
   }
 };
