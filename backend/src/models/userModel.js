@@ -2,24 +2,40 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  getUsers: async (limit, offset) => {
-    const baseQuery = `
+  getUsers: async (limit, offset, search) => {
+    let baseQuery = `
     SELECT 
       u.*, 
       pa.balance
-    FROM public.user u
+    FROM public."user" u
     LEFT JOIN payment_account pa ON u.id = pa.id
   `;
 
-    if (limit) {
-      return await db.any(`${baseQuery} LIMIT $1 OFFSET $2`, [limit, offset]);
+    if (search) {
+      baseQuery += `
+      WHERE u.username ILIKE $1 OR u.email ILIKE $1
+    `;
     }
-    return await db.any(baseQuery);
+
+    if (limit) {
+      baseQuery += ` LIMIT $2 OFFSET $3`;
+      return await db.any(baseQuery, [`%${search}%`, limit, offset]);
+    }
+
+    return await db.any(baseQuery, [`%${search}%`]);
   },
-  getUserCount: async () => {
-    const result = await db.one("SELECT COUNT(*) FROM public.user");
+
+  getUserCount: async (search) => {
+    let countQuery = `SELECT COUNT(*) FROM public."user"`;
+
+    if (search) {
+      countQuery += ` WHERE username ILIKE $1 OR email ILIKE $1`;
+    }
+
+    const result = await db.one(countQuery, [`%${search}%`]);
     return parseInt(result.count);
   },
+
   insertUser: async (username, password, email, isAdmin, publicUrl) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     return await db.none(

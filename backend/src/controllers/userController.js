@@ -14,14 +14,15 @@ exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const search = req.query.search || "";
 
     let offset = 0;
     if (page && limit) {
       offset = (page - 1) * limit;
     }
 
-    const users = await userModel.getUsers(limit, offset);
-    const totalItems = await userModel.getUserCount();
+    const users = await userModel.getUsers(limit, offset, search);
+    const totalItems = await userModel.getUserCount(search);
 
     const transformedUsers = users.map((user) => ({
       id: user.id,
