@@ -23,7 +23,7 @@ const getOrCreateCart = async (req, res, next) => {
 
   try {
     const cart = await cartModel.getOrCreateCart(user_id, limit, offset);
-    const totalItems = await cartModel.getItemsInCartCount(user_id);
+    const totalItems = await cartModel.getItemsInCartCount(cart.cart_id);
     const result = limit
       ? paginate(cart, totalItems, page || 1, limit)
       : { data: cart, totalItems };
