@@ -24,3 +24,12 @@ exports.getOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getRevenue = async (req, res, next) => {
+  try {
+      const result = await orderModel.getRevenue();
+      res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};

@@ -4,6 +4,9 @@ const https = require("https");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const { pass } = require("../strategies/localStrat");
+const { supabase } = require("../config/supabase");
+const { BUCKET_NAME: bucketName } = require("../config/constant");
+require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
 
@@ -43,24 +46,43 @@ exports.getUsers = async (req, res, next) => {
 exports.insertUser = async (req, res, next) => {
   try {
     const { username, password, email, isAdmin } = req.body;
+    const avatar = req.file;
 
-    if (
-      !username ||
-      !password ||
-      !email ||
-      isAdmin === undefined ||
-      isAdmin === null
-    ) {
-      return res.status(400).json({ message: "All fields are required." });
+    if (!username || !password || isAdmin === undefined || isAdmin === null) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required." });
     }
 
-    await userModel.insertUser(username, password, email, isAdmin);
+    let publicUrl = null;
+    if (avatar) {
+      const fileName = `${Date.now()}-${avatar.originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, avatar.buffer, {
+          contentType: avatar.mimetype,
+        });
+
+      if (uploadError) {
+        console.log(uploadError);
+        return res.status(500).json({ message: "Error uploading avatar." });
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      publicUrl = `https://${supabaseUrl.replace(
+        "https://",
+        ""
+      )}/storage/v1/object/public/${bucketName}/${fileName}`;
+    }
+
+    await userModel.insertUser(username, password, email, isAdmin, publicUrl);
 
     res.status(201).json({
       username,
       password,
       email,
       isAdmin,
+      avatar: publicUrl,
     });
   } catch (error) {
     next(error);
@@ -94,6 +116,29 @@ exports.updateUser = async (req, res, next) => {
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No fields to update." });
+    }
+
+    const avatar = req.file;
+
+    if (avatar) {
+      const fileName = `${Date.now()}-${avatar.originalname}`;
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, avatar.buffer, {
+          contentType: avatar.mimetype,
+        });
+
+      if (uploadError) {
+        console.log(uploadError);
+        return res.status(500).json({ message: "Error uploading image." });
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const publicUrl = `https://${supabaseUrl.replace(
+        "https://",
+        ""
+      )}/storage/v1/object/public/${bucketName}/${fileName}`;
+      if (publicUrl) updates.avatar = publicUrl;
     }
 
     const updatedUser = await userModel.updateUserById(id, updates);

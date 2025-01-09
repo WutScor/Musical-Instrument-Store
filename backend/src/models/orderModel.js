@@ -58,3 +58,15 @@ exports.getOrderCount = async (userId) => {
   const result = await db.one(query, values);
   return parseInt(result.count);
 };
+
+exports.getRevenue = async () => {
+  const result = await db.query(`
+      SELECT 
+          TO_CHAR(order_date, 'YYYY-MM-DD') AS date, -- Định dạng ngày thành chuỗi
+          SUM(total_price) AS total_revenue
+      FROM public.order
+      GROUP BY TO_CHAR(order_date, 'YYYY-MM-DD')
+      ORDER BY TO_CHAR(order_date, 'YYYY-MM-DD');
+  `);
+  return result;
+};

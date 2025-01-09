@@ -20,11 +20,11 @@ module.exports = {
     const result = await db.one("SELECT COUNT(*) FROM public.user");
     return parseInt(result.count);
   },
-  insertUser: async (username, password, email, isAdmin) => {
+  insertUser: async (username, password, email, isAdmin, publicUrl) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     return await db.none(
-      "INSERT INTO public.user (username, password, email, isAdmin) VALUES ($1, $2, $3, $4)",
-      [username, hashedPassword, email, isAdmin]
+      "INSERT INTO public.user (username, password, email, isAdmin, avatar) VALUES ($1, $2, $3, $4, $5)",
+      [username, hashedPassword, email, isAdmin, publicUrl]
     );
   },
   deleteUserById: async (id) => {
