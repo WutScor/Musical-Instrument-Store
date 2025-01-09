@@ -1,6 +1,33 @@
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useState, useEffect } from "react";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 
-const CartItems = () => {
+const CartItems = ({cartItems}) => {
+  // const [cartItems, setCartItems] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState({open: false, cartItemId: null});
+
+  // useEffect(() => {
+  //   const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+  //   setCartItems(storedCart);
+  // }, []);
+
+  const calculateSubtotal = (item) => item.quantity * item.price;
+
+  const confirmDelete = (id) => {
+    setDeleteConfirm({open: true, cartItemId: id});
+  };
+
+  const handleCloseDialog = () => {
+    setDeleteConfirm({open: false, cartItemId: null});
+  }
+
+  const handleDeleteItem = (id) => {
+    const updateCart = cartItems.filter((item) => item.id !== id);
+    // setCartItems(updateCart);
+    sessionStorage.setItem("cart", JSON.stringify(updateCart));
+    handleCloseDialog();
+  };
+
   return (
     <>
       <div className="cart-items">
@@ -15,33 +42,71 @@ const CartItems = () => {
             </tr>
           </thead>
           <tbody className="items-body">
-            <tr className="items-row">
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+            <tr key={item.id} className="items-row">
               <th className="col-4">
-                <div className="d-flex justify-content-center align-items-center">
+                <div className="d-flex justify-content-between align-items-center gap-4">
                   <img
-                    src="https://product.hstatic.net/200000423875/product/strat_debut_dkr-2048x2048_fd2ba961cb5c4761b854ef355d4714e1_master.png"
-                    alt=""
-                    className="cart-img"
-                  ></img>
-                  <p className="flex-wrap fw-normal">
-                    SQUIER DEBUT STRAT LAUREL DAKOTA RED
+                    src={item.image}
+                    alt={item.name}
+                    className="cart-img w-50"
+                  />
+                  <p className="flex-wrap fw-normal w-50">
+                    {item.name}
                   </p>
                 </div>
               </th>
               <th className="col-3">
-                <p class="fw-normal">250,000.00</p>
+                <p className="fw-normal">$ {item.price}</p>
               </th>
               <th className="col-1">
-                <p class="fw-normal quality">1</p>
+                <p className="fw-normal quality">{item.quantity}</p>
               </th>
               <th className="col-3">
-                <p class="fw-normal">250,000.00</p>
+                <p className="fw-normal">$ {calculateSubtotal(item)}</p>
               </th>
-              <th className="col-2"><RiDeleteBin6Line className="fs-5 delete-item"></RiDeleteBin6Line></th>
+              <th className="col-2"><RiDeleteBin6Line className="fs-5 delete-item" onClick={() => confirmDelete(item.id)}></RiDeleteBin6Line></th>
             </tr>
+            ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  <p className="mt-5 fs-3">No items in cart</p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
+
+      <Dialog
+            open={deleteConfirm.open}
+            onClose={handleCloseDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you want to delete this item? This action cannot be undone.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  handleDeleteItem(deleteConfirm.cartItemId);
+                }}
+                color="error"
+                autoFocus
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
 
       {/* -------------------------------- */}
     </>

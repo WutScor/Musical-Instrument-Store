@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ProductCounter from "./product-quantity-counter";
 import { FaFacebook, FaLinkedin, FaPinterest } from "react-icons/fa";
+import { AuthContext } from "../../../context/authContext";
+import { addToSessionCart } from "../cart/add-to-cart-session";
 
 const ShowProductDetail = ({ productDetail }) => {
   // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
+  // console.log("Product Detail: ", productDetail);
   const [showNotification, setShowNotification] = useState({ show: false, message: '', color: '' });
   const [count, setCount] = useState(1);
   //const [categoryName, setCategory] = useState('Unknown Category');
   const { id, name, image, price, release_year, category, quantity } = productDetail;
+  const context = useContext(AuthContext);
 
   const categoryName = category ? category.name : 'Unknown Category';
 
+  // console.log("Context: ", context);
+  // console.log("Context User: ", context.user);
+  // console.log("user id: ", context.user.id);
   const increment = () => setCount(count + 1);
   const decrement = () => {
     if (count > 1) {
       setCount(count - 1);
     }
   };
+
+  useEffect(() => {
+    setCount(1);
+  }, [productDetail]);
 
   const handleChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -30,18 +41,54 @@ const ShowProductDetail = ({ productDetail }) => {
     }, 2000);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    const token = context.token;
     if (count <= quantity) {
-      setNotice(true, "Product has been added to cart!", "green"); // Hiển thị thông báo khi click "Add to Cart"
-      setTimeout(() => {
-        setNotice(false, '', ''); // Ẩn thông báo sau 2 giây
-      }, 2000);
+      if (!token) {
+        addToSessionCart(productDetail, count);
+        setNotice(true, "Product has been added to cart!", "green");
+        setTimeout(() => {
+          setNotice(false, '', '');
+        }, 2000);
+      }
+      else {
+        const cartID = context.user.id;
+        console.log("Cart ID: ", cartID);
+        const params = new URLSearchParams({
+          page:  1,
+          limit: 5
+      });
+        const makeCart = await fetch(`/carts?${params.toString()}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            user_id: cartID
+          })
+        });
+        const response = await fetch(`/carts/${cartID}/items`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify([
+            {
+              "itemId": productDetail.id,
+              "quantity": count
+            }
+          ])
+        });
+
+      }
     }
     else if (quantity === 0) {
-      setNotice(true, "Product is out of stock!", "red"); // Hiển thị thông báo khi click "Add to Cart"
+      setNotice(true, "Product is out of stock!", "red");
     }
     else {
-      setNotice(true, "Quantity exceeds the available quantity!", "red"); // Hiển thị thông báo khi click "Add to Cart"
+      setNotice(true, "Quantity exceeds the available quantity!", "red");
     }
   };
   return (
@@ -53,30 +100,6 @@ const ShowProductDetail = ({ productDetail }) => {
       <div className="d-flex mt-4 product-detail-container">
         {/* Images */}
         <div className="image-field">
-          {/* Small image
-          <div className="d-flex flex-column small-gallery">
-            <img
-              src={ image }
-              alt={ name }
-              className="small-img"
-            ></img>
-            <img
-              src={ image }
-              alt={ name }
-              className="small-img"
-            ></img>
-            <img
-              src={ image }
-              alt={ name }
-              className="small-img"
-            ></img>
-            <img
-              src={ image }
-              alt={ name }
-              className="small-img"
-            ></img>
-          </div> */}
-          {/* Big image */}
           <div>
             <img
               src={image}
@@ -92,21 +115,10 @@ const ShowProductDetail = ({ productDetail }) => {
           <h5>${price}</h5>
           {/* Rating */}
           <div className="d-flex ms-4 align-items-center my-3">
-            {/* <div className="rating-container">
-              <span className="star">★</span>
-              <span className="star">★</span>
-              <span className="star">★</span>
-              <span className="star">★</span>
-              <span className="star">★</span>
-            </div>
-            <div>
-              <p>5 Customer Review</p>
-            </div> */}
             <div className="d-flex align-items-center gap-4 fw-bolder" style={{ fontSize: '1.1rem', color: quantity > 50 ? "green" : quantity > 20 ? "goldenrod" : quantity > 0 ? "orange" : "red" }}>
               <p>In stock: </p>
               <p>{quantity}</p>
             </div>
-            {/* <p>Available since {release_year}</p> */}
           </div>
           {/* Mini Description */}
           <div className="mini-description">
@@ -138,10 +150,6 @@ const ShowProductDetail = ({ productDetail }) => {
             <button className="add-to-cart-btn" onClick={handleAddToCart}>
               Add To Cart
             </button>
-            {/* <button className="d-flex align-items-center gap-2 compare-btn">
-              <p>+</p>
-              <p>Compare</p>
-            </button> */}
           </div>
           {/* More Information */}
           <div className="mt-5">

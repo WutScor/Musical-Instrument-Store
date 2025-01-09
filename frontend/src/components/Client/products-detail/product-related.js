@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const ProductRelated = ({ productRelated }) => {
-  console.log(productRelated);
+  // console.log(productRelated);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [visibleIndex, setVisibleIndex] = useState(0);       // Index của sản phẩm đầu tiên
 
@@ -23,13 +23,13 @@ const ProductRelated = ({ productRelated }) => {
   // Hiển thị sản phẩm tiếp theo
   const handleNext = () => {
     setVisibleIndex((prev) => Math.min(prev + 1, relatedProducts.length - 4));
-    console.log(visibleIndex);
+    // console.log(visibleIndex);
   }
 
   // Hiển thị sản phẩm trước
   const handlePrev = () => {
     setVisibleIndex((prev) => Math.max(prev - 1, 0));
-    console.log(visibleIndex);
+    // console.log(visibleIndex);
   }
 
   const visibleProducts = relatedProducts.slice(visibleIndex, visibleIndex + 4);

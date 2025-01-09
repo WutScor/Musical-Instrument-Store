@@ -54,9 +54,13 @@ import React from 'react';
 import { Button, Box, Grid } from "@mui/material";
 import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../../context/authContext';
+import { addToSessionCart } from '../cart/add-to-cart-session';
 
 const ProductItem = ({ product }) => {
   const navigate = useNavigate();
+  const context = useContext(AuthContext);
 
   const handleProductClick = () => {
     const productData = {
@@ -71,6 +75,17 @@ const ProductItem = ({ product }) => {
       quantity: product.quantity,
     };
     navigate(`/product/${product.id}`, { state: { product: productData } });
+  }
+
+
+  const handleAddToCart = () => {
+    const token = context.token;
+    if(!token) {
+      addToSessionCart(product, 1);
+    }
+    // else {
+
+    // }
   }
 
   return (
@@ -139,7 +154,7 @@ const ProductItem = ({ product }) => {
       <div className="bg-hover position-absolute" style={{ height: '100%' }}></div>
 
       <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column" style={{ height: '100%' }}>
-        <Button>Add to cart</Button>
+        <Button onClick={handleAddToCart}>Add to cart</Button>
         <div className="d-flex justify-content-between align-items-center w-100 px-3 mt-4">
           <div className="item">
             <AiOutlineShareAlt /><p>Share</p>

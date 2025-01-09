@@ -4,14 +4,15 @@ import CheckoutProducts from "../../components/Client/checkout/checkout-products
 import CartAds from "../../components/Client/cart/cart-ads";
 import CheckoutPayment from "../../components/Client/checkout/checkout-pay";
 // import { useRef } from "react";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../context/authContext";
 
 const Checkout = () => {
     const user = {
         username: 'John Doe',
         wallet: 100000
     };
-    const cartProducts = [
+    const cartProduct = [
         {
             id: 1,
             name: 'Product Name 1',
@@ -25,6 +26,41 @@ const Checkout = () => {
             quantity: 2
         }
     ];
+
+    const [cartProducts, setCartProducts] = useState([]);
+    const [page, setPage] = useState(1);
+    const context = useContext(AuthContext);
+
+    const fetchCartProducts = async () => {
+        try {
+            const params = new URLSearchParams({
+                page: page || 1,
+                limit: 5,
+            });
+            const response = await fetch(`/carts?${params.toString()}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${context.token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error fetching cart products: ${response.status} - ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Cart Products:', data);
+            setCartProducts(data.items);
+        }
+        catch (error) {
+            console.error('Error fetching cart products:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchCartProducts();
+    }, []);
 
     const total = cartProducts.reduce((acc, product) => acc + product.price * product.quantity, 0);
 

@@ -8,7 +8,7 @@ const ProductDetail = () => {
   const location = useLocation();
   // console.log(location);
   const {product} = location.state || {};
-  console.log(product);
+  // console.log(product);
   return (
     <>
       <Headline product={product}/>
