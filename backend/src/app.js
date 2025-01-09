@@ -33,5 +33,6 @@ app.use("/musical_instruments", require("./routes/musicalInstrumentRoutes"));
 app.use("/users", require("./routes/userRoutes"));
 app.use("/carts", require("./routes/cartRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
+app.use("/orders", require("./routes/ordersRoutes"));
 
 module.exports = app;

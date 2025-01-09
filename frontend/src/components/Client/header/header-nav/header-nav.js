@@ -11,19 +11,27 @@ const HeaderNav = () => {
   };
 
   return (
-    <div className="header-nav me-auto d-flex justify-content-between">
-      <Link to="/" style={getLinkStyle("/")}>
-        Home
-      </Link>
-      <Link to="/shop" style={getLinkStyle("/shop")}>
-        Shop
-      </Link>
-      <Link to="/about" style={getLinkStyle("/about")}>
-        About
-      </Link>
-      <Link to="/contact" style={getLinkStyle("/contact")}>
-        Contact
-      </Link>
+    <div className="header-nav row">
+      <div className="col-md-3">
+        <Link to="/" style={getLinkStyle("/")}>
+          Home
+        </Link>
+      </div>
+      <div className="col-md-3">
+        <Link to="/shop" style={getLinkStyle("/shop")}>
+          Shop
+        </Link>
+      </div>
+      <div className="col-md-3">
+        <Link to="/about" style={getLinkStyle("/about")}>
+          About
+        </Link>
+      </div>
+      <div className="col-md-3">
+        <Link to="/contact" style={getLinkStyle("/contact")}>
+          Contact
+        </Link>
+      </div>
     </div>
   );
 };

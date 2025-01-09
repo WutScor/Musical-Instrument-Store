@@ -92,7 +92,7 @@ const SignInForm = () => {
                             <input
                                 type={type}
                                 className="form-control"
-                                placeholder="Password"
+                                placeholder="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 autoComplete="current-password"
@@ -101,7 +101,7 @@ const SignInForm = () => {
                                 onClick={handleToggle}
                                 style={{ cursor: "pointer" }}
                                 className="position-absolute top-50 end-0 translate-middle-y pe-3">
-                                <Icon icon={icon} size={20} />
+                                <Icon className="eye" icon={icon} size={23} />
                             </span>
                         </div>
                     </div>
@@ -117,7 +117,7 @@ const SignInForm = () => {
                     </div>
                     {/* Google Login Button */}
                     <div className="text-center mt-3">
-                        <a href="https://localhost:4000/auth/google" className="btn btn-outline-danger">
+                        <a href="https://localhost:4000/auth/google" className="btn btn-outline-danger google">
                             <FaGoogle className="me-2" />
                             Sign In with Google
                         </a>

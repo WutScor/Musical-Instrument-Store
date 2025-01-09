@@ -32,7 +32,7 @@ const PasswordInput = ({ placeholder, value, onChange }) => {
         onClick={handleToggle}
         style={{ cursor: "pointer", right: "10px" }}
       >
-        <Icon icon={icon} size={20} />
+        <Icon className="eye" icon={icon} size={25} />
       </span>
     </div>
   );
@@ -85,31 +85,13 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit} className="signin-form w-100">
       <div className="row">
-        {/* Cột trái */}
         <div className="col-md-4">
-          <div className="d-flex align-items-start justify-content-center flex-column p1">
             <div className="d-flex flex-row align-items-center p2">
               <AiOutlineUser />
               <p className="form-txt">Username</p>
             </div>
-            <div className="d-flex flex-row align-items-center p2">
-              <AiOutlineMail />
-              <p className="form-txt">Email</p>
-            </div>
-            <div className="d-flex flex-row align-items-center p2">
-              <AiOutlineLock />
-              <p className="form-txt">Password</p>
-            </div>
-            <div className="d-flex flex-row align-items-center p2">
-              <AiOutlineLock />
-              <p className="form-txt">Re-enter Password</p>
-            </div>
-          </div>
         </div>
-
-        {/* Cột phải */}
-        <div className="col-md-8">
-          <div className="d-flex align-items-start justify-content-center flex-column p1">
+          <div className="col-md-8">
             <div className="d-flex flex-row align-items-center p2 w-100">
               <input
                 type="text"
@@ -119,6 +101,17 @@ const SignUpForm = () => {
                 className="w-100"
               />
             </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-4">
+          <div className="d-flex flex-row align-items-center p2">
+            <AiOutlineMail />
+            <p className="form-txt">Email</p>
+          </div>
+        </div>
+        <div className="col-md-8">
             <div className="d-flex flex-row align-items-center p2 w-100">
               <input
                 type="email"
@@ -128,17 +121,38 @@ const SignUpForm = () => {
                 className="w-100"
               />
             </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-4">
+            <div className="d-flex flex-row align-items-center p2">
+              <AiOutlineLock />
+              <p className="form-txt">Password</p>
+            </div>
+        </div>
+        <div className="col-md-8">
             <PasswordInput
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-4">
+            <div className="d-flex flex-row align-items-center p2">
+              <AiOutlineLock />
+              <p className="form-txt">Re-enter Password</p>
+            </div>
+        </div>
+        <div className="col-md-8">
             <PasswordInput
               placeholder="Re-enter Password"
               value={password2}
               onChange={(e) => setPassword2(e.target.value)}
             />
-          </div>
         </div>
       </div>
       {
@@ -157,3 +171,6 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+
+
+            

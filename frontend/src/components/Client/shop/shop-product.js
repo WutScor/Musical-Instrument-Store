@@ -88,7 +88,6 @@ const ProductItem = ({ product }) => {
           transform: 'scale(1.05)', // Phóng to nhẹ khi hover
         },
       }}
-      onClick={handleProductClick}
     >
       <Box
         className="img-wrapper position-relative"
@@ -138,7 +137,7 @@ const ProductItem = ({ product }) => {
       <div className="bg-hover position-absolute" style={{ height: '100%' }}></div>
 
       <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column" style={{ height: '100%' }}>
-        <Button>Add to cart</Button>
+        <Button onClick={handleProductClick}>See details</Button>
         <div className="d-flex justify-content-between align-items-center w-100 px-3 mt-4">
           <div className="item">
             <AiOutlineShareAlt /><p>Share</p>

@@ -5,71 +5,67 @@ exports.getUsers = async (req, res) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const offset = page && limit ? (page - 1) * limit : null;
 
-    let offset = 0;
-    if (page && limit) {
-      offset = (page - 1) * limit;
-    }
+    const filters = {
+      username: req.query.username,
+      email: req.query.email,
+      isAdmin:
+        req.query.isAdmin !== undefined && req.query.isAdmin !== ""
+          ? req.query.isAdmin === "true"
+          : undefined,
+    };
 
-    const users = await userModel.getUsers(limit, offset);
-    const totalItems = await userModel.getUserCount();
+    const items = await userModel.getUsers(limit, offset, filters);
+
+    const totalItems = await userModel.getUserCount(filters);
+
+    const mappedItems = items.map(({ password, ...item }) => item);
 
     const result = limit
-      ? paginate(users, totalItems, page || 1, limit)
-      : { data: users, totalItems };
+      ? paginate(mappedItems, totalItems, page || 1, limit)
+      : { data: mappedItems, totalItems };
 
     res.json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching Users" });
+    res.status(500).json({ message: "Error fetching users." });
   }
 };
 
 exports.insertUser = async (req, res) => {
   try {
-    const { username, password, email, isAdmin } = req.body;
+    console.log('req.body at insertUser', req.body);
+    const { username, email, password, isAdmin } = req.body;
 
-    if (
-      !username ||
-      !password ||
-      !email ||
-      isAdmin === undefined ||
-      isAdmin === null
-    ) {
-      return res.status(400).json({ message: "All fields are required." });
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Username, email, and password are required." });
     }
 
-    await userModel.insertUser(username, password, email, isAdmin);
+    const newUser = await userModel.insertUser(username, email, password, isAdmin);
 
-    res.status(201).json({
-      username,
-      password,
-      email,
-      isAdmin,
-    });
+    res.status(201).json({ newUser });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error inserting user." });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Error creating user." });
   }
-};
+}
 
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required." });
-    }
-
-    const result = await userModel.deleteUserById(id);
-
-    if (result.rowCount === 0) {
+    const deletedUser = await userModel.deleteUserById(id);
+    console.log('deletedUser', deletedUser);
+    if (!deletedUser) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    res.status(200).json({ message: "User deleted successfully." });
+    res.status(200).json({
+      deletedUser,
+    });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error(error);
     res.status(500).json({ message: "Error deleting user." });
   }
 };
@@ -77,20 +73,17 @@ exports.deleteUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
+    console.log('req.body', req.body);
+    const { username, email, password, isAdmin } = req.body;
 
-    if (Object.keys(updates).length === 0) {
-      return res.status(400).json({ message: "No fields to update." });
-    }
-
-    const updatedUser = await userModel.updateUserById(id, updates);
-    if (!updatedUser) {
+    const user = await userModel.getUserById(id);
+    if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    res.status(200).json({
-      updatedUser,
-    });
+    const updatedUser = await userModel.updateUserById(id, username, email, password, isAdmin);
+
+    res.status(200).json({ updatedUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating user." });

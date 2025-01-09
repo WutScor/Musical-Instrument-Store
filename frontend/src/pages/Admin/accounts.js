@@ -4,6 +4,7 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import { Box } from '@mui/system'; 
 import { AuthContext } from '../../context/authContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import AlertMessage from '../../components/Admin/alert-message';
 
 const AccountPage = () => {
@@ -13,6 +14,7 @@ const AccountPage = () => {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [alert, setAlert] = useState({ message: '', color: '' });
+  const navigate = useNavigate();
 
 
   const fetchUsers = async () => {
@@ -105,43 +107,12 @@ const AccountPage = () => {
     }
   };
 
-  // Handle delete product
-  const handleEdit = async (user) => {
-    console.log(user);
-    // try {
-    //   // Lấy token từ AuthContext
-    //   const token = context.user?.token;
-  
-    //   if (!token) {
-    //     console.error('User is not authenticated.');
-    //     return;
-    //   }
-  
-    //   // Gửi request xóa sản phẩm
-    //   const response = await fetch(`/musical_instruments/${productId}`, {
-    //     method: 'DELETE',
-    //     headers: {
-    //       'Authorization': `Bearer ${token}`, // Truyền token
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-  
-    //   // Đọc kết quả JSON từ phản hồi
-    //   const data = await response.json();
-  
-    //   if (response.status === 200) {
-    //     // Nếu thành công, cập nhật danh sách sản phẩm
-    //     setProducts(products.filter((product) => product.id !== productId));
-    //     // Hiển thị thông báo thành công
-    //     alertMessage(data.message || 'Product deleted successfully!', 'green');
-    //   } else {
-    //     // Hiển thị thông báo lỗi
-    //     alertMessage(data.message || 'Failed to delete product.', 'red');
-    //   }
-    // } catch (error) {
-    //   console.error('Error deleting product:', error);
-    //   alertMessage('An error occurred while deleting the product.', 'red');
-    // }
+  const handleEditAccount = async (user) => {
+    navigate(`/admin/accounts/edit`, { state: { user } });
+  };
+
+  const handleAddAccount = () => {
+    navigate('/admin/accounts/add');
   };
   
 
@@ -185,6 +156,7 @@ const AccountPage = () => {
               backgroundColor: '#FFD18D',
             }
           }}
+          onClick={handleAddAccount}
         >
           Add User
         </Button>
@@ -228,7 +200,7 @@ const AccountPage = () => {
                   <Button startIcon={<AiOutlineEdit />} 
                     size="small" 
                     color="primary"
-                    onClick={() => handleEdit(user)}
+                    onClick={() => handleEditAccount(user)}
                     sx={{
                       minWidth: 'auto',
                       marginRight: 1,

@@ -30,6 +30,9 @@ import AccountPage from './pages/Admin/accounts';
 import { useEffect } from 'react';
 import AddProduct from './pages/Admin/add-product';
 import EditProduct from './pages/Admin/edit-product';
+import AddAccount from './pages/Admin/add-account';
+import EditAccount from './pages/Admin/edit-account';
+import OrdersPage from './pages/Client/orders';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -72,6 +75,7 @@ function App() {
             <Route path='/auth/signup' exact={true} element={<SignUpPage/>} />
             <Route path='/product/:id' exact={true} element={<ProductDetail/>} />
             <Route path='/checkout' exact={true} element={<Checkout/>} />
+            <Route path='/orders' exact={true} element={<OrdersPage/>} />
 
             {/* Các route của Admin */}
             <Route path="/admin" element={<AdminLayout />}>
@@ -81,6 +85,8 @@ function App() {
               <Route path="/admin/products/edit" element={<EditProduct />} />
               <Route path="categories" element={<CategoryPage />} />
               <Route path="accounts" element={<AccountPage />} />
+              <Route path="/admin/accounts/add" element={<AddAccount />} />
+              <Route path="/admin/accounts/edit" element={<EditAccount />} />
               {/* Thêm các route Admin khác */}
             </Route>
           <Route path="/auth/google/callback" element={<GoogleCallback />} />
