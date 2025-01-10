@@ -3,21 +3,18 @@ import ProductCounter from "./product-quantity-counter";
 import { FaFacebook, FaLinkedin, FaPinterest } from "react-icons/fa";
 import { AuthContext } from "../../../context/authContext";
 import { addToSessionCart } from "../cart/add-to-cart-session";
+import { addToCart } from "../cart/add-to-cart";
+import { formattedPrice } from "../cart/format-price";
 
 const ShowProductDetail = ({ productDetail }) => {
   // Hiển thị nội dung sản phẩm (hình ảnh sản phẩm, chi tiết, đánh giá, thêm vào giỏ hàng theo số lượng, so sánh,...)
-  // console.log("Product Detail: ", productDetail);
   const [showNotification, setShowNotification] = useState({ show: false, message: '', color: '' });
   const [count, setCount] = useState(1);
-  //const [categoryName, setCategory] = useState('Unknown Category');
   const { id, name, image, price, release_year, category, quantity } = productDetail;
   const context = useContext(AuthContext);
 
   const categoryName = category ? category.name : 'Unknown Category';
 
-  // console.log("Context: ", context);
-  // console.log("Context User: ", context.user);
-  // console.log("user id: ", context.user.id);
   const increment = () => setCount(count + 1);
   const decrement = () => {
     if (count > 1) {
@@ -47,41 +44,20 @@ const ShowProductDetail = ({ productDetail }) => {
       if (!token) {
         addToSessionCart(productDetail, count);
         setNotice(true, "Product has been added to cart!", "green");
-        setTimeout(() => {
-          setNotice(false, '', '');
-        }, 2000);
       }
       else {
-        const cartID = context.user.id;
-        console.log("Cart ID: ", cartID);
-        const params = new URLSearchParams({
-          page:  1,
-          limit: 5
-      });
-        const makeCart = await fetch(`/carts?${params.toString()}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            user_id: cartID
-          })
-        });
-        const response = await fetch(`/carts/${cartID}/items`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify([
-            {
-              "itemId": productDetail.id,
-              "quantity": count
-            }
-          ])
-        });
-
+        if (context.user && context.user.id) {
+          const cartID = context.user.id;
+          console.log("Cart ID: ", cartID);
+          const response = await addToCart(productDetail, count, cartID, token);
+          console.log("Response: ", response);
+          if (response.ok) {
+            setNotice(true, "Product has been added to cart!", "green");
+          }
+          else {
+            setNotice(true, "Error adding to cart!", "red");
+          }
+        }
       }
     }
     else if (quantity === 0) {
@@ -112,7 +88,7 @@ const ShowProductDetail = ({ productDetail }) => {
         {/* Details */}
         <div className="product-detail">
           <h3>{name}</h3>
-          <h5>${price}</h5>
+          <h5>{formattedPrice(price)}</h5>
           {/* Rating */}
           <div className="d-flex ms-4 align-items-center my-3">
             <div className="d-flex align-items-center gap-4 fw-bolder" style={{ fontSize: '1.1rem', color: quantity > 50 ? "green" : quantity > 20 ? "goldenrod" : quantity > 0 ? "orange" : "red" }}>
