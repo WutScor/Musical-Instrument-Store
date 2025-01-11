@@ -43,11 +43,8 @@ module.exports = {
       [username, hashedPassword, email, isAdmin, publicUrl]
     );
   },
-  deleteUserById: async (id) => {
-    const query = `
-      DELETE FROM public.user
-      WHERE id = $1
-    `;
+  deleteUserById: async (id, username, email, password, is) => {
+    const query = `DELETE FROM public.user WHERE id = $1 RETURNING id`;
     return await db.result(query, [id]);
   },
   updateUserById: async (id, updates) => {
@@ -81,31 +78,30 @@ module.exports = {
   createUser: async (user) => {
     try {
       const query = `
-        INSERT INTO public.user (username, password, isadmin)
-        VALUES ($1, $2, false)
-        RETURNING id, username, isadmin
+        UPDATE public.user
+        SET username = $2, email = $3, password = $4, isadmin = $5
+        WHERE id = $1
+        RETURNING id, username, email, isadmin
       `;
-
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-
-      return await db.one(query, [user.username, hashedPassword]);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw error;
+      return await db.one(query, [id, username, email, hashedPassword, isAdmin]);
     }
   },
+  createUser: async (user) => {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    return await db.one({
+      text: `
+        INSERT INTO public.user (username, password, email, isadmin, avatar)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id, username, email, isadmin, avatar
+      `,
+      values: [user.username, hashedPassword, user.email, false, 'https://i.pinimg.com/originals/95/4e/0f/954e0f2ab2e4f5ade11b494a479fbf18.jpg'],
+    });
+  },
   getUserByUsername: async (username) => {
-    try {
-      const query = `
-        SELECT * FROM public.user
-        WHERE username = $1
-      `;
-
-      return await db.oneOrNone(query, [username]);
-    } catch (error) {
-      console.error("Error getting user by username:", error);
-      throw error;
-    }
+    return await db.oneOrNone({
+      text: "SELECT * FROM public.user WHERE username = $1",
+      values: [username],
+    });
   },
   comparePassword: async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);

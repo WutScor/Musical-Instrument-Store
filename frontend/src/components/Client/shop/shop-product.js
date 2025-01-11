@@ -104,7 +104,6 @@ const ProductItem = ({ product }) => {
           transform: 'scale(1.05)', // Phóng to nhẹ khi hover
         },
       }}
-      onClick={handleProductClick}
     >
       <Box
         className="img-wrapper position-relative"

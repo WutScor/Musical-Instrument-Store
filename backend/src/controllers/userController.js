@@ -88,23 +88,21 @@ exports.insertUser = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}
 
 exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required." });
-    }
-
-    const result = await userModel.deleteUserById(id);
-
-    if (result.rowCount === 0) {
+    const deletedUser = await userModel.deleteUserById(id);
+    console.log('deletedUser', deletedUser);
+    if (!deletedUser) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    res.status(200).json({ message: "User deleted successfully." });
+    res.status(200).json({
+      deletedUser,
+    });
   } catch (error) {
     next(error);
   }
@@ -142,8 +140,8 @@ exports.updateUser = async (req, res, next) => {
       if (publicUrl) updates.avatar = publicUrl;
     }
 
-    const updatedUser = await userModel.updateUserById(id, updates);
-    if (!updatedUser) {
+    const user = await userModel.getUserById(id);
+    if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 

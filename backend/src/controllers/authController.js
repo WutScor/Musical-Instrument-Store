@@ -19,8 +19,14 @@ exports.register = async (req, res) => {
         if (user) {
         return res.status(400).json({ message: "User already exists" });
         }
+
+        const emailUser = await userModel.getUserByEmail(email);
+
+        if (emailUser) {
+            return res.status(400).json({ message: "Email already exists" });
+        }
     
-        const newUser = await userModel.createUser({ username, password });
+        const newUser = await userModel.createUser({ username, password, email });
     
         res.json(newUser);
     } catch (error) {
@@ -65,7 +71,7 @@ exports.protected = async (req, res) => {
 exports.loginWithGoogle = async (req, res) => {
     console.log("logging in with Google", req.user);
     try {
-        const token = jwt.sign({ sub: req.user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ sub: req.user.id, role: req.user.isadmin ? "admin" : "client" }, process.env.JWT_SECRET, { expiresIn: "1h" });
         console.log('redirecting to client with token', token);
         res.redirect(`http://localhost:3000/auth/google/callback?token=${token}`);
     } catch (error) {

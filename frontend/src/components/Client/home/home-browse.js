@@ -46,9 +46,6 @@ const HomeBrowse = () => {
                         </div>
                     </div>
                 </div>
-                <button onClick={context.logout} className="btn btn-danger mt-3">
-                    Logout
-                </button>
             </div>
         </>
     )

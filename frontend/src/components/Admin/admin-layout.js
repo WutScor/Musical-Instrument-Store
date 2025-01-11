@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/authContext.js';
 const AdminLayout = () => {
 
   const context = useContext(AuthContext);
-  console.log("User:", context.user);
+  console.log('user', context.user);
   if (!context.user || !context.user.isadmin) {
     return <h1>Access denied</h1>;
   }

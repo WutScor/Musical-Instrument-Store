@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AiOutlineFilter } from "react-icons/ai";
 
-const ShopNavbar = ({ onFilterChange }) => {
+const ShopNavbar = ({ onFilterChange, selectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   // Load categories từ API
@@ -61,6 +61,7 @@ const ShopNavbar = ({ onFilterChange }) => {
           <select
             className="form-select"
             style={{ width: '150px', borderRadius: '4px', backgroundColor: '#fff', color: '#000' }}
+            value={selectedCategory || ''} // Giá trị mặc định là từ prop selectedCategory
             onChange={handleCategoryChange}
           >
             {categories.map(category => (
