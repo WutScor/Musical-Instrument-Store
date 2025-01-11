@@ -76,17 +76,6 @@ module.exports = {
     return await db.oneOrNone(query, values);
   },
   createUser: async (user) => {
-    try {
-      const query = `
-        UPDATE public.user
-        SET username = $2, email = $3, password = $4, isadmin = $5
-        WHERE id = $1
-        RETURNING id, username, email, isadmin
-      `;
-      return await db.one(query, [id, username, email, hashedPassword, isAdmin]);
-    }
-  },
-  createUser: async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     return await db.one({
       text: `
