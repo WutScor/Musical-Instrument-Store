@@ -2,19 +2,46 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  getUsers: async (limit, offset) => {
-    const baseQuery = `
-    SELECT 
-      u.*, 
-      pa.balance
-    FROM public.user u
-    LEFT JOIN payment_account pa ON u.id = pa.id
-  `;
+  getUsers: async (filters, limit, offset) => {
+    const conditions = [];
+    const values = [];
+    let query = `
+      SELECT id, username, email, isadmin, avatar
+      FROM public.user
+    `;
+
+    if (filters.username) {
+      conditions.push(`username ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.username}%`);
+    }
+
+    if (filters.email) {
+      conditions.push(`email ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.email}%`);
+    }
+
+    if (filters.isAdmin !== undefined) {
+      conditions.push(`isadmin = $${conditions.length + 1}`);
+      values.push(filters.isAdmin);
+    }
+
+    if (conditions.length > 0) {
+      query += ` WHERE ${conditions.join(" AND ")}`;
+    }
+
+    query += ` ORDER BY id`;
 
     if (limit) {
-      return await db.any(`${baseQuery} LIMIT $1 OFFSET $2`, [limit, offset]);
+      query += ` LIMIT $${values.length + 1}`;
+      values.push(limit);
     }
-    return await db.any(baseQuery);
+
+    if (offset !== null) {
+      query += ` OFFSET $${values.length + 1}`;
+      values.push(offset);
+    }
+
+    return await db.manyOrNone(query, values); 
   },
   getUserCount: async () => {
     const result = await db.one("SELECT COUNT(*) FROM public.user");
@@ -158,7 +185,7 @@ module.exports = {
   getUserById: async (id) => {
     try {
       const query = `
-        SELECT id, username, isadmin, avatar
+        SELECT id, username, email, isadmin, avatar
         FROM public.user
         WHERE id = $1
       `;
@@ -168,5 +195,11 @@ module.exports = {
       console.error("Error getting user by id:", error);
       throw error;
     }
+  },
+  getUserByEmail: async (email) => {
+    return await db.oneOrNone({
+      text: "SELECT * FROM public.user WHERE email = $1",
+      values: [email],
+    });
   },
 };

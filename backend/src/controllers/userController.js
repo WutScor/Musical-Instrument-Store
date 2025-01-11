@@ -5,6 +5,7 @@ const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const { supabase } = require("../config/supabase");
 const { BUCKET_NAME: bucketName } = require("../config/constant");
+const { search } = require("../routes/userRoutes");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
@@ -12,19 +13,17 @@ const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
 exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
-    console.log('page at userController:', page);
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
-    console.log('limit at userController:', limit);
     const offset = page && limit ? (page - 1) * limit : null;
-    console.log('offset at userController:', offset);
 
     const filters = {
       username: req.query.username,
       email: req.query.email,
-      isAdmin:
-        req.query.isAdmin !== undefined && req.query.isAdmin !== ""
-          ? req.query.isAdmin === "true"
+      isadmin:
+        req.query.isadmin !== undefined && req.query.isadmin !== ""
+          ? req.query.isadmin === "true"
           : undefined,
+      search: req.query.search,
     };
 
     const users = await userModel.getUsers(limit, offset, filters);
@@ -36,7 +35,7 @@ exports.getUsers = async (req, res, next) => {
       username: user.username,
       password: user.password,
       email: user.email,
-      isAdmin: user.isAdmin,
+      isadmin: user.isadmin,
       avatar: user.avatar,
       payment_account: { balance: user.balance },
     }));
@@ -45,7 +44,6 @@ exports.getUsers = async (req, res, next) => {
       ? paginate(transformedUsers, totalItems, page || 1, limit)
       : { data: transformedUsers, totalItems };
 
-    console.log('paginate at userController:', result);
     res.json(result);
   } catch (error) {
     console.error(error);
@@ -120,7 +118,6 @@ exports.deleteUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log('req.body', req.body);
     const updates = req.body;
 
     if (Object.keys(updates).length === 0) {

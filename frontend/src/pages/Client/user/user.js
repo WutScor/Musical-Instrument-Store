@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import UserInfo from "../../components/Client/home/user/user-info";
-import { AuthContext } from "../../context/authContext";
+import UserInfo from "../../../components/Client/home/user/user-info";
+import { AuthContext } from "../../../context/authContext";
 import { useContext } from "react";
 
 const UserPage = () => {

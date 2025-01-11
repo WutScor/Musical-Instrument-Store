@@ -15,7 +15,6 @@ const ProductPage = () => {
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [alert, setAlert] = useState({ message: '', color: '' });
 
-
   const fetchProducts = async () => {
     try {
       const searchQuery = search || '';

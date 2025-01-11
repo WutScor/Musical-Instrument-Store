@@ -52,7 +52,6 @@
 
 import React from 'react';
 import { Button, Box, Grid } from "@mui/material";
-import { AiOutlineShareAlt, AiOutlineSwap, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../../context/authContext';
@@ -154,18 +153,8 @@ const ProductItem = ({ product }) => {
 
       <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column" style={{ height: '100%' }}>
         <Button onClick={handleProductClick}>See details</Button>
+        <div className='mt-2'></div>
         <Button onClick={handleAddToCart}>Add to cart</Button>
-        <div className="d-flex justify-content-between align-items-center w-100 px-3 mt-4">
-          <div className="item">
-            <AiOutlineShareAlt /><p>Share</p>
-          </div>
-          <div className="item">
-            <AiOutlineSwap /><p>Compare</p>
-          </div>
-          <div className="item">
-            <AiOutlineHeart /><p>Like</p>
-          </div>
-        </div>
       </div>
     </Box>
   );

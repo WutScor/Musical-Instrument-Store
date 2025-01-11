@@ -1,6 +1,7 @@
 import { AuthContext } from "../../../../context/authContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
 import UserLink from "./user-link";
 
 const UserInfo = ({ name }) => {
@@ -12,6 +13,10 @@ const UserInfo = ({ name }) => {
     const handleLogout = () => {
         context.logout();
         navigate('/');
+    }
+
+    const handleEditProfile = () => {
+        navigate('/user/edit');
     }
 
     return(
@@ -54,6 +59,7 @@ const UserInfo = ({ name }) => {
                                         />
                                     </div>
                                 </div>
+                                <button onClick={handleEditProfile} className="btn btn-danger mt-4 align-self-center">Edit Profile</button>
                                 <button onClick={handleLogout} className="btn btn-danger mt-4 align-self-center">Sign Out</button>
                             </div>
                         </div>

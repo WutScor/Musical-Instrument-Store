@@ -7,7 +7,7 @@ import HomePage from './pages/Client/home';
 import ShopPage from './pages/Client/shop';
 import AboutPage from './pages/Client/about';
 import ContactPage from './pages/Client/contact';
-import UserPage from './pages/Client/user';
+import UserPage from './pages/Client/user/user';
 import FavoritePage from './pages/Client/favorite';
 import SignInPage from './pages/Client/signin';
 import SignUpPage from './pages/Client/signup';
@@ -35,6 +35,7 @@ import EditAccount from './pages/Admin/edit-account';
 import OrdersPage from './pages/Client/orders';
 import AddCategory from './pages/Admin/add-category';
 import EditCategory from './pages/Admin/edit-category';
+import UserEditPage from './pages/Client/user/user-edit';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -71,6 +72,7 @@ function App() {
             <Route path='/about' exact={true} element={<AboutPage/>} />
             <Route path='/contact' exact={true} element={<ContactPage/>} />
             <Route path='/user' exact={true} element={<UserPage/>} />
+            <Route path='/user/edit' element={<UserEditPage/>} />
             <Route path='/favorite' exact={true} element={<FavoritePage/>} />
             <Route path='/cart' exact={true} element={<CartPage/>} />
             <Route path='/auth/signin' exact={true} element={<SignInPage/>} />
