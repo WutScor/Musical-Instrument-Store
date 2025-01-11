@@ -24,7 +24,7 @@ const getOrCreateCart = async (userId, limit, offset) => {
     let paginationQuery = "";
     const values = [cart.cart_id];
 
-    if (limit && offset) {
+    if (limit) {
       paginationQuery = `LIMIT $2 OFFSET $3`;
       values.push(limit, offset);
     }

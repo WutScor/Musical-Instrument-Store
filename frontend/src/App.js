@@ -30,6 +30,7 @@ import AccountPage from './pages/Admin/accounts';
 import AddProduct from './pages/Admin/add-product';
 import EditProduct from './pages/Admin/edit-product';
 import AddCategory from './pages/Admin/add-category';
+import EditCategory from './pages/Admin/edit-category';
 
 
 
@@ -61,6 +62,7 @@ function App() {
               <Route path="/admin/products/edit" element={<EditProduct />} />
               <Route path="categories" element={<CategoryPage />} />
               <Route path="/admin/categories/add" element={<AddCategory />}></Route>
+              <Route path="/admin/categories/edit" element={<EditCategory />} />
               <Route path="accounts" element={<AccountPage />} />
               {/* Thêm các route Admin khác */}
             </Route>
