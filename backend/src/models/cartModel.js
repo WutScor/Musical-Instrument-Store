@@ -6,7 +6,7 @@ const getOrCreateCart = async (userId, limit, offset) => {
     let cart = await db.oneOrNone(
       `SELECT id AS cart_id 
        FROM cart 
-       WHERE user_id = $1 AND isPaid = false`,
+       WHERE user_id = $1`,
       [userId]
     );
 
@@ -24,7 +24,7 @@ const getOrCreateCart = async (userId, limit, offset) => {
     let paginationQuery = "";
     const values = [cart.cart_id];
 
-    if (limit !== null && offset !== null) {
+    if (limit && offset) {
       paginationQuery = `LIMIT $2 OFFSET $3`;
       values.push(limit, offset);
     }
@@ -85,13 +85,13 @@ const getItemsInCartCount = async (cart_id) => {
   return parseInt(result.count);
 };
 
-const addItemToCart = async (cart_id, musical_instrument_id, quantity) => {
+const addItemsToCart = async (cart_id, items) => {
   try {
-    // Check if the cart exists and is unpaid
+    // Check if the cart exists
     const cart = await db.oneOrNone(
       `SELECT id AS cart_id 
        FROM cart 
-       WHERE id = $1 AND isPaid = false`,
+       WHERE id = $1`,
       [cart_id]
     );
 
@@ -101,55 +101,68 @@ const addItemToCart = async (cart_id, musical_instrument_id, quantity) => {
       throw error;
     }
 
-    // Check if the musical instrument exists and get its available quantity
-    const instrument = await db.oneOrNone(
-      `SELECT id, quantity 
-       FROM musical_instrument 
-       WHERE id = $1`,
-      [musical_instrument_id]
-    );
+    // Validate item data
+    for (const item of items) {
+      const { itemId, quantity } = item;
 
-    if (!instrument) {
-      const error = new Error("Musical instrument not found");
-      error.status = 404;
-      throw error;
+      if (!itemId || !quantity) {
+        const error = new Error("Invalid item data");
+        error.status = 400;
+        throw error;
+      }
+
+      // Check if the instrument exists
+      const instrument = await db.oneOrNone(
+        `SELECT id, quantity 
+         FROM musical_instrument 
+         WHERE id = $1`,
+        [itemId]
+      );
+
+      if (!instrument) {
+        const error = new Error(
+          `Musical instrument with id ${itemId} not found`
+        );
+        error.status = 404;
+        throw error;
+      }
+
+      // Check if the quantity requested is available
+      if (quantity > instrument.quantity) {
+        const error = new Error(
+          `Not enough quantity available for musical instrument with id ${itemId}`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      // Check if the item already exists in the cart
+      const existingItem = await db.oneOrNone(
+        `SELECT * 
+         FROM cart_item 
+         WHERE cart_id = $1 AND musical_instrument_id = $2`,
+        [cart_id, itemId]
+      );
+
+      if (existingItem) {
+        // If the item already exists, update the quantity
+        await db.none(
+          `UPDATE cart_item 
+           SET quantity = $1 
+           WHERE cart_id = $2 AND musical_instrument_id = $3`,
+          [quantity, cart_id, itemId]
+        );
+      } else {
+        // If the item doesn't exist, add it to the cart
+        await db.none(
+          `INSERT INTO cart_item (cart_id, musical_instrument_id, quantity) 
+           VALUES ($1, $2, $3)`,
+          [cart_id, itemId, quantity]
+        );
+      }
     }
 
-    // Check if the requested quantity exceeds the available quantity
-    if (quantity > instrument.quantity) {
-      const error = new Error(
-        "Not enough quantity available for this musical instrument"
-      );
-      error.status = 400;
-      throw error;
-    }
-
-    // Check if the item already exists in the cart
-    const existingItem = await db.oneOrNone(
-      `SELECT id 
-       FROM cart_item 
-       WHERE cart_id = $1 AND musical_instrument_id = $2`,
-      [cart_id, musical_instrument_id]
-    );
-
-    if (existingItem) {
-      // If the item already exists, update the quantity
-      await db.none(
-        `UPDATE cart_item 
-         SET quantity = $1 
-         WHERE id = $2`,
-        [quantity, existingItem.id]
-      );
-    } else {
-      // If the item doesn't exist, add it to the cart
-      await db.none(
-        `INSERT INTO cart_item (cart_id, musical_instrument_id, quantity) 
-         VALUES ($1, $2, $3)`,
-        [cart_id, musical_instrument_id, quantity]
-      );
-    }
-
-    return { message: "Item added/updated successfully" };
+    return { message: "Items added/updated successfully" };
   } catch (error) {
     const status = error.status || 500;
     const message = error.message || "An unexpected error occurred";
@@ -164,7 +177,7 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
     const cart = await db.oneOrNone(
       `SELECT id AS cart_id 
        FROM cart 
-       WHERE id = $1 AND isPaid = false`,
+       WHERE id = $1`,
       [cart_id]
     );
 
@@ -176,7 +189,7 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
 
     // Check if the item exists in the cart
     const existingItem = await db.oneOrNone(
-      `SELECT id 
+      `SELECT 1 
        FROM cart_item 
        WHERE cart_id = $1 AND musical_instrument_id = $2`,
       [cart_id, musical_instrument_id]
@@ -191,8 +204,8 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
     // Remove the item from the cart
     await db.none(
       `DELETE FROM cart_item 
-       WHERE id = $1`,
-      [existingItem.id]
+       WHERE cart_id = $1 AND musical_instrument_id = $2`,
+      [cart_id, musical_instrument_id]
     );
 
     return { message: "Item removed from cart successfully" };
@@ -203,27 +216,9 @@ const deleteItemFromCart = async (cart_id, musical_instrument_id) => {
   }
 };
 
-const markCartAsPaid = async (cart_id) => {
-  // Mark the cart as paid
-  const updateCart = await db.result(
-    `UPDATE cart SET isPaid = true WHERE id = $1 AND isPaid = false RETURNING id`,
-    [cart_id]
-  );
-
-  // If the cart is not found or already paid, throw an error
-  if (updateCart.rowCount === 0) {
-    const error = new Error("Cart not found or already paid");
-    error.status = 404;
-    throw error;
-  }
-
-  return { message: "Checkout successful" };
-};
-
 module.exports = {
   getOrCreateCart,
   getItemsInCartCount,
-  addItemToCart,
+  addItemsToCart,
   deleteItemFromCart,
-  markCartAsPaid,
 };

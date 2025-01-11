@@ -9,7 +9,7 @@ import { useState } from "react";
 const Checkout = () => {
     const user = {
         username: 'John Doe',
-        wallet: 100000
+        wallet: 2000000
     };
     const cartProducts = [
         {
@@ -34,6 +34,12 @@ const Checkout = () => {
     const [message, setMessage] = useState("");
 
     const handlePlaceOrder = () => {
+        const checkValidation = billingDetailsRef.current.validateForm();
+
+        if (!checkValidation) {
+            return;
+        }
+
         setIsWaiting(true);
         setPaymentStatus(null);
 
