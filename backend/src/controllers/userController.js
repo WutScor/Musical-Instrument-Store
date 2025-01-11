@@ -3,9 +3,9 @@ const { paginate } = require("../helpers/paginationHelper");
 const https = require("https");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const { pass } = require("../strategies/localStrat");
 const { supabase } = require("../config/supabase");
 const { BUCKET_NAME: bucketName } = require("../config/constant");
+const { search } = require("../routes/userRoutes");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
@@ -29,7 +29,7 @@ exports.getUsers = async (req, res, next) => {
       username: user.username,
       password: user.password,
       email: user.email,
-      isAdmin: user.isAdmin,
+      isadmin: user.isadmin,
       avatar: user.avatar,
       payment_account: { balance: user.balance },
     }));
@@ -111,6 +111,7 @@ exports.deleteUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const updates = req.body;
     const updates = req.body;
 
     if (Object.keys(updates).length === 0) {

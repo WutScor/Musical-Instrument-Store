@@ -3,7 +3,6 @@ import { AiOutlineSearch, AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from '
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Pagination, Typography } from '@mui/material'; 
 import { Box } from '@mui/system'; 
 import { AuthContext } from '../../context/authContext';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertMessage from '../../components/Admin/alert-message';
 
@@ -16,7 +15,6 @@ const AccountPage = () => {
   const [alert, setAlert] = useState({ message: '', color: '' });
   const navigate = useNavigate();
 
-
   const fetchUsers = async () => {
     try {
       const searchQuery = search || '';
@@ -25,32 +23,32 @@ const AccountPage = () => {
         limit: 5,
         search: searchQuery,
       });
-  
+
       const response = await fetch(`/users?${params.toString()}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${context.token}`, // Truyền token từ AuthContext
+          Authorization: `Bearer ${context.token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error fetching users: ${response.status} - ${response.statusText}`);
       }
-  
+
       const data = await response.json();
-  
-      // Cập nhật state
+
       setUsers(data.items);
+
       setPagination({
         page: data.pagination.page,
         totalPages: data.pagination.totalPages,
       });
+      console.log('pagination', data.pagination);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
-  
 
   useEffect(() => {
     fetchUsers();
@@ -67,7 +65,7 @@ const AccountPage = () => {
 
   const showAlert = (message, color) => {
     setAlert({ message, color });
-  
+
     setTimeout(() => {
       setAlert({ message: '', color: '' });
     }, 3000);
@@ -78,12 +76,12 @@ const AccountPage = () => {
       console.log(context);
       const token = context.token;
       console.log("Access Token: ", token);
-  
+
       if (!token) {
         showAlert('User is not authenticated.', 'red');
         return;
       }
-  
+
       const response = await fetch(`/users/${userId}`, {
         method: 'DELETE',
         headers: {
@@ -91,14 +89,13 @@ const AccountPage = () => {
           'Content-Type': 'application/json',
         },
       });
-        const data = await response.json();
-  
+      const data = await response.json();
+
       if (response.status === 200) {
         setUsers(users.filter((user) => user.id !== userId));
         showAlert(data.message || 'User deleted successfully!', 'green'); 
         fetchUsers();     
-      }
-      else {
+      } else {
         showAlert(data.message || 'Failed to delete user.', 'red');      
       }
     } catch (error) {
@@ -114,7 +111,6 @@ const AccountPage = () => {
   const handleAddAccount = () => {
     navigate('/admin/accounts/add');
   };
-  
 
   return (
     <Box>
@@ -149,9 +145,9 @@ const AccountPage = () => {
             color: '#B97A04', 
             paddingX: 3,
             paddingY: 1,
-            textTransform: 'none', // Tắt chữ in hoa
-            boxShadow: 'none', // Bỏ shadow
-            border: '0.5px solid #B97A04', // Thêm border
+            textTransform: 'none',
+            boxShadow: 'none',
+            border: '0.5px solid #B97A04',
             '&:hover': {
               backgroundColor: '#FFD18D',
             }
@@ -178,9 +174,9 @@ const AccountPage = () => {
               <TableRow key={user.id}>
                 <TableCell>
                   <Box display="flex" alignItems="center">
-                    {/* <img 
-                      src={product.image} 
-                      alt={product.name} 
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name} 
                       width={50} 
                       height={50} 
                       style={{ 
@@ -190,7 +186,7 @@ const AccountPage = () => {
                         width: '50px', 
                         height: '50px' 
                       }} 
-                    />                     */}
+                    />                    
                     {user.username}
                   </Box>
                 </TableCell>
@@ -229,11 +225,11 @@ const AccountPage = () => {
           onChange={handlePageChange}
           sx={{
             '& .Mui-selected': {
-              backgroundColor: '#FFD2A5',  // Màu nền khi chọn trang
-              color: '#B97A04',  // Màu chữ khi chọn trang
+              backgroundColor: '#FFD2A5',
+              color: '#B97A04',
             },
             '& .MuiPaginationItem-root': {
-              color: '#B97A04',  // Màu chữ mặc định
+              color: '#B97A04',
             },
           }}
         />

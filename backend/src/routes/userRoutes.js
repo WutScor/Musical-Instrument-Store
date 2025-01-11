@@ -2,14 +2,18 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const passport = require("passport");
+const { upload } = require("../config/supabase");
 const authController = require('../controllers/authController');
 const { upload } = require("../config/supabase");
 
-router.get("/", userController.getUsers);
-router.post("/", upload.single("avatar"),
+router.get("/", 
+    passport.authenticate('jwt', { session: false }),
+    userController.getUsers
+);
+router.post("/", 
     passport.authenticate('jwt', { session: false }),
     authController.requireRole('admin'),
-    userController.insertUser
+    upload.single("avatar"), userController.insertUser
 );
 router.delete("/:id", 
     passport.authenticate('jwt', { session: false }),
@@ -22,6 +26,9 @@ router.put("/:id",
     upload.single("avatar"),
     userController.updateUser
 );
-router.post("/payment_account", userController.createPaymentAccount);
+router.post("/payment_account", 
+    passport.authenticate('jwt', { session: false }),
+    userController.createPaymentAccount
+);
 
 module.exports = router;

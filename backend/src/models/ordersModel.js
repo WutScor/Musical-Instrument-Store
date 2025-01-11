@@ -65,7 +65,7 @@ module.exports = {
         if (conditions.length > 0) {
             query += ` WHERE ${conditions.join(" AND ")}`;
         }
-        return await db.one(query, values);
+        return await db.one(query, values, (a) => +a.count);
     },
 
 };

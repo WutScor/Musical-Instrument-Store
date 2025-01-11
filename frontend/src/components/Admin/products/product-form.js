@@ -116,6 +116,8 @@ const ProductForm = ({ product = null }) => {
       formDataToSend.append('image', formData.image);
     }
 
+    console.log('Form data to send at product-form.js:', formDataToSend); 
+
     try {
       const method = product ? 'PUT' : 'POST';
       const url = product ? `/musical_instruments/${product.id}` : '/musical_instruments';

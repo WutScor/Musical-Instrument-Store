@@ -98,7 +98,7 @@ module.exports = {
   getUserById: async (id) => {
     try {
       const query = `
-        SELECT id, username, isadmin
+        SELECT id, username, email, isadmin, avatar
         FROM public.user
         WHERE id = $1
       `;
