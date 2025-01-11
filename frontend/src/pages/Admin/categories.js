@@ -141,6 +141,10 @@ const CategoryPage = () => {
     navigate('/admin/categories/add');
   }
 
+  const handleEditCategory = async (category) => {
+    navigate('/admin/categories/edit', { state: { category } });
+  }
+
   return (
     <Box>
       {/* Header */}
@@ -222,7 +226,7 @@ const CategoryPage = () => {
                   <Button startIcon={<AiOutlineEdit />}
                     size="small"
                     color="primary"
-
+                    onClick={() => handleEditCategory(category)}
                     sx={{
                       minWidth: 'auto',
                       marginRight: 1,

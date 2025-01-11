@@ -34,6 +34,7 @@ import AddAccount from './pages/Admin/add-account';
 import EditAccount from './pages/Admin/edit-account';
 import OrdersPage from './pages/Client/orders';
 import AddCategory from './pages/Admin/add-category';
+import EditCategory from './pages/Admin/edit-category';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -86,6 +87,7 @@ function App() {
               <Route path="/admin/products/edit" element={<EditProduct />} />
               <Route path="categories" element={<CategoryPage />} />
               <Route path="/admin/categories/add" element={<AddCategory />}></Route>
+              <Route path="/admin/categories/edit" element={<EditCategory />} />
               <Route path="accounts" element={<AccountPage />} />
               <Route path="/admin/accounts/add" element={<AddAccount />} />
               <Route path="/admin/accounts/edit" element={<EditAccount />} />

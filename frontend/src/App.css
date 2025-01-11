@@ -563,8 +563,7 @@ a {
 }
 
 .cart-img {
-  width: 100px;
-  height: 100px;
+  max-height: 150px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -869,7 +868,21 @@ p {
 }
 
 .counter-num {
-  padding: 0 5px 0 5px;
+  width: 50px;
+  text-align: center;
+  font-size: 1rem;
+  padding: 5px;
+  border: none
+}
+
+.counter-num:focus {
+  outline: none;
+}
+
+.counter-num::-webkit-inner-spin-button,
+.counter-num::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .notification-bar {
@@ -877,7 +890,7 @@ p {
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #28a745; /* Màu xanh lá */
+  /* background-color: #28a745; Màu xanh lá */
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
