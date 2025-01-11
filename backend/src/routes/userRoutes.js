@@ -4,7 +4,6 @@ const userController = require("../controllers/userController");
 const passport = require("passport");
 const { upload } = require("../config/supabase");
 const authController = require('../controllers/authController');
-const { upload } = require("../config/supabase");
 
 router.get("/", 
     passport.authenticate('jwt', { session: false }),

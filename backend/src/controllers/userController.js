@@ -112,7 +112,6 @@ exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const updates = req.body;
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No fields to update." });
