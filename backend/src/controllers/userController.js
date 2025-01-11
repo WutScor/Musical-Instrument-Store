@@ -3,7 +3,6 @@ const { paginate } = require("../helpers/paginationHelper");
 const https = require("https");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const { pass } = require("../strategies/localStrat");
 const { supabase } = require("../config/supabase");
 const { BUCKET_NAME: bucketName } = require("../config/constant");
 require("dotenv").config();
@@ -28,11 +27,9 @@ exports.getUsers = async (req, res, next) => {
           : undefined,
     };
 
-    const items = await userModel.getUsers(limit, offset, filters);
+    const users = await userModel.getUsers(limit, offset, filters);
 
     const totalItems = await userModel.getUserCount(filters);
-
-    const mappedItems = items.map(({ password, ...item }) => item);
 
     const transformedUsers = users.map((user) => ({
       id: user.id,
@@ -45,8 +42,9 @@ exports.getUsers = async (req, res, next) => {
     }));
 
     const result = limit
-      ? paginate(mappedItems, totalItems, page || 1, limit)
-      : { data: mappedItems, totalItems };
+      ? paginate(transformedUsers, totalItems, page || 1, limit)
+      : { data: transformedUsers, totalItems };
+
     console.log('paginate at userController:', result);
     res.json(result);
   } catch (error) {
@@ -123,7 +121,7 @@ exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log('req.body', req.body);
-    const { username, email, password, isAdmin } = req.body;
+    const updates = req.body;
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No fields to update." });
@@ -156,8 +154,6 @@ exports.updateUser = async (req, res, next) => {
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found." });
     }
-
-    const updatedUser = await userModel.updateUserById(id, username, email, password, isAdmin);
 
     res.status(200).json({ updatedUser });
   } catch (error) {
