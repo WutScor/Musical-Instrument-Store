@@ -4,8 +4,11 @@ const { paginate } = require("../helpers/paginationHelper");
 exports.getUsers = async (req, res) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
+    console.log('page at userController:', page);
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    console.log('limit at userController:', limit);
     const offset = page && limit ? (page - 1) * limit : null;
+    console.log('offset at userController:', offset);
 
     const filters = {
       username: req.query.username,
@@ -25,7 +28,7 @@ exports.getUsers = async (req, res) => {
     const result = limit
       ? paginate(mappedItems, totalItems, page || 1, limit)
       : { data: mappedItems, totalItems };
-
+    console.log('paginate at userController:', result);
     res.json(result);
   } catch (error) {
     console.error(error);

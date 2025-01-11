@@ -22,7 +22,7 @@ const AccountPage = () => {
       const searchQuery = search || '';
       const params = new URLSearchParams({
         page: page || 1,
-        limit: 5,
+        limit: 7,
         search: searchQuery,
       });
   
@@ -46,6 +46,7 @@ const AccountPage = () => {
         page: data.pagination.page,
         totalPages: data.pagination.totalPages,
       });
+      console.log('pagination', data.pagination);
     } catch (error) {
       console.error('Error fetching users:', error);
     }

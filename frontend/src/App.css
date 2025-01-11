@@ -22,7 +22,6 @@ body {
 
 #root {
   background: #fff;
-  width: 100vw;
 }
 
 .header {
@@ -1057,14 +1056,21 @@ p {
   --field-drab: #6d5829;
 }
 
-body {
-  background-color: #f2f2f2;
+.main-about {
   min-width: 100vh;
   font-family: 'DM Sans';
   font-size: 18px;
   line-height: 1;
   display: grid;
   place-content: center;
+}
+
+@media screen and (max-width: 768px) {
+  .main-about {
+      padding: 2rem 0;
+      min-width: auto !important;
+  }
+  
 }
 
 .xlg-text {
@@ -1341,3 +1347,10 @@ body {
   padding: 0 12vw;
 }
 
+.ms-typo {
+  margin-left: 36px !important;
+}
+
+.text-transform-none {
+  text-transform: none !important;
+}

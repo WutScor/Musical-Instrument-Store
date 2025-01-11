@@ -45,6 +45,7 @@ const ProductPage = () => {
         page: data.pagination.page,
         totalPages: data.pagination.totalPages,
       });
+      console.log('pagination', data.pagination);
     } catch (error) {
       console.error('Error fetching products:', error);
     }

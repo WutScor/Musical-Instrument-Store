@@ -2,7 +2,7 @@
 
 const AboutPage = () => {
     return(
-        <>
+        <div className="main-about">
             <div className="main d-flex justify-content-center align-items-center mt-5">
                 <div class="bento-grid">
                     <div class="item">
@@ -47,7 +47,7 @@ const AboutPage = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
