@@ -563,7 +563,9 @@ a {
 }
 
 .cart-img {
+  width: 100%;
   max-height: 150px;
+  object-fit: contain;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -755,6 +757,14 @@ a {
   padding: 0 30px !important;
   font-size: 14px !important;
   width: 100% !important;
+}
+
+.cdialog-img {
+  width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* --------- Product Detail ----------*/
@@ -965,7 +975,7 @@ p {
 .description-tabs {
   width: 60%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   margin: auto;
   font-size: 1.2rem;
