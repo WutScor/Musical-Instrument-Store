@@ -11,9 +11,7 @@ const CartInformation = () => {
     const context = useContext(AuthContext);
     const { token } = context;
     const [cartItems, setCartItems] = useState([]);
-    const [currentItems, setCurrentItems] = useState([]);
     const [cartID, setCartID] = useState();
-    // const [storedCart, setStoredCart] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [notice, setNotice] = useState({ show: false, message: '', color: '' });

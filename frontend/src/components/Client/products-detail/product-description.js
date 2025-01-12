@@ -27,12 +27,12 @@ const DescriptionTab = ({ description, additional, reviews, image }) => {
           >
             Additional Information
           </div>
-          <div
+          {/* <div
             onClick={() => setActiveTab("reviews")}
             className={activeTab === "reviews" ? "active-tab" : "tab"}
           >
             Reviews
-          </div>
+          </div> */}
         </div>
 
         {/* Tabs Content */}

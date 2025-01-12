@@ -1,14 +1,41 @@
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../context/authContext';
+import { useContext, useState } from 'react';
+import NoticeDialog from './notice-dialog';
 
 // Cart Total
-const CartTotal = ({cartItems}) => {
+const CartTotal = ({ cartItems }) => {
     const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    const [notice, setNotice] = useState({ open: false, message: "" });
+
+    const navigate = useNavigate();
 
     const formattedTotal = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
     }).format(total);
+
+    const context = useContext(AuthContext);
+
+    const checkUserToCheckout = () => {
+        const token = context.token;
+        if (!token) {
+            setNotice({ open: true, message: "You need to login to checkout!" });
+        }
+        else {
+            navigate('/checkout');
+        }
+    }
+
+    const closeNotice = () => {
+        setNotice({ open: false, message: "" });
+    }
+
+    const onLink = () => {
+        navigate('/auth/signin');
+    }
 
     return (
         <>
@@ -25,8 +52,9 @@ const CartTotal = ({cartItems}) => {
                         <p className="total-text">{formattedTotal}</p>
                     </div>
                 </div>
-                <Link to={'/checkout'}><Button className="checkout-btn">Check Out</Button></Link>
+                <Button className="checkout-btn" onClick={checkUserToCheckout}>Check Out</Button>
             </div>
+            <NoticeDialog open={notice.open} message={notice.message} onClose={closeNotice} onLink={onLink} button1={"Cancel"} button2={"Login"} />
         </>
     )
 }

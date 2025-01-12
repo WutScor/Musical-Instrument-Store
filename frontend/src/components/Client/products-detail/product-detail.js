@@ -88,7 +88,7 @@ const ShowProductDetail = ({ productDetail }) => {
         {/* Details */}
         <div className="product-detail">
           <h3>{name}</h3>
-          <h5>{formattedPrice(price)}</h5>
+          <h5 className="ms-3 mt-3">{formattedPrice(price)}</h5>
           {/* Rating */}
           <div className="d-flex ms-4 align-items-center my-3">
             <div className="d-flex align-items-center gap-4 fw-bolder" style={{ fontSize: '1.1rem', color: quantity > 50 ? "green" : quantity > 20 ? "goldenrod" : quantity > 0 ? "orange" : "red" }}>
@@ -103,15 +103,15 @@ const ShowProductDetail = ({ productDetail }) => {
             </p>
           </div>
           {/* Color */}
-          <div className="my-4">
+          {/* <div className="my-4">
             <p className="color-title">Color</p>
             <div className="d-flex gap-4">
               <div className="color-box bg-primary"></div>
               <div className="color-box bg-success"></div>
               <div className="color-box bg-danger"></div>
             </div>
-          </div>
-          <div className="d-flex button-container">
+          </div> */}
+          <div className="d-flex button-container mt-5">
             {/* Điều chỉnh số lượng sản phẩm muốn thêm vào Cart */}
             <div className="product-counter d-flex align-items-center gap-4">
               <button className="counter-btn" onClick={decrement}>-</button>

@@ -27,7 +27,7 @@ const CartItems = ({ cartItems, setCartItems, showNotice, cartID }) => {
             'Authorization': `Bearer ${context.token}`
           }
         });
-        if(deleteItem.ok) {
+        if (deleteItem.ok) {
           const updateCart = cartItems.filter((item) => item.id !== id);
           setCartItems(updateCart);
           showNotice(true, "Item has been removed from cart!", "green");
@@ -70,11 +70,13 @@ const CartItems = ({ cartItems, setCartItems, showNotice, cartID }) => {
                 <tr key={item.id} className="items-row">
                   <th className="col-4">
                     <div className="d-flex justify-content-between align-items-center gap-4">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="cart-img w-50"
-                      />
+                      <div className="w-50">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="cart-img"
+                        />
+                      </div>
                       <p className="flex-wrap fw-normal w-50">
                         {item.name}
                       </p>
