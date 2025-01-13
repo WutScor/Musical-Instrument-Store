@@ -17,10 +17,10 @@ const AboutPage = () => {
                     <div class="item">
                         <p class="lg-text">Who we are</p>
                         <ul class="team-list">
-                            <li><strong>Nguyen Dang Quoc</strong> <br/> 2112xxxx Team Leader</li>
+                            <li><strong>Nguyen Dang Quoc</strong> <br/> 21120543 Team Leader</li>
+                            <li><strong>Tran Ton Buu Quang</strong> <br/> 21120540</li>
                             <li><strong>Nguyen Van Chien</strong> <br/> 22120037</li>
                             <li><strong>Tran Trong Nghia</strong> <br/> 22120231</li>
-                            <li><strong>Tran Ton Buu Quang</strong> <br/> 21120540</li>
                         </ul>
                         <p class="sm-text">Sickalinz was established by a dedicated team of 4 talented members.</p>
                     </div>

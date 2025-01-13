@@ -18,17 +18,17 @@ exports.getUsers = async (req, res, next) => {
 
     const filters = {
       username: req.query.username,
+      search: req.query.search,
       email: req.query.email,
       isadmin:
         req.query.isadmin !== undefined && req.query.isadmin !== ""
           ? req.query.isadmin === "true"
           : undefined,
-      search: req.query.search,
     };
 
     const users = await userModel.getUsers(limit, offset, filters);
 
-    const totalItems = await userModel.getUserCount(filters);
+    const totalUsers = await userModel.getUserCount(filters);
 
     const transformedUsers = users.map((user) => ({
       id: user.id,
@@ -41,8 +41,8 @@ exports.getUsers = async (req, res, next) => {
     }));
 
     const result = limit
-      ? paginate(transformedUsers, totalItems, page || 1, limit)
-      : { data: transformedUsers, totalItems };
+      ? paginate(transformedUsers, totalUsers, page || 1, limit)
+      : { data: transformedUsers, totalUsers };
 
     res.json(result);
   } catch (error) {

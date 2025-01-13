@@ -2,7 +2,7 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  getUsers: async (filters, limit, offset) => {
+  getUsers: async (limit, offset, filters) => {
     const conditions = [];
     const values = [];
     let query = `
@@ -13,6 +13,11 @@ module.exports = {
     if (filters.username) {
       conditions.push(`username ILIKE $${conditions.length + 1}`);
       values.push(`%${filters.username}%`);
+    }
+
+    if (filters.search) {
+      conditions.push(`username ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.search}%`);
     }
 
     if (filters.email) {

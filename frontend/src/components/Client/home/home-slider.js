@@ -68,7 +68,7 @@ const HomeSlider = () => {
 
                     <div className="item">
                         <img 
-                        src="https://r4.wallpaperflare.com/wallpaper/22/762/507/film-movie-filmmaker-movie-director-wallpaper-7980187d710a0dbbd6e768ef7001360d.jpg" 
+                        src="https://r4.wallpaperflare.com/wallpaper/1006/1019/646/contemporary-flash-indoors-lights-wallpaper-88a6edc860d06c6880fcc11e18f2f44a.jpg" 
                         className="w-100" 
                         alt=""
                         onClick={() => handleImageClick(5)}

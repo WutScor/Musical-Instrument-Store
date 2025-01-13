@@ -76,7 +76,7 @@ const ContactPage = () => {
           <div className="col-md-5 me-auto">
             <h1>Contact Us</h1>
             <p className="mb-5 text-muted">
-            If you have any questions, feedback, or inquiries, feel free to reach out to us using the form below. 
+            If you have any questions, feedback, or inquiries, feel free to reach out to us using the form beside.
             We're here to help and will respond as soon as possible!
             </p>
             <ul className="list-unstyled pl-md-5 mb-5">

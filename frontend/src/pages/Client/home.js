@@ -35,8 +35,8 @@ const HomePage = () => {
     return (
         <>
             <HomeSlider />
-            <HomeBrowse />
             <HomeProducts products={products} />
+            <HomeBrowse />
         </>
     );
 };
