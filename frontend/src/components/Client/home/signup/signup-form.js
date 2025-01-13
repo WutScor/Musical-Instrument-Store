@@ -46,6 +46,31 @@ const SignUpForm = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const createPaymentAccount = async (userId) => {
+    try {
+        const response = await fetch("/users/payment_account", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+            }),
+        });
+    
+        const data = await response.json();
+
+        if (response.ok) {
+            navigate("/auth/signin");
+        } else {
+            setError(data.message || "Registration failed");
+        }
+    } catch (error) {
+        console.error("Error registering user:", error);
+        setError("An error occurred processing your request");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -72,7 +97,7 @@ const SignUpForm = () => {
 
         if (response.ok) {
             console.log("User registered:", data);
-            navigate("/auth/signin");
+            await createPaymentAccount(data.id)
         } else {
             setError(data.message || "Registration failed");
         }

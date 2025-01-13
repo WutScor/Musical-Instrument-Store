@@ -20,11 +20,11 @@ exports.register = async (req, res) => {
         return res.status(400).json({ message: "User already exists" });
         }
 
-        // const emailUser = await userModel.getUserByEmail(email);
+        const emailUser = await userModel.getUserByEmail(email);
 
-        // if (emailUser) {
-        //     return res.status(400).json({ message: "Email already exists" });
-        // }
+        if (emailUser) {
+            return res.status(400).json({ message: "Email already exists" });
+        }
     
         const newUser = await userModel.createUser({ username, password, email });
     

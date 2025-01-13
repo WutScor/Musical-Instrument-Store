@@ -122,6 +122,9 @@ const ProductItem = ({ product }) => {
         }}
       >
         <img src={product.image} alt={product.name} />
+        {product.quantity === 0 && (
+          <span className="badge bg-primary position-absolute">Out of stock</span>
+        )}
       </Box>
 
       <Box className="product-info w-100" sx={{ padding: '10px', height: '100px', overflow: 'hidden' }}>
@@ -154,7 +157,9 @@ const ProductItem = ({ product }) => {
       <div className="product-hover position-absolute d-flex align-items-center justify-content-center flex-column" style={{ height: '100%' }}>
         <Button onClick={handleProductClick}>See details</Button>
         <div className='mt-2'></div>
-        <Button onClick={handleAddToCart}>Add to cart</Button>
+        {product.quantity === 0 
+        ? <Button disabled onClick={handleAddToCart}>Add to cart</Button> 
+        : <Button onClick={handleAddToCart}>Add to cart</Button>}        
       </div>
     </Box>
   );

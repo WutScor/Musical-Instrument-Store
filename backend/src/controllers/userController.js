@@ -33,7 +33,7 @@ exports.getUsers = async (req, res, next) => {
     const transformedUsers = users.map((user) => ({
       id: user.id,
       username: user.username,
-      password: user.password,
+      //password: user.password,
       email: user.email,
       isadmin: user.isadmin,
       avatar: user.avatar,
@@ -146,14 +146,12 @@ exports.updateUser = async (req, res, next) => {
       if (publicUrl) updates.avatar = publicUrl;
     }
 
-    const user = await userModel.getUserById(id);
-    if (!user) {
+    const updatedUser = await userModel.updateUserById(id, updates);
+    if (!updatedUser) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    res.status(200).json({
-      updatedUser,
-    });
+    res.status(200).json({ updatedUser });
   } catch (error) {
     next(error);
   }

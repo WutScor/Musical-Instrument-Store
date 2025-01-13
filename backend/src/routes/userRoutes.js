@@ -21,12 +21,10 @@ router.delete("/:id",
 );
 router.put("/:id",
     passport.authenticate('jwt', { session: false }),
-    authController.requireRole('admin'),
     upload.single("avatar"),
     userController.updateUser
 );
 router.post("/payment_account", 
-    passport.authenticate('jwt', { session: false }),
     userController.createPaymentAccount
 );
 

@@ -6,8 +6,11 @@ module.exports = {
     const conditions = [];
     const values = [];
     let query = `
-      SELECT id, username, email, isadmin, avatar
-      FROM public.user
+      SELECT 
+        u.*, 
+        pa.balance
+      FROM public."user" u
+      LEFT JOIN payment_account pa ON u.id = pa.id
     `;
 
     if (filters.username) {
@@ -34,12 +37,19 @@ module.exports = {
       query += ` WHERE ${conditions.join(" AND ")}`;
     }
 
+    query += ` ORDER BY id`;
+
     if (limit) {
-      baseQuery += ` LIMIT $2 OFFSET $3`;
-      return await db.any(baseQuery, [`%${search}%`, limit, offset]);
+      query += ` LIMIT $${values.length + 1}`;
+      values.push(limit);
     }
 
-    return await db.any(baseQuery, [`%${search}%`]);
+    if (offset !== null) {
+      query += ` OFFSET $${values.length + 1}`;
+      values.push(offset);
+    }
+
+    return await db.manyOrNone(query, values);
   },
 
   // getUserCount: async (search) => {

@@ -1,7 +1,7 @@
 import { formattedPrice } from "../cart/format-price";
 
 const CheckoutPayment = ({ user }) => {
-    // console.log('Payment User:', user);
+    console.log('Payment User:', user);
     return (
         <>
             <div className="d-flex flex-column gap-2">
