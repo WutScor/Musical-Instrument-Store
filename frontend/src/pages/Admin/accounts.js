@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AiOutlineSearch, AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'; 
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Pagination, Typography } from '@mui/material'; 
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Pagination, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'; 
 import { Box } from '@mui/system'; 
 import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ const AccountPage = () => {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [alert, setAlert] = useState({ message: '', color: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState({open: false, userId: null});
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
@@ -70,6 +71,14 @@ const AccountPage = () => {
       setAlert({ message: '', color: '' });
     }, 3000);
   };
+
+  const confirmDelete = (userId) => {
+    setDeleteConfirm({open: true, userId});
+  }
+
+  const handleCloseDialog = () => {
+    setDeleteConfirm({open: false, userId: null});
+  }
 
   const handleDelete = async (userId) => {
     try {
@@ -205,7 +214,7 @@ const AccountPage = () => {
                   <Button startIcon={<AiOutlineDelete style={{ color: '#E92020' }}/>} 
                     size="small" 
                     color="secondary" 
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => confirmDelete(user.id)}
                     sx={{
                       minWidth: 'auto',
                       padding: '4px 8px',
@@ -235,6 +244,36 @@ const AccountPage = () => {
         />
       </Box>
       <AlertMessage message={alert.message} color={alert.color} />
+
+      {/* Dialog Confirm Delete */}
+      <Dialog
+        open={deleteConfirm.open}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this account? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleDelete(deleteConfirm.userId);
+              handleCloseDialog();
+            }}
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

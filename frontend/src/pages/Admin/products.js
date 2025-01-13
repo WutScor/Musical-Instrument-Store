@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AiOutlineSearch, AiOutlinePlus, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'; 
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Pagination, Typography } from '@mui/material'; 
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Pagination, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'; 
 import { Box } from '@mui/system'; 
 import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ const ProductPage = () => {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [alert, setAlert] = useState({ message: '', color: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState({open: false, productId: null});
 
   const fetchProducts = async () => {
     try {
@@ -72,6 +73,14 @@ const ProductPage = () => {
     }, 3000);
   };
 
+  const confirmDelete = (productId) => {
+    setDeleteConfirm({open: true, productId});
+  }
+
+  const handleCloseDialog = () => {
+    setDeleteConfirm({open: false, productId: null});
+  }
+
   const handleDelete = async (productId) => {
     try {
       console.log(context);
@@ -106,7 +115,6 @@ const ProductPage = () => {
     }
   };
 
-  // Handle delete product
   const handleEdit = async (product) => {
     navigate(`/admin/products/edit`, { state: { product } });
   };
@@ -213,7 +221,7 @@ const ProductPage = () => {
                   <Button startIcon={<AiOutlineDelete style={{ color: '#E92020' }}/>} 
                     size="small" 
                     color="secondary" 
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => confirmDelete(product.id)}
                     sx={{
                       minWidth: 'auto',
                       padding: '4px 8px',
@@ -243,6 +251,36 @@ const ProductPage = () => {
         />
       </Box>
       <AlertMessage message={alert.message} color={alert.color} />
+
+      {/* Dialog Confirm Delete */}
+      <Dialog
+        open={deleteConfirm.open}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this product? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleDelete(deleteConfirm.productId);
+              handleCloseDialog();
+            }}
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

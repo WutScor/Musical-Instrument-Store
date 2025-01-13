@@ -3,7 +3,7 @@ import { TextField, Button, Box, Typography, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/authContext';
 
-const AccountForm = ({ user = null, users }) => {
+const AccountForm = ({ user = null }) => {
   const context = useContext(AuthContext);
   const [formData, setFormData] = useState({
     username: '',
@@ -12,11 +12,37 @@ const AccountForm = ({ user = null, users }) => {
     isAdmin: false,
     avatar: null,
   });
+  const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+        const response = await fetch('/users', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${context.token}`,
+            },
+        });
+        const data = await response.json();
+        console.log("UUUUUUUUU---: ", data);
+        if (response.ok) {
+            setUsers(data.data);
+        } else {
+            console.error(data.message || 'Failed to fetch users');
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+  }
+
+  useEffect(() =>  {
+    fetchUsers();
+  }, []);
+
+  useEffect(() =>  {
     if (user) {
       setFormData({
         username: user.username || '',
@@ -58,6 +84,7 @@ const AccountForm = ({ user = null, users }) => {
     const newErrors = {};
     if (!formData.username) newErrors.username = 'Username is required';
     //check if username already exists
+    console.log("USERSSSS: ", users);
     if (users.find((u) => u.username === formData.username && u.username !== user?.username)) {
       newErrors.username = 'Username already exists';
     }

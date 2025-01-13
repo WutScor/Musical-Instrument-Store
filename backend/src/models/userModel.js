@@ -42,26 +42,15 @@ module.exports = {
     if (limit) {
       query += ` LIMIT $${values.length + 1}`;
       values.push(limit);
-    }
 
-    if (offset !== null) {
-      query += ` OFFSET $${values.length + 1}`;
-      values.push(offset);
-    }
+      if (offset !== null) {
+        query += ` OFFSET $${values.length + 1}`;
+        values.push(offset);
+      }
+    }    
 
     return await db.manyOrNone(query, values);
   },
-
-  // getUserCount: async (search) => {
-  //   let countQuery = `SELECT COUNT(*) FROM public."user"`;
-
-  //   if (search) {
-  //     countQuery += ` WHERE username ILIKE $1 OR email ILIKE $1`;
-  //   }
-
-  //   const result = await db.one(countQuery, [`%${search}%`]);
-  //   return parseInt(result.count);
-  // },
 
   getUserCount: async (filters) => {
     const conditions = [];
