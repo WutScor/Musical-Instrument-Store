@@ -6,11 +6,10 @@ const authController = require('../controllers/authController');
 
 router.get("/",
     passport.authenticate('jwt', { session: false }),
-    authController.requireRole('admin'), 
     orderController.getOrders);
 router.get('/revenue',
-    passport.authenticate('jwt', { session: false }),
-    authController.requireRole('admin'),
+    // passport.authenticate('jwt', { session: false }),
+    // authController.requireRole('admin'),
     orderController.getRevenue);
 
 module.exports = router;
