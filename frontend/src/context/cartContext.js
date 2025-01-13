@@ -8,8 +8,8 @@ export const CartContextProvider = ({ children }) => {
 
   const plusCartItemQtty = () => setCartItemQtty(cartItemQtty + 1);
   const minusCartItemQtty = () => cartItemQtty > 0 && setCartItemQtty(cartItemQtty - 1);
-  const updateCartItemQtty = (newQuantity) => {
-    if (newQuantity >= 0) setCartItemQtty(newQuantity);
+  const updateCartItemQtty = (total) => {
+    setCartItemQtty(total);
   };
 
   return (

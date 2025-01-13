@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import ProductCounter from "./product-quantity-counter";
 import { FaFacebook, FaLinkedin, FaPinterest } from "react-icons/fa";
 import { AuthContext } from "../../../context/authContext";
+import { CartContext } from "../../../context/cartContext";
 import { addToSessionCart } from "../cart/add-to-cart-session";
 import { addToCart } from "../cart/add-to-cart";
 import { formattedPrice } from "../cart/format-price";
@@ -11,7 +12,8 @@ const ShowProductDetail = ({ productDetail }) => {
   const [showNotification, setShowNotification] = useState({ show: false, message: '', color: '' });
   const [count, setCount] = useState(1);
   const { id, name, image, price, release_year, category, quantity } = productDetail;
-  const context = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const cartContext = useContext(CartContext);
 
   const categoryName = category ? category.name : 'Unknown Category';
 
@@ -39,19 +41,33 @@ const ShowProductDetail = ({ productDetail }) => {
   };
 
   const handleAddToCart = async () => {
-    const token = context.token;
+    const token = authContext.token;
     if (count <= quantity) {
       if (!token) {
-        addToSessionCart(productDetail, count);
+        const check = addToSessionCart(productDetail, count, quantity);
+        const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+        cartContext.updateCartItemQtty(storedCart.length);
         setNotice(true, "Product has been added to cart!", "green");
       }
       else {
-        if (context.user && context.user.id) {
-          const cartID = context.user.id;
+        if (authContext.user && authContext.user.id) {
+          const cartID = authContext.user.id;
           console.log("Cart ID: ", cartID);
           const response = await addToCart(productDetail, count, cartID, token);
           console.log("Response: ", response);
           if (response.ok) {
+            const newFetch = await fetch(`/carts/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                user_id: cartID
+              })
+            });
+            const newCart = await newFetch.json();
+            cartContext.updateCartItemQtty(newCart.data.items.length);
             setNotice(true, "Product has been added to cart!", "green");
           }
           else {
