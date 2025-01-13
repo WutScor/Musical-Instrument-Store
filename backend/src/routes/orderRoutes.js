@@ -8,8 +8,8 @@ router.get("/",
     passport.authenticate('jwt', { session: false }),
     orderController.getOrders);
 router.get('/revenue',
-    // passport.authenticate('jwt', { session: false }),
-    // authController.requireRole('admin'),
+    passport.authenticate('jwt', { session: false }),
+    authController.requireRole('admin'),
     orderController.getRevenue);
 
 module.exports = router;
