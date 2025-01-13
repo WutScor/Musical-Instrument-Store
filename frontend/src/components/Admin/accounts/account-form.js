@@ -3,7 +3,7 @@ import { TextField, Button, Box, Typography, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/authContext';
 
-const AccountForm = ({ user = null }) => {
+const AccountForm = ({ user = null, users }) => {
   const context = useContext(AuthContext);
   const [formData, setFormData] = useState({
     username: '',
@@ -57,7 +57,15 @@ const AccountForm = ({ user = null }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = 'Username is required';
+    //check if username already exists
+    if (users.find((u) => u.username === formData.username && u.username !== user?.username)) {
+      newErrors.username = 'Username already exists';
+    }
     if (!formData.email) newErrors.email = 'Email is required';
+    //check if email already exists
+    if (users.find((u) => u.email === formData.email && u.email !== user?.email)) {
+      newErrors.email = 'Email already exists';
+    }
     if (!user && !formData.password) newErrors.password = 'Password is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

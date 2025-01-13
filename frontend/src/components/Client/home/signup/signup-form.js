@@ -63,7 +63,7 @@ const SignUpForm = () => {
         if (response.ok) {
             navigate("/auth/signin");
         } else {
-            setError(data.message || "Registration failed");
+            setError(data.message || 'Payment account creation failed');
         }
     } catch (error) {
         console.error("Error registering user:", error);

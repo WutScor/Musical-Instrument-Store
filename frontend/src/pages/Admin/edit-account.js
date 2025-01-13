@@ -4,12 +4,12 @@ import AccountForm from "../../components/Admin/accounts/account-form";
 
 const EditAccount = () => {
     const location = useLocation();
-    const { user } = location.state || {};
+    const { user, users } = location.state || {};
 
     return (
         <div>
             <h2 style={{ fontWeight: "bold" }}>Edit Account</h2>
-            {user ? <AccountForm user={user} /> : <div>Loading...</div>}
+            {user ? <AccountForm user={user} users={users} /> : <div>Loading...</div>}
         </div>
     );
 };

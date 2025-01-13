@@ -104,12 +104,12 @@ const AccountPage = () => {
     }
   };
 
-  const handleEditAccount = async (user) => {
-    navigate(`/admin/accounts/edit`, { state: { user } });
+  const handleEditAccount = async (user, users) => {
+    navigate(`/admin/accounts/edit`, { state: { user, users } });
   };
 
-  const handleAddAccount = () => {
-    navigate('/admin/accounts/add');
+  const handleAddAccount = (users) => {
+    navigate('/admin/accounts/add' , { state: { users } });
   };
 
   return (
@@ -152,7 +152,7 @@ const AccountPage = () => {
               backgroundColor: '#FFD18D',
             }
           }}
-          onClick={handleAddAccount}
+          onClick={() => handleAddAccount(users)}
         >
           Add User
         </Button>
@@ -196,7 +196,7 @@ const AccountPage = () => {
                   <Button startIcon={<AiOutlineEdit />} 
                     size="small" 
                     color="primary"
-                    onClick={() => handleEditAccount(user)}
+                    onClick={() => handleEditAccount(user, users)}
                     sx={{
                       minWidth: 'auto',
                       marginRight: 1,

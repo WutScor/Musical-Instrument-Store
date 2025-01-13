@@ -4,7 +4,31 @@ import { AuthContext } from '../../context/authContext';
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
-  const { fetchUserData, setToken } = useContext(AuthContext);
+  const { fetchUserData, setToken, user } = useContext(AuthContext);
+
+  const createPaymentAccount = async (userId) => {
+    try {
+        const response = await fetch("/users/payment_account", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+            }),
+        });
+    
+        const data = await response.json();
+
+        if (response.ok) {
+            navigate("/");
+        } else {
+            console.error(data.message || 'Payment account creation failed');
+        }
+    } catch (error) {
+        console.error("Error registering user:", error);
+    }
+  };
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
@@ -18,8 +42,12 @@ const GoogleCallback = () => {
           localStorage.setItem('token', token);
           setToken(token); // Cập nhật token trong AuthContext
           await fetchUserData(); // Lấy thông tin user ngay lập tức
+          console.log("User data:", user);
           window.history.replaceState({}, document.title, "/"); // Xóa query parameters
-          navigate('/'); 
+          if (user) {
+            console.log("User logged in with Google:", user);
+            await createPaymentAccount(user.id);
+          }
         } else {
           console.log("No token found, redirecting to login page");
           navigate('/auth/signin');
@@ -31,7 +59,7 @@ const GoogleCallback = () => {
     };
 
     handleGoogleCallback();
-  }, [navigate, fetchUserData, setToken]);
+  }, [navigate, fetchUserData, setToken, user]);
 
   return <div>Loading...</div>;
 };
