@@ -2,19 +2,36 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  getUsers: async (limit, offset, search) => {
-    let baseQuery = `
-    SELECT 
-      u.*, 
-      pa.balance
-    FROM public."user" u
-    LEFT JOIN payment_account pa ON u.id = pa.id
-  `;
-
-    if (search) {
-      baseQuery += `
-      WHERE u.username ILIKE $1 OR u.email ILIKE $1
+  getUsers: async (limit, offset, filters) => {
+    const conditions = [];
+    const values = [];
+    let query = `
+      SELECT id, username, email, isadmin, avatar
+      FROM public.user
     `;
+
+    if (filters.username) {
+      conditions.push(`username ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.username}%`);
+    }
+
+    if (filters.search) {
+      conditions.push(`username ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.search}%`);
+    }
+
+    if (filters.email) {
+      conditions.push(`email ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.email}%`);
+    }
+
+    if (filters.isAdmin !== undefined) {
+      conditions.push(`isadmin = $${conditions.length + 1}`);
+      values.push(filters.isAdmin);
+    }
+
+    if (conditions.length > 0) {
+      query += ` WHERE ${conditions.join(" AND ")}`;
     }
 
     if (limit) {
@@ -25,15 +42,42 @@ module.exports = {
     return await db.any(baseQuery, [`%${search}%`]);
   },
 
-  getUserCount: async (search) => {
-    let countQuery = `SELECT COUNT(*) FROM public."user"`;
+  // getUserCount: async (search) => {
+  //   let countQuery = `SELECT COUNT(*) FROM public."user"`;
 
-    if (search) {
-      countQuery += ` WHERE username ILIKE $1 OR email ILIKE $1`;
+  //   if (search) {
+  //     countQuery += ` WHERE username ILIKE $1 OR email ILIKE $1`;
+  //   }
+
+  //   const result = await db.one(countQuery, [`%${search}%`]);
+  //   return parseInt(result.count);
+  // },
+
+  getUserCount: async (filters) => {
+    const conditions = [];
+    const values = [];
+    let query = "SELECT COUNT(*) FROM public.user";
+
+    if (filters.username) {
+      conditions.push(`username ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.username}%`);
     }
 
-    const result = await db.one(countQuery, [`%${search}%`]);
-    return parseInt(result.count);
+    if (filters.email) {
+      conditions.push(`email ILIKE $${conditions.length + 1}`);
+      values.push(`%${filters.email}%`);
+    }
+
+    if (filters.isAdmin !== undefined) {
+      conditions.push(`isadmin = $${conditions.length + 1}`);
+      values.push(filters.isAdmin);
+    }
+
+    if (conditions.length > 0) {
+      query += ` WHERE ${conditions.join(" AND ")}`;
+    }
+
+    return await db.one(query, values, (data) => +data.count);
   },
 
   insertUser: async (username, password, email, isAdmin, publicUrl) => {
@@ -108,5 +152,11 @@ module.exports = {
       console.error("Error getting user by id:", error);
       throw error;
     }
+  },
+  getUserByEmail: async (email) => {
+    return await db.oneOrNone({
+      text: "SELECT * FROM public.user WHERE email = $1",
+      values: [email],
+    });
   },
 };

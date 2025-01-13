@@ -38,7 +38,7 @@ const Footer = () => {
                     <hr/>
 
                     <div className="copyright py-3">
-                        <p>©2024 team <b>Sickalinz.</b> All rights reserved.</p>
+                        <p>©2025 team <b>Sickalinz.</b> All rights reserved.</p>
                     </div>
                 </div>
             </div>

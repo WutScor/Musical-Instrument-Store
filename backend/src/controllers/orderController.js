@@ -18,7 +18,7 @@ exports.getOrders = async (req, res, next) => {
     const result = limit
       ? paginate(orders, totalItems, page || 1, limit)
       : { data: orders, totalItems };
-
+    console.log('result', result);
     res.json(result);
   } catch (error) {
     next(error);

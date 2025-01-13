@@ -14,15 +14,21 @@ exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
-    const search = req.query.search || "";
+    const offset = page && limit ? (page - 1) * limit : null;
 
-    let offset = 0;
-    if (page && limit) {
-      offset = (page - 1) * limit;
-    }
+    const filters = {
+      username: req.query.username,
+      search: req.query.search,
+      email: req.query.email,
+      isadmin:
+        req.query.isadmin !== undefined && req.query.isadmin !== ""
+          ? req.query.isadmin === "true"
+          : undefined,
+    };
 
-    const users = await userModel.getUsers(limit, offset, search);
-    const totalItems = await userModel.getUserCount(search);
+    const users = await userModel.getUsers(limit, offset, filters);
+
+    const totalUsers = await userModel.getUserCount(filters);
 
     const transformedUsers = users.map((user) => ({
       id: user.id,
@@ -35,8 +41,8 @@ exports.getUsers = async (req, res, next) => {
     }));
 
     const result = limit
-      ? paginate(transformedUsers, totalItems, page || 1, limit)
-      : { data: transformedUsers, totalItems };
+      ? paginate(transformedUsers, totalUsers, page || 1, limit)
+      : { data: transformedUsers, totalUsers };
 
     res.json(result);
   } catch (error) {

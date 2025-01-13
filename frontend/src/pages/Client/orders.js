@@ -12,7 +12,7 @@ import {
     IconButton,
     Pagination,
 } from "@mui/material";
-//import { ExpandLess, ExpandMore } from "@mui/icons-material"; 
+import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import { AuthContext } from '../../context/authContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -163,9 +163,9 @@ const OrdersPage = () => {
                                             ${order.total_price}
                                         </TableCell>
                                         <TableCell sx={{ backgroundColor: "#F5F5F5" }}>
-                                            {/* <IconButton onClick={() => toggleRow(order.id)}>
-                                                {expandedRow === order.id ? <ExpandLess /> : <ExpandMore />}
-                                            </IconButton> */}
+                                            <IconButton onClick={() => toggleRow(order.id)}>
+                                                {expandedRow === order.id ? <MdExpandLess /> : <MdExpandMore />}
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                     {expandedRow === order.id && (

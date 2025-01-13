@@ -7,7 +7,7 @@ const HomeProducts = ({ products }) => {
 
   return (
     <div>
-      <div className="container mt-4 d-flex justify-content-center align-items-center flex-column">
+      <div className="container my-4 d-flex justify-content-center align-items-center flex-column">
       <h1 className="title mt-5">Explore Our Instruments</h1>
       <p className="title-desc mb-5">
           Find the perfect musical instrument to elevate your performance.

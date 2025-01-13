@@ -9,7 +9,7 @@ const HomeBrowse = () => {
 
     return(
         <>
-            <div className="main d-flex justify-content-center align-items-center flex-column">
+            <div className="main d-flex justify-content-center align-items-center flex-column mt-5">
                 <div className="container-w1">
                     <div className="d-flex align-items-center justify-content-center textZone flex-column">
                     <h1 

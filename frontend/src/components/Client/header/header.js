@@ -46,7 +46,7 @@ const Header = () => {
                         ) : (
                             <div className="col-md-8 d-flex justify-content-between align-items-center">
                                 <div className="row w-100">
-                                    <div className="col-md-6">
+                                    <div className="col-md-6 d-flex align-items-center">
                                         <HeaderNav />
                                     </div>
                                     <div className="col-md-6">
