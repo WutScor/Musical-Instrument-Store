@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
+import { Button } from '@mui/material';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
@@ -69,11 +70,11 @@ const SignInForm = () => {
             <div className="signin-form container mt-5">
                 <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "500px" }}>
                     <div className="row mb-3">
-                        <div className="col d-flex align-items-center">
+                        <div className="col-4 d-flex align-items-center">
                             <AiOutlineUser className="me-2" />
                             <label className="mb-0">Username</label>
                         </div>
-                        <div className="col">
+                        <div className="col-8">
                             <input
                                 type="text"
                                 className="form-control"
@@ -84,11 +85,11 @@ const SignInForm = () => {
                         </div>
                     </div>
                     <div className="row mb-3">
-                        <div className="col d-flex align-items-center">
+                        <div className="col-4 d-flex align-items-center">
                             <AiOutlineLock className="me-2" />
                             <label className="mb-0">Password</label>
                         </div>
-                        <div className="col position-relative">
+                        <div className="col-8 position-relative">
                             <input
                                 type={type}
                                 className="form-control"
@@ -111,13 +112,40 @@ const SignInForm = () => {
                         </div>
                     )}
                     <div className="text-center">
-                        <button type="submit" className="btn mt-3">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{
+                            backgroundColor: "#B88E2F",
+                            color: "#FFFFFF",
+                            "&:hover": {
+                                backgroundColor: "#A57C28",
+                            },
+                            marginTop: "1rem",
+                            }}
+                        >
                             Sign In
-                        </button>
+                        </Button>
                     </div>
                     {/* Google Login Button */}
                     <div className="text-center mt-3">
-                        <a href="https://localhost:4000/auth/google" className="btn btn-outline-danger google">
+                        <a href="https://localhost:4000/auth/google" className="btn google"
+                            style={{
+                                border: "1px solid #B88E2F",
+                                borderRadius: "5px",
+                                padding: "10px 20px",
+                                textDecoration: "none",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.backgroundColor = "#E4D7BE";
+                              }}
+                            onMouseOut={(e) => {
+                                e.target.style.backgroundColor = "#FFFFFF";
+                              }}
+                              >
                             <FaGoogle className="me-2" />
                             Sign In with Google
                         </a>

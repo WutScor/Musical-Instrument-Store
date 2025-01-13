@@ -198,7 +198,6 @@ const CartDialog = () => {
                 <div className="pad-25">
                     <div className="d-flex justify-content-around align-items-center btn-grp">
                         <Link to={'/cart'}><Button onClick={() => cartContext.setIsOpenCart(false)}>Cart</Button></Link>
-                        <Link><Button onClick={checkUserToCheckout}>Checkout</Button></Link>
                     </div>
                 </div>
             </Dialog>

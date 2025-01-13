@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineUser, AiOutlineMail, AiOutlineLock } from "react-icons/ai";
+import { Button } from '@mui/material';
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 import { useNavigate } from "react-router-dom";
@@ -187,9 +188,22 @@ const SignUpForm = () => {
         </div>
       } {/* Hiển thị thông báo lỗi */}
       <div className="d-flex justify-content-center mt-3">
-        <button type="submit" className="btn">
-          Sign Up
-        </button>
+        <div className="text-center">
+            <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                backgroundColor: "#B88E2F",
+                color: "#FFFFFF",
+                "&:hover": {
+                    backgroundColor: "#A57C28",
+                },
+                marginTop: "1rem",
+                }}
+            >
+                Sign Up
+            </Button>
+        </div>
       </div>
     </form>
   );

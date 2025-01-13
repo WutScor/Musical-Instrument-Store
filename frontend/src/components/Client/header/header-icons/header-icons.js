@@ -70,6 +70,7 @@ const HeaderIcons = () => {
         </div>
       ) : (
         <>
+          <div className="col-md-2"></div>
           <Link to={"/user"} className="col-md-2">
             <AiOutlineUser />
           </Link>
@@ -85,9 +86,9 @@ const HeaderIcons = () => {
               <AiOutlineSearch />
             </button>
           </div>
-          <Link to={"/favorite"} className="col-md-2">
+          {/* <Link to={"/favorite"} className="col-md-2">
             <AiOutlineHeart />
-          </Link>
+          </Link> */}
           <div className="col-md-2">
             <CartIcon />
           </div>

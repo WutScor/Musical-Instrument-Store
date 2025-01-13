@@ -19,7 +19,7 @@ const CDialogComponent = ({ products, cartId }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${context.token}`
+                    'Authorization': `Bearer ${authContext.token}`
                 },
                 body: JSON.stringify([
                     {
@@ -91,7 +91,7 @@ const CDialogComponent = ({ products, cartId }) => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${context.token}`
+                    'Authorization': `Bearer ${authContext.token}`
                 }
             });
             if (remove.ok) {

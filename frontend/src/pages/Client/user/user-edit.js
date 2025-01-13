@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/authContext';
 
@@ -10,7 +10,6 @@ const UserEditPage = () => {
     username: user.username || '',
     avatar: null,
   });
-  const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState('');
   const navigate = useNavigate();
 
