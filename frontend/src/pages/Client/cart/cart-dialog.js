@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CartDialog = () => {
 
-    const context = useContext(CartContext);
+    const cartContext = useContext(CartContext);
     const authContext = useContext(AuthContext);
     const { token } = authContext;
     const [notice, setNotice] = useState({ open: false, message: "" });
@@ -18,12 +18,15 @@ const CartDialog = () => {
     const [cartID, setCartID] = useState();
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 1;
 
     // Lấy sản phẩm trong session
-    useEffect(() => {
-        const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
-        setCartItems(storedCart);
-    }, []);
+    // useEffect(() => {
+    //     const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+    //     setCartItems(storedCart);
+    //     cartContext.updateCartItemQtty(storedCart.length);
+    //     setTotalPages(Math.ceil(storedCart.length / itemsPerPage));
+    // }, []);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -69,6 +72,7 @@ const CartDialog = () => {
                     release_year: item.musical_instrument.release_year
                 }));
                 const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+                cartContext.updateCartItemQtty(data.pagination.totalItems + storedCart.length);
 
                 if (storedCart.length !== 0) {
                     storedCart.forEach(storedItem => {
@@ -106,7 +110,6 @@ const CartDialog = () => {
                 }
 
                 setCartItems(newItems);
-
             } catch (error) {
                 console.error('Error fetching cart items:', error);
             }
@@ -120,10 +123,24 @@ const CartDialog = () => {
         else {
             const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
             setCartItems(storedCart);
-            setTotalPages(0);
-            setPage(1);
+            setTotalPages(Math.ceil(storedCart.length / itemsPerPage));
+            cartContext.updateCartItemQtty(storedCart.length);
         }
     }, [authContext.user, page]);
+
+    useEffect(() => {
+        if (authContext.user && authContext.user.id) {
+            getCartItems();
+        }
+        else {
+            const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            setCartItems(storedCart);
+            setTotalPages(Math.ceil(storedCart.length / itemsPerPage));
+            // cartContext.updateCartItemQtty(storedCart);
+            // setTotalPages(0);
+        }
+        setPage(1);
+    }, [cartContext.isOpenCart]);
 
     const checkUserToCheckout = () => {
         if (!token) {
@@ -136,24 +153,27 @@ const CartDialog = () => {
 
     const closeNotice = () => {
         setNotice({ open: false, message: "" });
-        context.setIsOpenCart(false);
+        cartContext.setIsOpenCart(false);
+        setPage(1);
     }
 
     const onLink = () => {
         navigate('/auth/signin');
     }
 
+    const paginatedItems = cartItems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    console.log('Paginated items:', paginatedItems);
     return (
         <>
-            <Dialog open={context.isOpenCart} className="cart-dialog" onClose={() => context.setIsOpenCart(false)}>
+            <Dialog open={cartContext.isOpenCart} className="cart-dialog" onClose={() => cartContext.setIsOpenCart(false)}>
                 <div className="pad-25">
                     <div className="d-flex justify-content-between align-items-center">
                         <h3>Shopping Cart</h3>
-                        <Button onClick={() => context.setIsOpenCart(false)}><BsBagX /></Button>
+                        <Button onClick={() => cartContext.setIsOpenCart(false)}><BsBagX /></Button>
                     </div>
                     <hr />
                     <div className="d-flex flex-column mt-5">
-                        <CDialogComponent products={cartItems} cartId={cartID} />
+                        <CDialogComponent products={(authContext.user && authContext.user.id) ? cartItems : paginatedItems} cartId={cartID} />
                     </div>
                 </div>
                 <Box display="flex" justifyContent="center" mt={3}>
@@ -177,7 +197,7 @@ const CartDialog = () => {
                 <hr className="mt-5 mb-0" />
                 <div className="pad-25">
                     <div className="d-flex justify-content-around align-items-center btn-grp">
-                        <Link to={'/cart'}><Button onClick={() => context.setIsOpenCart(false)}>Cart</Button></Link>
+                        <Link to={'/cart'}><Button onClick={() => cartContext.setIsOpenCart(false)}>Cart</Button></Link>
                         <Link><Button onClick={checkUserToCheckout}>Checkout</Button></Link>
                     </div>
                 </div>

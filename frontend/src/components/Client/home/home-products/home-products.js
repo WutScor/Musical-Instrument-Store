@@ -1,36 +1,28 @@
-import { Button } from "@mui/material";
-import ProductItem from "./product-item";
-import { Link } from "react-router-dom";
+import React from 'react';
+import ProductItem from '../../shop/shop-product';
+import { Button, Grid } from "@mui/material";
+import { Link } from 'react-router-dom';
 
+const HomeProducts = ({ products }) => {
 
-const HomeProducts = () => {
-    return(
-        <>
-            <div className="main d-flex justify-content-center align-items-center flex-column">
-                <div className="container-w1">
-                    <div className="d-flex align-items-center justify-content-center textZone flex-column">
-                        <h1 className="title mt-5">Our Products</h1>
-                        <p className="title-desc">This is the description under those stupid titles...</p>
-
-                        <div className="container-w3 mt-5">
-                            <div className="products-row w-100 d-flex">
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                                <ProductItem/>
-                            </div>
-                        </div>
-
-                        <Link to={'/shop'} className="btn-container"><Button className="sm-button">Show More</Button></Link>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
+  return (
+    <div>
+      <div className="container mt-4 d-flex justify-content-center align-items-center flex-column">
+      <h1 className="title mt-5">Explore Our Instruments</h1>
+      <p className="title-desc mb-5">
+          Find the perfect musical instrument to elevate your performance.
+      </p>
+        <Grid container spacing={2} sx={{ marginBottom: '20px' }}>
+          {products.map((product) => (
+            <Grid item xs={12} sm={6} md={3} key={product.id}>
+              <ProductItem product={product} />
+            </Grid>
+          ))}
+        </Grid>
+        <Link to={'/shop'} className="btn-container"><Button className="sm-button">Show More</Button></Link>
+      </div>
+    </div>
+  );
+};
 
 export default HomeProducts;

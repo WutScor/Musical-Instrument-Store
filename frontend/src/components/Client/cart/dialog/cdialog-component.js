@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../../../../context/cartContext";
 import { AuthContext } from "../../../../context/authContext";
+import { addToSessionCart } from "../add-to-cart-session";
 import NoticeDialog from "../notice-dialog";
 
 const CDialogComponent = ({ products, cartId }) => {
@@ -12,28 +13,38 @@ const CDialogComponent = ({ products, cartId }) => {
     const [showForm, setShowForm] = useState({ open: false, message: "" });
 
     const updateProductQuantity = async (id, quantity) => {
-        const update = await fetch(`/carts/${cartId}/items`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${context.token}`
-            },
-            body: JSON.stringify([
-                {
-                    "itemId": id,
-                    "quantity": quantity
-                }
-            ])
-        })
-        if (update.ok) {
-            console.log('Update success');
+        // console.log((authContext.user && authContext.user.id));
+        if (authContext.user && authContext.user.id) {
+            const update = await fetch(`/carts/${cartId}/items`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${context.token}`
+                },
+                body: JSON.stringify([
+                    {
+                        "itemId": id,
+                        "quantity": quantity
+                    }
+                ])
+            })
+            if (update.ok) {
+                console.log('Update success');
+            }
+            else {
+                console.error('Error updating product quantity:', update);
+            }
+            return update;
         }
         else {
-            console.error('Error updating product quantity:', update);
+            const check = addToSessionCart(newProducts[0], quantity, newProducts[0].available);
+            return check;
         }
-        return update;
     }
 
+    useEffect(() => {
+        setCount(newProducts.length > 0 ? newProducts[0].quantity : 1);
+    }, [products]);
 
     const handleChangeQuantity = async (e) => {
         const value = parseInt(e.target.value, 10);
@@ -52,6 +63,9 @@ const CDialogComponent = ({ products, cartId }) => {
         if (respone.ok) {
             setCount(count + 1);
             newProducts[0].quantity += 1;
+        }
+        else {
+            console.error('Error updating product quantity:', respone);
         }
     }
 

@@ -3,9 +3,9 @@ const { paginate } = require("../helpers/paginationHelper");
 const https = require("https");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const { pass } = require("../strategies/localStrat");
 const { supabase } = require("../config/supabase");
 const { BUCKET_NAME: bucketName } = require("../config/constant");
+const { search } = require("../routes/userRoutes");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET_SUB_SYSTEM;
@@ -14,21 +14,22 @@ exports.getUsers = async (req, res, next) => {
   try {
     const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const search = req.query.search || "";
 
     let offset = 0;
     if (page && limit) {
       offset = (page - 1) * limit;
     }
 
-    const users = await userModel.getUsers(limit, offset);
-    const totalItems = await userModel.getUserCount();
+    const users = await userModel.getUsers(limit, offset, search);
+    const totalItems = await userModel.getUserCount(search);
 
     const transformedUsers = users.map((user) => ({
       id: user.id,
       username: user.username,
       password: user.password,
       email: user.email,
-      isAdmin: user.isAdmin,
+      isadmin: user.isadmin,
       avatar: user.avatar,
       payment_account: { balance: user.balance },
     }));
@@ -87,23 +88,21 @@ exports.insertUser = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}
 
 exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required." });
-    }
-
-    const result = await userModel.deleteUserById(id);
-
-    if (result.rowCount === 0) {
+    const deletedUser = await userModel.deleteUserById(id);
+    console.log('deletedUser', deletedUser);
+    if (!deletedUser) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    res.status(200).json({ message: "User deleted successfully." });
+    res.status(200).json({
+      deletedUser,
+    });
   } catch (error) {
     next(error);
   }
@@ -141,8 +140,8 @@ exports.updateUser = async (req, res, next) => {
       if (publicUrl) updates.avatar = publicUrl;
     }
 
-    const updatedUser = await userModel.updateUserById(id, updates);
-    if (!updatedUser) {
+    const user = await userModel.getUserById(id);
+    if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 

@@ -1,11 +1,13 @@
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../../context/authContext";
+import { CartContext } from "../../../context/cartContext";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 
-const CartItems = ({ cartItems, setCartItems, showNotice, cartID }) => {
+const CartItems = ({ cartItems, setCartItems, showNotice, cartID, totalItems }) => {
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, cartItemId: null });
   const context = useContext(AuthContext);
+  const cartContext = useContext(CartContext);
 
   const calculateSubtotal = (item) => item.quantity * item.price;
 
@@ -30,8 +32,10 @@ const CartItems = ({ cartItems, setCartItems, showNotice, cartID }) => {
         if (deleteItem.ok) {
           const updateCart = cartItems.filter((item) => item.id !== id);
           setCartItems(updateCart);
+          cartContext.updateCartItemQtty(totalItems);
           showNotice(true, "Item has been removed from cart!", "green");
           handleCloseDialog();
+          window.location.reload();
         }
         else {
           console.error('Error deleting item:', deleteItem);
@@ -46,6 +50,8 @@ const CartItems = ({ cartItems, setCartItems, showNotice, cartID }) => {
       const updateCart = cartItems.filter((item) => item.id !== id);
       sessionStorage.setItem("cart", JSON.stringify(updateCart));
       setCartItems(updateCart);
+      cartContext.updateCartItemQtty(totalItems - 1);
+      window.location.reload();
       showNotice(true, "Item has been removed!", "green");
       handleCloseDialog();
     }

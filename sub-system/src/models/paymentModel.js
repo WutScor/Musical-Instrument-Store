@@ -25,16 +25,40 @@ exports.createPaymentAccount = async (userId) => {
 };
 
 exports.updateBalance = async (id, adjustmentAmount, t) => {
-  const query = `
-    UPDATE payment_account
-    SET balance = balance + $2
-    WHERE id = $1
-    RETURNING *
-  `;
+  try {
+    // Fetch current balance
+    const currentBalanceQuery = `
+      SELECT balance
+      FROM payment_account
+      WHERE id = $1
+    `;
+    const currentBalanceResult = await t.oneOrNone(currentBalanceQuery, [id]);
 
-  const result = await t.any(query, [id, adjustmentAmount]);
+    // Check if payment account exists
+    if (!currentBalanceResult) {
+      throw new Error(`No payment account found`);
+    }
 
-  if (result.length === 0) {
-    throw new Error(`No payment account found with id ${id}`);
+    const currentBalance = currentBalanceResult.balance;
+
+    // Check if sufficient balance
+    if (currentBalance + adjustmentAmount < 0) {
+      throw new Error(`Insufficient balance for account`);
+    }
+
+    // Update balance
+    const query = `
+      UPDATE payment_account
+      SET balance = balance + $2
+      WHERE id = $1
+      RETURNING *
+    `;
+    const result = await t.any(query, [id, adjustmentAmount]);
+
+    if (result.length === 0) {
+      throw new Error(`No payment account found`);
+    }
+  } catch (error) {
+    throw new Error(`${error.message}`);
   }
 };

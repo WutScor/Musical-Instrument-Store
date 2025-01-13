@@ -15,7 +15,6 @@ const ProductPage = () => {
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
   const [alert, setAlert] = useState({ message: '', color: '' });
 
-
   const fetchProducts = async () => {
     try {
       const searchQuery = search || '';
@@ -45,6 +44,7 @@ const ProductPage = () => {
         page: data.pagination.page,
         totalPages: data.pagination.totalPages,
       });
+      console.log('pagination', data.pagination);
     } catch (error) {
       console.error('Error fetching products:', error);
     }

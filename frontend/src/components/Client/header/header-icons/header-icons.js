@@ -39,9 +39,9 @@ const HeaderIcons = () => {
   };
 
   return (
-    <div className="header-icons ms-auto d-flex justify-content-between align-items-center">
+    <div className="header-icons d-flex justify-content-between align-items-center row">
       {isSearchActive ? (
-        <div className="search-bar d-flex align-items-center position-relative">
+        <div className="search-bar d-flex align-items-center position-relative col-md-10">
           <input
             type="text"
             placeholder="Search..."
@@ -51,7 +51,7 @@ const HeaderIcons = () => {
               padding: "8px 30px 8px 8px", 
               borderRadius: "4px",
               border: "1px solid #ccc",
-              width: "240px",
+              width: "100%",
             }}
           />
           <button
@@ -61,7 +61,7 @@ const HeaderIcons = () => {
               border: "none",
               cursor: "pointer",
               position: "absolute",
-              right: "8px", 
+              right: "15px",
               fontSize: "10px",
             }}
           >
@@ -70,23 +70,25 @@ const HeaderIcons = () => {
         </div>
       ) : (
         <>
-          <Link to={"/user"}>
+          <Link to={"/user"} className="col-md-2">
             <AiOutlineUser />
           </Link>
-          <button
-            onClick={handleSearchToggle}
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            <AiOutlineSearch />
-          </button>
-          <Link to={"/favorite"}>
+          <div className="col-md-2">
+            <button
+              onClick={handleSearchToggle}
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <AiOutlineSearch />
+            </button>
+          </div>
+          <Link to={"/favorite"} className="col-md-2">
             <AiOutlineHeart />
           </Link>
-          <div className="d-flex justify-content-center align-items-center">
+          <div className="col-md-2">
             <CartIcon />
           </div>
         </>

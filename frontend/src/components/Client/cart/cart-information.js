@@ -14,7 +14,9 @@ const CartInformation = () => {
     const [cartID, setCartID] = useState();
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [totalItems, setTotalItems] = useState(0);
     const [notice, setNotice] = useState({ show: false, message: '', color: '' });
+    const itemsPerPage = 3;
 
     const showNotice = (isShow, message, color) => {
         setNotice({ show: isShow, message: message, color: color });
@@ -23,10 +25,10 @@ const CartInformation = () => {
         }, 2000);
     };
 
-    useEffect(() => {
-        const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
-        setCartItems(storedCart);
-    }, []);
+    // useEffect(() => {
+    //     const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+    //     setCartItems(storedCart);
+    // }, []);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -59,6 +61,7 @@ const CartInformation = () => {
                 console.log('Cart data:', data);
                 setCartID(data.items.cart_id);
                 setTotalPages(data.pagination.totalPages);
+                setTotalItems(data.pagination.totalItems);
 
                 const newItems = data.items.items.map(item => ({
                     id: item.musical_instrument.id,
@@ -123,7 +126,14 @@ const CartInformation = () => {
         if (context.user && context.user.id) {
             getCartItems();
         }
+        else {
+            const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            setCartItems(storedCart);
+            setTotalPages(Math.ceil(storedCart.length / itemsPerPage));
+        }
     }, [context.user, page]);
+
+    const paginatedItems = cartItems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
     return (
         <>
@@ -133,7 +143,7 @@ const CartInformation = () => {
             <CartIntro />
             <div className="cart-information gap-4">
                 <div className='w-100'>
-                    <CartItems cartItems={cartItems} setCartItems={setCartItems} showNotice={showNotice} cartID={cartID} />
+                    <CartItems cartItems={(context.user && context.user.id) ? cartItems : paginatedItems} setCartItems={setCartItems} showNotice={showNotice} cartID={cartID} totalItems={totalItems} />
                     <Box display="flex" justifyContent="center" mt={3}>
                         <Pagination
                             count={totalPages}

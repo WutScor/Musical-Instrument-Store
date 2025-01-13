@@ -2,24 +2,40 @@ const db = require("../config/database");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  getUsers: async (limit, offset) => {
-    const baseQuery = `
+  getUsers: async (limit, offset, search) => {
+    let baseQuery = `
     SELECT 
       u.*, 
       pa.balance
-    FROM public.user u
+    FROM public."user" u
     LEFT JOIN payment_account pa ON u.id = pa.id
   `;
 
-    if (limit) {
-      return await db.any(`${baseQuery} LIMIT $1 OFFSET $2`, [limit, offset]);
+    if (search) {
+      baseQuery += `
+      WHERE u.username ILIKE $1 OR u.email ILIKE $1
+    `;
     }
-    return await db.any(baseQuery);
+
+    if (limit) {
+      baseQuery += ` LIMIT $2 OFFSET $3`;
+      return await db.any(baseQuery, [`%${search}%`, limit, offset]);
+    }
+
+    return await db.any(baseQuery, [`%${search}%`]);
   },
-  getUserCount: async () => {
-    const result = await db.one("SELECT COUNT(*) FROM public.user");
+
+  getUserCount: async (search) => {
+    let countQuery = `SELECT COUNT(*) FROM public."user"`;
+
+    if (search) {
+      countQuery += ` WHERE username ILIKE $1 OR email ILIKE $1`;
+    }
+
+    const result = await db.one(countQuery, [`%${search}%`]);
     return parseInt(result.count);
   },
+
   insertUser: async (username, password, email, isAdmin, publicUrl) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     return await db.none(
@@ -27,11 +43,8 @@ module.exports = {
       [username, hashedPassword, email, isAdmin, publicUrl]
     );
   },
-  deleteUserById: async (id) => {
-    const query = `
-      DELETE FROM public.user
-      WHERE id = $1
-    `;
+  deleteUserById: async (id, username, email, password, is) => {
+    const query = `DELETE FROM public.user WHERE id = $1 RETURNING id`;
     return await db.result(query, [id]);
   },
   updateUserById: async (id, updates) => {
@@ -63,33 +76,21 @@ module.exports = {
     return await db.oneOrNone(query, values);
   },
   createUser: async (user) => {
-    try {
-      const query = `
-        INSERT INTO public.user (username, password, isadmin)
-        VALUES ($1, $2, false)
-        RETURNING id, username, isadmin
-      `;
-
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-
-      return await db.one(query, [user.username, hashedPassword]);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw error;
-    }
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    return await db.one({
+      text: `
+        INSERT INTO public.user (username, password, email, isadmin, avatar)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id, username, email, isadmin, avatar
+      `,
+      values: [user.username, hashedPassword, user.email, false, 'https://i.pinimg.com/originals/95/4e/0f/954e0f2ab2e4f5ade11b494a479fbf18.jpg'],
+    });
   },
   getUserByUsername: async (username) => {
-    try {
-      const query = `
-        SELECT * FROM public.user
-        WHERE username = $1
-      `;
-
-      return await db.oneOrNone(query, [username]);
-    } catch (error) {
-      console.error("Error getting user by username:", error);
-      throw error;
-    }
+    return await db.oneOrNone({
+      text: "SELECT * FROM public.user WHERE username = $1",
+      values: [username],
+    });
   },
   comparePassword: async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
@@ -97,7 +98,7 @@ module.exports = {
   getUserById: async (id) => {
     try {
       const query = `
-        SELECT id, username, isadmin
+        SELECT id, username, email, isadmin, avatar
         FROM public.user
         WHERE id = $1
       `;
