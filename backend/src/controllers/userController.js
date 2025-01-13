@@ -165,13 +165,6 @@ exports.createPaymentAccount = async (req, res, next) => {
       return res.status(400).json({ message: "userId is required" });
     }
 
-    const exists = await userModel.getUserById(userId);
-    if (exists) {
-      return res.status(201).json({ 
-        message: "Payment account already exists",
-       });
-    }
-
     const token = jwt.sign({ system: "backend" }, JWT_SECRET, {
       expiresIn: "1h",
     });

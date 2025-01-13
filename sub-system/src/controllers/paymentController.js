@@ -23,6 +23,13 @@ const createPaymentAccount = async (req, res) => {
     return res.status(400).json({ message: "userId is required" });
   }
 
+  const exists = await paymentModel.isExistedUserAccount(userId);
+  if (exists) {
+    return res.status(201).json({ 
+      message: "Payment account already exists",
+    });
+  }
+
   try {
     const result = await paymentModel.createPaymentAccount(userId);
 

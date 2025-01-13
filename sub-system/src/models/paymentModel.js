@@ -62,3 +62,20 @@ exports.updateBalance = async (id, adjustmentAmount, t) => {
     throw new Error(`${error.message}`);
   }
 };
+
+exports.isExistedUserAccount = async (userId) => {
+  const queryCheck = `
+    SELECT COUNT(*)
+    FROM payment_account
+    WHERE id = $1
+  `;
+
+
+  const result = await db.oneOrNone(queryCheck, [userId]);
+
+  if (parseInt(result.count) === 0) {
+    return 0;
+  } else {
+    return 1;
+  }
+};

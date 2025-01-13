@@ -8,7 +8,7 @@ const AddAccount = () => {
     return (
         <div>
         <h2 style={{ fontWeight: "bold" }}>Add New Account</h2>
-        <AccountForm users={users} />
+        <AccountForm user={null} users={users} />
         </div>
     );
 };
