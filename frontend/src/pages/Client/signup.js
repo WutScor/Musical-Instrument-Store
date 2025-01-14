@@ -8,7 +8,7 @@ const SignUpPage = () => {
             <div
                 className="d-flex justify-content-center align-items-center vh-100"
                 style={{
-                    background: "linear-gradient(135deg, #FFF3E3, #FFE8D0)",
+                    background: "linear-gradient(135deg, #cd9b33, #FFE8D0)",
                 }}
                 >
                 <div
