@@ -11,25 +11,26 @@ API giao tiếp: AJAX
 1. Branching Strategy
 Chúng ta sử dụng chiến lược Feature Branch Workflow:
 
-Nhánh chính:
+- Nhánh chính:
 main: Chỉ chứa code đã kiểm thử, sẵn sàng cho sản xuất.
 
-Nhánh theo giai đoạn:
+- Nhánh theo giai đoạn:
 milestone1: Chứa code ổn định đã được tích hợp trong giai đoạn 1
 milestone2: Chứa code ổn định đã được tích hợp trong giai đoạn 2
-milestone3: Chứa code ổn định đã được tích hợp trong giai đoạn 3
 
-Nhánh Dev:
+- Nhánh Dev:
 Từng thành viên code và push lên nhánh của mình
 
 
 2. Commit Guidelines
 Commit message phải rõ ràng, theo định dạng
 
-## 🏗️ Phần 2: React Workflow
+## 🏗️ Phần 2: Coding Workflow
 1. Project Structure
-Dự án React được tổ chức theo cấu trúc như sau:
-
+Dự án được tổ chức theo mô hình MVC như sau:
+- Model được lưu trong thư mục backend/src/models
+- View được lưu trữ trong thư mục frontend
+- Controller được lưu trữ trong  thư mực backend/src/controllers
 
 2. Coding Standards
 - Quy tắc đặt tên:
@@ -39,8 +40,9 @@ Biến và hàm: Sử dụng camelCase (handleClick, fetchData).
 - Component Organization
 Client components: Đặt trong components/Client
 Admin components: Đặt trong components/Admin
-Reusable components cho cả hai (Client và Admin): Đặt trong components/Common
 
 - Page Organization
 Client pages: Đặt trong pages/Client
 Admin pages: Đặt trong pages/Admin
+
+## Phần 3: Preview
