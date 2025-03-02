@@ -45,4 +45,10 @@ Admin components: Đặt trong components/Admin
 Client pages: Đặt trong pages/Client
 Admin pages: Đặt trong pages/Admin
 
-## Phần 3: Preview
+## 💻 Phần 3: Preview
+![Demo Screenshot](preview/home_01.png)
+![Demo Screenshot](preview/home_02.png)
+![Demo Screenshot](preview/shop.png)
+![Demo Screenshot](preview/about.png)
+![Demo Screenshot](preview/admin_dashboard.png)
+![Demo Screenshot](preview/admin_products.png)
